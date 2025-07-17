@@ -59,7 +59,7 @@ const Hero = () => {
           {/* Right: Image */}
           <div className="flex-1 flex items-center justify-center">
             <div className="relative">
-              <Image src="/lovable-uploads/38ffef0e-f269-4d70-ac89-2c38e0518b91.png" alt="Professional healthcare provider" className="w-full max-w-md object-cover h-[500px]" />
+              <Image src="/lovable-uploads/38ffef0e-f269-4d70-ac89-2c38e0518b91.png" alt="Professional healthcare provider" width={500} height={500} className="w-full max-w-md object-cover h-[500px]" />
             </div>
           </div>
         </div>

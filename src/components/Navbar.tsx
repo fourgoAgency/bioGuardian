@@ -74,6 +74,8 @@ const Navbar = () => {
             <Image 
               src="/lovable-uploads/469ecc54-4aee-49e8-b38d-0a9632b6e97a.png" 
               alt="BioGuardian Pharma Logo" 
+              width={56}
+              height={56} 
               className="w-14 h-14 object-contain"
             />
           </Link>
