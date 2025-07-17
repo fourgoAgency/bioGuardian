@@ -5,16 +5,19 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const auth = useAuth(); // could be null
+  const auth = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (auth && !auth.loading && !auth.isAdmin) {
-      router.replace('/login');
+    if (!auth?.loading) {
+      // Redirect if not logged in OR not admin
+      if (!auth?.user || !auth?.isAdmin) {
+        router.replace('/login');
+      }
     }
-  }, [auth, router]);
+  }, [auth?.loading, auth?.user, auth?.isAdmin, router]);
 
-  if (!auth || auth.loading) {
+  if (auth?.loading || !auth?.user || !auth?.isAdmin) {
     return (
       <div className="flex justify-center items-center h-screen">
         <div>Loading...</div>
