@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { Menu, X, ShoppingCart, Globe, LogOut } from 'lucide-react';
-import BioGuardianLogoText from "./BioGuardianLogoText";
 import { useCart } from '@/contexts/CartContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
@@ -12,6 +11,7 @@ import { auth } from '@/lib/firebase';
 import { signOut } from 'firebase/auth';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,8 +40,12 @@ const Navbar = () => {
       await signOut(auth);
       toast.success('Logged out successfully!');
       router.push('/login');
-    } catch (error: any) {
-      toast.error('Logout failed: ' + error.message);
+    } catch (error: unknown) {
+  if (error instanceof Error) {
+    toast.error('Logout failed: ' + error.message);
+  } else {
+    toast.error('Logout failed: An unknown error occurred.');
+  }
     }
     setIsOpen(false);
   };
@@ -67,7 +71,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center">
-            <img 
+            <Image 
               src="/lovable-uploads/469ecc54-4aee-49e8-b38d-0a9632b6e97a.png" 
               alt="BioGuardian Pharma Logo" 
               className="w-14 h-14 object-contain"

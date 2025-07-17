@@ -1,12 +1,14 @@
 'use client';
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Mail, Map, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import { Mail, Map, Facebook, Instagram, Linkedin } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+import { FirebaseError } from 'firebase/app';
 
 const Footer = () => {
   const { toast } = useToast();
@@ -32,12 +34,15 @@ const Footer = () => {
         description: "You've been subscribed to our newsletter. Welcome!",
       });
       setEmail('');
-    } catch (error: any) {
-      if (error.code === 'already-exists') {
-        toast({
-          title: "Already Subscribed",
-          description: "This email is already subscribed.",
-        });
+    } catch (error: unknown) {
+  if (
+    error instanceof Error &&
+    (error as FirebaseError).code === 'already-exists'
+  ) {
+    toast({
+      title: "Already Subscribed",
+      description: "This email is already subscribed.",
+    });
       } else {
         console.error('Error subscribing to newsletter:', error);
         toast({
@@ -59,7 +64,7 @@ const Footer = () => {
           <div className="md:col-span-4">
             <div className="flex items-center space-x-2 mb-4">
               <div className="bg-white p-2 rounded-lg">
-                <img 
+                <Image 
                   src="/lovable-uploads/469ecc54-4aee-49e8-b38d-0a9632b6e97a.png" 
                   alt="BioGuardian Pharma Logo" 
                   className="w-8 h-8 object-contain"
@@ -68,7 +73,7 @@ const Footer = () => {
               <span className="text-xl text-white font-bold">BioGuardian Pharma</span>
             </div>
             <p className="text-gray-300 mb-6 max-w-md text-sm">
-              Specializing in women's health and infertility treatments. 
+              Specializing in women&#39;s health and infertility treatments. 
               Committed to providing safe, affordable, and innovative pharmaceutical solutions.
             </p>
             <div className="flex space-x-4">

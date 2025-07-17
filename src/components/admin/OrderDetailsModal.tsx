@@ -8,11 +8,11 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, Timestamp, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { toast } from 'sonner';
 
-interface Order {
+export interface Order {
   id: string;
   customer_name: string;
   customer_email: string;
@@ -20,8 +20,8 @@ interface Order {
   payment_method: string;
   shipping_address: string;
   status: string;
-  created_at: any;
-  updated_at: any;
+  created_at: Timestamp | string;
+  updated_at: Timestamp;
   total_items: number;
   items: {
     name: string;

@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Calendar, User, Tag } from 'lucide-react';
+import Image from 'next/image';
 
 interface BlogCardProps {
   post: {
@@ -52,7 +53,7 @@ const BlogCard = ({ post, onClick }: BlogCardProps) => {
       <div className="bg-white/20 backdrop-blur-md rounded-3xl border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden h-full">
         {/* Featured Image */}
         <div className="relative h-48 overflow-hidden rounded-t-3xl">
-          <img
+          <Image
             src={post.image_url || 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop'}
             alt={post.title}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"

@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useCart } from '@/contexts/CartContext';
 import { Separator } from '@/components/ui/separator';
+import Image from 'next/image';
 
 const CartSummary = () => {
   const { state } = useCart();
@@ -41,7 +42,7 @@ const CartSummary = () => {
             const originalPrice = Math.round(item.price / 0.9);
             return (
               <div key={item.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                <img
+                <Image
                   src={item.image}
                   alt={item.name}
                   className="w-12 h-12 object-cover rounded-md"
@@ -105,7 +106,7 @@ const CartSummary = () => {
 
         <div className="mt-4 p-3 bg-blue-50 rounded-lg">
           <p className="text-sm text-blue-700 font-medium">Payment Method: Cash on Delivery</p>
-          <p className="text-xs text-blue-600 mt-1">You'll pay when your order is delivered</p>
+          <p className="text-xs text-blue-600 mt-1">You&#39;ll pay when your order is delivered</p>
         </div>
       </CardContent>
     </Card>

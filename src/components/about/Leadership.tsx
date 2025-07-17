@@ -1,4 +1,5 @@
 
+import Image from 'next/image';
 import React from 'react';
 
 const leadership = [
@@ -29,7 +30,7 @@ const Leadership = () => {
         {leadership.map((leader, index) => (
           <div key={index} className="text-center group">
             <div className="relative mb-6 mx-auto w-48 h-48 rounded-full overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-300">
-              <img src={leader.image} alt={leader.name} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+              <Image src={leader.image} alt={leader.name} width={600} height={500} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
             <div className="p-6 bg-white/60 backdrop-blur-sm rounded-3xl border border-white/20 hover:shadow-lg transition-all duration-200">

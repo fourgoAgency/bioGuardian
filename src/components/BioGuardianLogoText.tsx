@@ -10,7 +10,6 @@ import React from "react";
 const blue = "#3859a6";
 const dark = "#222429";
 const BioGuardianLogoText = ({
-  className = "",
   style = {}
 }: {
   className?: string;

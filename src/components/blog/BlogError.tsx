@@ -10,7 +10,7 @@ const BlogError = () => {
           <div className="text-center">
             <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-slate-800 mb-2">Error Loading Posts</h2>
-            <p className="text-slate-600">We're having trouble loading the blog posts. Please try again later.</p>
+            <p className="text-slate-600">We&#39;re having trouble loading the blog posts. Please try again later.</p>
           </div>
         </div>
       </div>

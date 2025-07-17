@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { collection, getDocs, query, orderBy, doc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, doc, updateDoc} from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import type { Order } from './OrderDetailsModal';
 import {
   Table,
   TableBody,
@@ -23,23 +24,23 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import OrderDetailsModal from './OrderDetailsModal';
 
-interface Order {
-  id: string;
-  customer_name: string;
-  customer_email: string;
-  customer_phone: string;
-  shipping_address: string;
-  status: string;
-  created_at: string;
-  updated_at: string;
-  total_items: number;
-  items: {
-    name: string;
-    quantity: number;
-    price: number;
-  }[];
-  notes?: string;
-}
+// interface Order {
+//   id: string;
+//   customer_name: string;
+//   customer_email: string;
+//   customer_phone: string;
+//   shipping_address: string;
+//   status: string;
+//   created_at: string | Timestamp;
+//   updated_at: string;
+//   total_items: number;
+//   items: {
+//     name: string;
+//     quantity: number;
+//     price: number;
+//   }[];
+//   notes?: string;
+// }
 
 const fetchOrders = async (): Promise<Order[]> => {
   const ordersRef = collection(db, 'orders');
@@ -47,7 +48,6 @@ const fetchOrders = async (): Promise<Order[]> => {
   const querySnapshot = await getDocs(q);
 
   return querySnapshot.docs.map(doc => ({
-    id: doc.id,
     ...(doc.data() as Order),
   }));
 };
@@ -160,26 +160,26 @@ const OrdersTable = () => {
                   {order.status}
                 </Badge>
               </TableCell>
-              <TableCell>{new Date(order.created_at).toLocaleString()}</TableCell>
+              <TableCell>{order.created_at.toLocaleString()}</TableCell>
               <TableCell className="text-right">
                 <DropdownMenu>
-                  <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                  <DropdownMenuTrigger asChild onClick={(e:React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()}>
                     <Button variant="ghost" className="h-8 w-8 p-0">
                       <span className="sr-only">Open menu</span>
                       <MoreHorizontal className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleStatusChange(order.id, 'processing'); }}>
+                    <DropdownMenuItem onClick={(e:React.MouseEvent<HTMLDivElement>) => { e.stopPropagation(); handleStatusChange(order.id, 'processing'); }}>
                       Mark as Processing
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleStatusChange(order.id, 'shipped'); }}>
+                    <DropdownMenuItem onClick={(e:React.MouseEvent<HTMLDivElement>) => { e.stopPropagation(); handleStatusChange(order.id, 'shipped'); }}>
                       Mark as Shipped
                     </DropdownMenuItem>
-                     <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleStatusChange(order.id, 'delivered'); }}>
+                     <DropdownMenuItem onClick={(e:React.MouseEvent<HTMLDivElement>) => { e.stopPropagation(); handleStatusChange(order.id, 'delivered'); }}>
                       Mark as Delivered
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleStatusChange(order.id, 'cancelled'); }} className="text-red-600">
+                    <DropdownMenuItem onClick={(e:React.MouseEvent<HTMLDivElement>) => { e.stopPropagation(); handleStatusChange(order.id, 'cancelled'); }} className="text-red-600">
                       Cancel Order
                     </DropdownMenuItem>
                   </DropdownMenuContent>

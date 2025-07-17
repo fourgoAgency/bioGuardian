@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import AnimatedCounter from './AnimatedCounter';
+import Image from 'next/image';
 
 const Hero = () => {
   return <section className="pt-24 pb-16 px-4">
@@ -18,7 +19,7 @@ const Hero = () => {
                 </h1>
                 
                 <p className="text-left text-xl text-gray-600 max-w-2xl leading-relaxed">
-                  Specialized in women's health and infertility treatments. We provide safe, 
+                  Specialized in women&#39;s health and infertility treatments. We provide safe, 
                   effective, and affordable pharmaceutical solutions across Pakistan, helping 
                   families build their dreams with our expertise in gynecology and reproductive health.
                 </p>
@@ -58,7 +59,7 @@ const Hero = () => {
           {/* Right: Image */}
           <div className="flex-1 flex items-center justify-center">
             <div className="relative">
-              <img src="/lovable-uploads/38ffef0e-f269-4d70-ac89-2c38e0518b91.png" alt="Professional healthcare provider" className="w-full max-w-md object-cover h-[500px]" />
+              <Image src="/lovable-uploads/38ffef0e-f269-4d70-ac89-2c38e0518b91.png" alt="Professional healthcare provider" className="w-full max-w-md object-cover h-[500px]" />
             </div>
           </div>
         </div>

@@ -16,8 +16,8 @@ const CallToAction = () => {
                                 Ready to Join Our Mission?
                             </h2>
                             <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                                Be part of a team dedicated to improving women's health across Pakistan. 
-                                Together, we're making quality healthcare accessible and affordable for all.
+                                Be part of a team dedicated to improving women&#39;s health across Pakistan. 
+                                Together, we&#39;re making quality healthcare accessible and affordable for all.
                             </p>
                         </div>
                         

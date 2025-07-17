@@ -11,7 +11,7 @@ const Expertise = () => {
                     Our <span className="text-sky-600">Expertise</span>
                     </h2>
                     <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                    Specialized in women's health and infertility treatments with over a decade of experience
+                    Specialized in women&#39;s health and infertility treatments with over a decade of experience
                     </p>
                 </div>
 
@@ -20,7 +20,7 @@ const Expertise = () => {
                     <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
                         <Heart className="w-8 h-8 text-blue-600" />
                     </div>
-                    <h3 className="text-xl font-semibold mb-4 text-gray-800">Women's Health</h3>
+                    <h3 className="text-xl font-semibold mb-4 text-gray-800">Women&#39;s Health</h3>
                     <p className="text-gray-600">Comprehensive solutions for PCOS, hormonal imbalances, and reproductive health challenges.</p>
                     </div>
 

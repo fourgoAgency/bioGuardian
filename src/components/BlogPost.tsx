@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useRouter } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import Navbar from '@/components/Navbar';
@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import { ArrowLeft, Calendar, User, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import Image from 'next/image';
 
 interface Post {
   id: string;
@@ -22,7 +23,7 @@ interface Post {
 
 const BlogPost = () => {
   const { slug } = useParams();
-  const navigate = useNavigate();
+  const navigate = useRouter();
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
@@ -32,10 +33,11 @@ const BlogPost = () => {
       if (!slug) return;
       setLoading(true);
       try {
-        const docRef = doc(db, 'posts', slug);
+        const docRef = doc(db, 'posts', Array.isArray(slug) ? slug[0] : slug);
+
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          setPost({ id: docSnap.id, ...(docSnap.data() as Post) });
+          setPost({ ...(docSnap.data() as Post) });
         } else {
           setPost(null);
         }
@@ -114,8 +116,8 @@ const BlogPost = () => {
         <div className="pt-24 pb-16 px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-3xl font-bold text-gray-800 mb-4">Article Not Found</h1>
-            <p className="text-gray-600 mb-8">The article you're looking for doesn't exist.</p>
-            <Button onClick={() => navigate('/blog')} className="bg-gradient-to-r from-blue-600 to-purple-600">
+            <p className="text-gray-600 mb-8">The article you&#39;re looking for doesn&#39;t exist.</p>
+            <Button onClick={() => navigate.push('/blog')} className="bg-gradient-to-r from-blue-600 to-purple-600">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Health Corner
             </Button>
@@ -134,7 +136,7 @@ const BlogPost = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back Button */}
           <Button 
-            onClick={() => navigate('/blog')} 
+            onClick={() => navigate.push('/blog')} 
             variant="ghost" 
             className="mb-8 hover:bg-white/60"
           >
@@ -145,7 +147,7 @@ const BlogPost = () => {
           {/* Article Header */}
           <header className="mb-8">
             <div className="aspect-video mb-8 rounded-3xl overflow-hidden shadow-lg">
-              <img
+              <Image
                 src={post.image_url || 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&h=400&fit=crop'}
                 alt={post.title}
                 className="w-full h-full object-cover"
@@ -187,7 +189,7 @@ const BlogPost = () => {
           {/* Navigation */}
           <div className="mt-12 text-center">
             <Button 
-              onClick={() => navigate('/blog')} 
+              onClick={() => navigate.push('/blog')} 
               className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3"
             >
               Read More Articles

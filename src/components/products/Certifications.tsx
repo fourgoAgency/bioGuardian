@@ -1,4 +1,5 @@
 
+import Image from 'next/image';
 import React from 'react';
 
 const certificationLogos = [
@@ -17,7 +18,7 @@ const Certifications = () => {
         <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16">
           {certificationLogos.map((logo, index) => (
             <div key={index} className="flex justify-center">
-              <img src={logo.src} alt={logo.alt} className="h-24 object-contain transition-transform duration-300 hover:scale-110" />
+              <Image src={logo.src} alt={logo.alt} className="h-24 object-contain transition-transform duration-300 hover:scale-110" />
             </div>
           ))}
         </div>

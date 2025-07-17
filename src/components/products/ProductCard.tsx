@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
+import Image from 'next/image';
 
 export interface Product {
   id: string;
@@ -73,7 +74,7 @@ const ProductCard = ({ product, selectedImageIndex, onImageSelect, onAddToCart }
           10% OFF
         </div>
         <div className="relative z-10">
-          <img
+          <Image
             src={product.images[selectedImageIndex]}
             alt={product.name}
             className="w-32 h-32 mx-auto mb-4 object-contain drop-shadow-lg transition-all duration-300 hover:scale-110 cursor-pointer"

@@ -5,6 +5,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { Button } from '@/components/ui/button';
 import { Minus, Plus, X, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const CartDrawer = () => {
   const { state, updateQuantity, removeFromCart, closeCart } = useCart();
@@ -40,7 +41,7 @@ const CartDrawer = () => {
             <div className="space-y-4">
               {state.items.map((item) => (
                 <div key={item.id} className="flex items-center space-x-3 bg-white p-3 rounded-lg border">
-                  <img
+                  <Image
                     src={item.image}
                     alt={item.name}
                     className="w-16 h-16 object-cover rounded-md"

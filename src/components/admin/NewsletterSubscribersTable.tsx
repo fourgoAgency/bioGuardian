@@ -24,7 +24,6 @@ const fetchSubscribers = async (): Promise<Subscription[]> => {
   const querySnapshot = await getDocs(q);
 
   return querySnapshot.docs.map(doc => ({
-    id: doc.id,
     ...(doc.data() as Subscription),
   }));
 };

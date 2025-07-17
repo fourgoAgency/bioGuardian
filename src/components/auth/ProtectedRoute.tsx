@@ -1,22 +1,25 @@
+'use client';
 
-import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAdmin, loading } = useAuth();
-  const location = useLocation();
+  const auth = useAuth(); // could be null
+  const router = useRouter();
 
-  if (loading) {
+  useEffect(() => {
+    if (auth && !auth.loading && !auth.isAdmin) {
+      router.replace('/login');
+    }
+  }, [auth, router]);
+
+  if (!auth || auth.loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <div>Loading...</div>
       </div>
     );
-  }
-
-  if (!isAdmin) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   return <>{children}</>;
