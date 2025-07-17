@@ -1,9 +1,11 @@
 import React from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 const AdminDashboard = () => {
   return (
+    <ProtectedRoute>
     <div className="p-8">
       <Navbar />
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
@@ -38,6 +40,7 @@ const AdminDashboard = () => {
         </Link>
       </div>
     </div>
+    </ProtectedRoute>
   );
 };
 

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 interface OrderItem {
   name: string;
@@ -38,6 +39,7 @@ const OrdersPage = () => {
   }, []);
 
   return (
+    <ProtectedRoute>
     <div className="p-8">
       <h2 className="text-3xl font-bold mb-6">Orders</h2>
       <div className="overflow-x-auto rounded shadow border border-gray-300">
@@ -136,6 +138,7 @@ const OrdersPage = () => {
         </div>
       )}
     </div>
+    </ProtectedRoute>
   );
 };
 

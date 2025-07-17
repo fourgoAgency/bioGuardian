@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 interface Submission {
   id: string;
@@ -38,6 +39,7 @@ const ContactSubmissionsPage: React.FC = () => {
   }, []);
 
   return (
+    <ProtectedRoute>
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Contact Form Submissions</h1>
       {loading ? (
@@ -75,6 +77,7 @@ const ContactSubmissionsPage: React.FC = () => {
         </div>
       )}
     </div>
+    </ProtectedRoute>
   );
 };
 

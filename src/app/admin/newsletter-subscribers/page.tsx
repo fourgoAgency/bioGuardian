@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 interface Subscriber {
   id: string;
@@ -38,6 +39,8 @@ const NewsletterSubscribersPage: React.FC = () => {
   }, []);
 
   return (
+    <ProtectedRoute>
+
     <div style={{ padding: "20px" }}>
       <h2>Newsletter Subscribers</h2>
       {loading ? (
@@ -67,6 +70,7 @@ const NewsletterSubscribersPage: React.FC = () => {
         </table>
       )}
     </div>
+    </ProtectedRoute>
   );
 };
 
