@@ -35,6 +35,7 @@ export default function RootLayout({
         <LanguageProvider>
           <CartProvider>
             <QueryProvider>
+              
               {children}
             </QueryProvider>
           </CartProvider>
