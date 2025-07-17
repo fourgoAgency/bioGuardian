@@ -3,6 +3,12 @@ import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
+interface OrderItem {
+  name: string;
+  quantity: number;
+  price: number;
+}
+
 interface Order {
   id: string;
   customer_name: string;
@@ -10,8 +16,8 @@ interface Order {
   customer_phone: string;
   shipping_address: string;
   total_items: number;
-  created_at: any;
-  items: any[];
+  created_at: import("firebase/firestore").Timestamp | null;
+  items: OrderItem[];
 }
 
 const OrdersPage = () => {
@@ -21,9 +27,9 @@ const OrdersPage = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       const querySnapshot = await getDocs(collection(db, "orders"));
-      const ordersData: any[] = [];
+      const ordersData: Order[] = [];
       querySnapshot.forEach((doc) => {
-        ordersData.push({ id: doc.id, ...doc.data() });
+        ordersData.push({ id: doc.id, ...(doc.data() as Omit<Order, "id">) });
       });
       setOrders(ordersData);
     };

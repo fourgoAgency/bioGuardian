@@ -4,18 +4,28 @@ import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
+interface Subscriber {
+  id: string;
+  email: string;
+  created_at?: { toDate: () => Date };
+}
+
 const NewsletterSubscribersPage: React.FC = () => {
-  const [subscribers, setSubscribers] = useState<any[]>([]);
+  const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchSubscribers = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "newsletter_subscriptions"));
-        const data = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+        const data = querySnapshot.docs.map((doc) => {
+          const docData = doc.data();
+          return {
+            id: doc.id,
+            email: docData.email || "",
+            created_at: docData.created_at,
+          };
+        });
         setSubscribers(data);
       } catch (err) {
         console.error("Error fetching subscribers:", err);

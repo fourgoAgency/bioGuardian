@@ -17,20 +17,34 @@ interface Post {
   title: string;
   content: string;
   created_at: string;
-  [key: string]: any;
+  excerpt: string;
+  slug: string;
+  category: string;
+  image_url: string;
+  author: string;
+  [key: string]: unknown;
 }
 
 const Blog = () => {
   const { data: posts, isLoading, error } = useQuery<Post[]>({
     queryKey: ['posts'],
     queryFn: async () => {
-      const postsRef = collection(db, 'posts');
-      const q = query(postsRef, orderBy('created_at', 'desc'));
+      const q = query(collection(db, 'posts'), orderBy('created_at', 'desc'));
       const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Post[];
+      return snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          title: data.title ?? '',
+          content: data.content ?? '',
+          created_at: data.created_at ?? '',
+          excerpt: data.excerpt ?? '',
+          slug: data.slug ?? '',
+          category: data.category ?? '',
+          image_url: data.image_url ?? '',
+          author: data.author ?? '',
+        };
+      }) as Post[];
     },
   });
 

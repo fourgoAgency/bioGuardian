@@ -1,4 +1,4 @@
-import { doc, updateDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { updateDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 export const updatePcosPostImage = async () => {

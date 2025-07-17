@@ -19,8 +19,16 @@ const LoginPage: React.FC = () => {
 
       // Go to admin page
       navigate.push("/admin");
-    } catch (err: any) {
-      console.error("❌ Firebase login error:", err.code, err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error("❌ Firebase login error:", err.message);
+      } else if (typeof err === "object" && err !== null && "code" in err && "message" in err) {
+        // For Firebase errors
+        const firebaseErr = err as { code: string; message: string };
+        console.error("❌ Firebase login error:", firebaseErr.code, firebaseErr.message);
+      } else {
+        console.error("❌ Firebase login error:", err);
+      }
       setError("Invalid email or password.");
     }
   };

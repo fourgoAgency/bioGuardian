@@ -6,8 +6,9 @@ import Footer from '@/components/Footer';
 import { ArrowLeft, Calendar, User, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import Image from 'next/image';
 
 interface Post {
   id: string;
@@ -39,9 +40,20 @@ useEffect(() => {
         where('slug', '==', slug)
       );
       const querySnapshot = await getDocs(q);
-      const dataArray: any[] = [];
+      const dataArray: Post[] = [];
       querySnapshot.forEach((doc) => {
-        dataArray.push({ id: doc.id, ...doc.data() });
+        const data = doc.data() as Post;
+        dataArray.push({
+          id: doc.id,
+          title: data.title ?? '',
+          content: data.content ?? '',
+          excerpt: data.excerpt ?? null,
+          created_at: data.created_at ?? '',
+          slug: data.slug ?? '',
+          category: data.category ?? null,
+          image_url: data.image_url ?? null,
+          author: data.author ?? null,
+        });
       });
       const data = dataArray[0] || null;
       if (!data) {
@@ -126,7 +138,7 @@ useEffect(() => {
         <div className="pt-24 pb-16 px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-3xl font-bold text-gray-800 mb-4">Article Not Found</h1>
-            <p className="text-gray-600 mb-8">The article you're looking for doesn't exist.</p>
+            <p className="text-gray-600 mb-8">The article you&#39;re looking for doesn&#39;t exist.</p>
             <Button onClick={() => navigate.push('/blog')} className="bg-gradient-to-r from-blue-600 to-purple-600">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Health Corner
@@ -157,9 +169,11 @@ useEffect(() => {
           {/* Article Header */}
           <header className="mb-8">
             <div className="aspect-video mb-8 rounded-3xl overflow-hidden shadow-lg">
-              <img
+              <Image
                 src={post.image_url || 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&h=400&fit=crop'}
                 alt={post.title}
+                width={800}
+                height={400}
                 className="w-full h-full object-cover"
               />
             </div>

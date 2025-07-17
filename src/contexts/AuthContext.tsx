@@ -1,16 +1,16 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 
 interface AuthContextType {
-  user: any; // Replace 'any' with your user type if available
+  user: User | null; // Replace 'any' with your user type if available
   loading: boolean;
   isAdmin: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
+export const AuthProvider: React.FC<React.PropsWithChildren<object>> = ({ children }) => {
   const [user, setUser] = useState<import('firebase/auth').User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);

@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar, ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import Image from 'next/image';
 
 interface Post {
   id: string;
@@ -37,7 +38,7 @@ const BlogDynamic = () => {
     { id: 'hormonal-health', label: t('category_hormonal_health') }
   ];
 
-  const fetchPosts = async () => {
+  const fetchPosts = React.useCallback(async () => {
     setLoading(true);
     try {
       const postsRef = collection(db, 'posts');
@@ -60,11 +61,11 @@ const BlogDynamic = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [fetchPosts]);
 
   const filteredPosts = selectedCategory === 'all' 
     ? posts 
@@ -117,7 +118,7 @@ const BlogDynamic = () => {
                     {filteredPosts.map((post) => (
                       <Card key={post.id} onClick={() => handleReadMore(post.slug)} className="group cursor-pointer hover:shadow-xl transition-all duration-300 border-0 bg-white/60 backdrop-blur-sm overflow-hidden flex flex-col">
                         <div className="aspect-video overflow-hidden">
-                          <img
+                          <Image
                             src={post.image_url || 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=250&fit=crop'}
                             alt={post.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

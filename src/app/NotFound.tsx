@@ -2,6 +2,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { useLanguage } from '@/contexts/LanguageContext';
+import Link from "next/link";
 
 const NotFound = () => {
   const location = usePathname();
@@ -19,9 +20,9 @@ const NotFound = () => {
       <div className="text-center">
         <h1 className="text-4xl font-bold mb-4 text-slate-800">404</h1>
         <p className="text-xl text-slate-600 mb-4">{t('page_not_found')}</p>
-        <a href="/" className="text-blue-600 hover:text-blue-700 underline">
+        <Link href="/" className="text-blue-600 hover:text-blue-700 underline">
           {t('return_home')}
-        </a>
+        </Link>
       </div>
     </div>
   );
