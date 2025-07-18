@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import {
   Table,
@@ -15,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 interface Subscription {
   id: string;
   email: string;
-  created_at: string;
+  created_at: Timestamp| Date | string;
 }
 
 const fetchSubscribers = async (): Promise<Subscription[]> => {
@@ -59,7 +59,9 @@ const NewsletterSubscribersTable = () => {
               {subscribers?.map((subscriber) => (
                 <TableRow key={subscriber.id}>
                   <TableCell className="font-medium">{subscriber.email}</TableCell>
-                  <TableCell className="text-right">{new Date(subscriber.created_at).toLocaleString()}</TableCell>
+                  <TableCell className="text-right"> {new Date(
+    (subscriber.created_at as Timestamp).toDate?.() ?? subscriber.created_at
+  ).toLocaleDateString()}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

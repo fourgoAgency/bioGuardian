@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { collection, getDocs, query, orderBy, doc, updateDoc} from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, doc, updateDoc, Timestamp} from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import type { Order } from './OrderDetailsModal';
 import {
@@ -23,6 +23,7 @@ import { MoreHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import OrderDetailsModal from './OrderDetailsModal';
+import { format } from "date-fns";
 
 // interface Order {
 //   id: string;
@@ -115,6 +116,7 @@ const OrdersTable = () => {
     return <div className="p-4 text-red-500">Error fetching orders: {error.message}</div>;
   }
 
+
   return (
     <>
       <Table>
@@ -130,9 +132,9 @@ const OrdersTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {orders?.map((order) => (
-            <TableRow 
-              key={order.id} 
+          {orders?.map((order, index) => (
+            <TableRow  
+              key={order.id || index}
               className="cursor-pointer hover:bg-gray-50"
               onClick={() => handleOrderClick(order)}
             >
@@ -160,7 +162,14 @@ const OrdersTable = () => {
                   {order.status}
                 </Badge>
               </TableCell>
-              <TableCell>{order.created_at.toLocaleString()}</TableCell>
+              <TableCell>                        
+                {order.created_at? format(
+                            order.created_at instanceof Timestamp
+                              ? order.created_at.toDate()
+                              : order.created_at,
+                            "MMM dd, yyyy HH:mm"
+                          )
+                          : "N/A"}</TableCell>
               <TableCell className="text-right">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild onClick={(e:React.MouseEvent<HTMLButtonElement>) => e.stopPropagation()}>

@@ -20,7 +20,7 @@ export interface Order {
   payment_method: string;
   shipping_address: string;
   status: string;
-  created_at: Timestamp | string;
+  created_at: Timestamp | Date;
   updated_at: Timestamp;
   total_items: number;
   items: {
@@ -50,7 +50,12 @@ const OrderDetailsModal = ({ order, isOpen, onClose }: OrderDetailsModalProps) =
   const handleStatusChange = async (newStatus: string) => {
     try {
       setUpdating(true);
-      const orderRef = doc(db, 'orders', order.id);
+      const OrderId = order?.id;
+      if (!OrderId) {
+        toast.error('Order ID is missing');
+        return;
+      }
+      const orderRef = doc(db, 'orders', OrderId);
       await updateDoc(orderRef, {
         status: newStatus,
         updated_at: new Date().toISOString(),
@@ -69,7 +74,7 @@ const OrderDetailsModal = ({ order, isOpen, onClose }: OrderDetailsModalProps) =
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Order Details - #{order.id.slice(0, 8)}</DialogTitle>
+          <DialogTitle>Order Details - #{order.id?.slice(0, 8)}</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-6">
@@ -170,6 +175,12 @@ const OrderDetailsModal = ({ order, isOpen, onClose }: OrderDetailsModalProps) =
             </div>
           )}
         </div>
+        <Button
+          className="mt-6"
+          onClick={onClose}
+        >
+          Print
+        </Button>
       </DialogContent>
     </Dialog>
   );

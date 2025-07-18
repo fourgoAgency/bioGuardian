@@ -73,8 +73,8 @@ const ContactSubmissionsTable = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {submissions?.map((submission) => (
-                <TableRow key={submission.id}>
+              {submissions?.map((submission, index) => (
+                <TableRow key={submission.id || index}>
                   <TableCell className="font-medium">{submission.name}</TableCell>
                   <TableCell>{submission.email}</TableCell>
                   <TableCell>{submission.phone || 'N/A'}</TableCell>
