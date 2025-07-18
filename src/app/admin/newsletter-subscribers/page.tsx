@@ -1,77 +1,129 @@
-// src/pages/NewsletterSubscribers.tsx
-'use client';
-import React, { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import ProtectedRoute from "@/components/auth/ProtectedRoute";
+'use client'
 
-interface Subscriber {
-  id: string;
-  email: string;
-  created_at?: { toDate: () => Date };
-}
+import React from 'react'
+import Sidebar from '@/components/admin/Sidebar'
+import Topbar from '@/components/admin/Topbar'
+import NewsletterSubscribersTable from '@/components/admin/NewsletterSubscribersTable'
 
-const NewsletterSubscribersPage: React.FC = () => {
-  const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchSubscribers = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "newsletter_subscriptions"));
-        const data = querySnapshot.docs.map((doc) => {
-          const docData = doc.data();
-          return {
-            id: doc.id,
-            email: docData.email || "",
-            created_at: docData.created_at,
-          };
-        });
-        setSubscribers(data);
-      } catch (err) {
-        console.error("Error fetching subscribers:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSubscribers();
-  }, []);
-
+export default function NewsletterSubscribersPage() {
   return (
-    <ProtectedRoute>
+    <div className="flex h-screen">
+      <Sidebar />
 
-    <div style={{ padding: "20px" }}>
-      <h2>Newsletter Subscribers</h2>
-      {loading ? (
-        <p>Loading subscribers...</p>
-      ) : (
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <thead>
-            <tr>
-              <th style={{ border: "1px solid #ccc", padding: "8px" }}>ID</th>
-              <th style={{ border: "1px solid #ccc", padding: "8px" }}>Email</th>
-              <th style={{ border: "1px solid #ccc", padding: "8px" }}>Subscribed At</th>
-            </tr>
-          </thead>
-          <tbody>
-            {subscribers.map((sub) => (
-              <tr key={sub.id}>
-                <td style={{ border: "1px solid #ccc", padding: "8px" }}>{sub.id}</td>
-                <td style={{ border: "1px solid #ccc", padding: "8px" }}>{sub.email}</td>
-                <td style={{ border: "1px solid #ccc", padding: "8px" }}>
-                  {sub.created_at?.toDate
-                    ? sub.created_at.toDate().toLocaleString()
-                    : "N/A"}
-                </td>
-              </tr>
+      <div className="flex flex-col flex-1">
+        <Topbar />
+
+        <main className="p-6 bg-gray-50 overflow-auto">
+          <h1 className="text-2xl font-semibold mb-4">Newsletter Subscribers</h1>
+
+          {/* Overview cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            {[
+              { label: 'Total Subscribers', value: 1250, change: '+10%' },
+              { label: 'New Subscribers (30d)', value: 45, change: '+5%' },
+              { label: 'Unsubscribed (30d)', value: 8, change: '-2%' },
+              { label: 'Active Subscribers', value: 1197, change: '+98%' },
+            ].map((card, i) => (
+              <div key={i} className="bg-white p-4 shadow rounded-lg">
+                <div className="text-sm text-gray-500">{card.label}</div>
+                <div className="text-xl font-bold">{card.value}</div>
+                <div className="text-xs text-green-600">{card.change} this month</div>
+              </div>
             ))}
-          </tbody>
-        </table>
-      )}
-    </div>
-    </ProtectedRoute>
-  );
-};
+          </div>
 
-export default NewsletterSubscribersPage;
+          {/* Search + Filters + Bulk Actions */}
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <input
+              type="text"
+              placeholder="Search by email..."
+              className="px-4 py-2 border rounded w-full md:w-auto"
+            />
+
+            <select className="px-3 py-2 border rounded text-sm">
+              <option>All Statuses</option>
+              <option>Active</option>
+              <option>Unsubscribed</option>
+            </select>
+
+            <div className="space-x-2">
+              <button className="px-3 py-2 bg-blue-600 text-white rounded">Apply Filters</button>
+              <button className="px-3 py-2 border rounded">Reset Filters</button>
+              <button className="px-3 py-2 border rounded">Bulk Actions</button>
+            </div>
+          </div>
+
+          {/* Subscriber Table */}
+          <NewsletterSubscribersTable/>
+          {/* <div className="overflow-auto">
+            <table className="min-w-full bg-white rounded shadow">
+              <thead className="bg-gray-100 text-left text-sm">
+                <tr>
+                  <th className="p-3">Email</th>
+                  <th className="p-3">Subscription Date</th>
+                  <th className="p-3">Source</th>
+                  <th className="p-3">Status</th>
+                  <th className="p-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="text-sm text-gray-700">
+                {[
+                  {
+                    email: 'john.doe@example.com',
+                    date: '2023-06-15',
+                    source: 'Website',
+                    status: 'Active',
+                  },
+                  {
+                    email: 'peter.jones@example.com',
+                    date: '2023-08-01',
+                    source: 'Event Signup',
+                    status: 'Unsubscribed',
+                  },
+                  {
+                    email: 'grace.wilson@example.com',
+                    date: '2023-09-01',
+                    source: 'Event Signup',
+                    status: 'Active',
+                  },
+                ].map((row, i) => (
+                  <tr key={i} className="border-t">
+                    <td className="p-3">{row.email}</td>
+                    <td className="p-3">{row.date}</td>
+                    <td className="p-3">{row.source}</td>
+                    <td className="p-3">
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          row.status === 'Active'
+                            ? 'bg-blue-100 text-blue-700'
+                            : 'bg-red-100 text-red-700'
+                        }`}
+                      >
+                        {row.status}
+                      </span>
+                    </td>
+                    <td className="p-3 space-x-2">
+                      <button className="text-sm text-red-600 hover:underline">Unsubscribe</button>
+                      <button className="text-sm text-gray-600 hover:underline">Details</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div> */}
+
+          {/* Pagination */}
+          <div className="mt-4 flex justify-between items-center text-sm">
+            <p className="text-gray-600">Page 1 of 2</p>
+            <div className="space-x-2">
+              <button className="px-3 py-1 border rounded">Previous</button>
+              <button className="px-3 py-1 border rounded bg-blue-600 text-white">1</button>
+              <button className="px-3 py-1 border rounded">2</button>
+              <button className="px-3 py-1 border rounded">Next</button>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  )
+}

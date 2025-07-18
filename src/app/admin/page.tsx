@@ -1,47 +1,55 @@
-import React from "react";
-import Link from "next/link";
-import Navbar from "@/components/Navbar";
-import ProtectedRoute from "@/components/auth/ProtectedRoute";
+"use client";
 
-const AdminDashboard = () => {
+import Sidebar from "@/components/admin/Sidebar";
+import Topbar from "@/components/admin/Topbar";
+import OverviewCard from "@/components/admin/OverviewCard";
+import OrderVolumeChart from "@/components/admin/OrderVolumeChart";
+import JobTrendsChart from "@/components/admin/JobTrendsChart";
+import ActivityItem from "@/components/admin/ActivityItem";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart, User, Mail, FileText, Briefcase, Clipboard } from "lucide-react";
+
+export default function Dashboard() {
   return (
-    <ProtectedRoute>
-    <div className="p-8">
-      <Navbar />
-      <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Link
-          href="/admin/orders"
-          className="block p-6 bg-white rounded-lg shadow hover:bg-blue-50 transition"
-        >
-          <h2 className="text-xl font-semibold text-blue-600 mb-2">Orders</h2>
-          <p className="text-gray-600">Manage customer orders and view order details.</p>
-        </Link>
-        <Link
-          href="/admin/contact-submissions"
-          className="block p-6 bg-white rounded-lg shadow hover:bg-blue-50 transition"
-        >
-          <h2 className="text-xl font-semibold text-blue-600 mb-2">Contact Submissions</h2>
-          <p className="text-gray-600">View messages sent through the contact form.</p>
-        </Link>
-        <Link
-          href="/admin/job-applications"
-          className="block p-6 bg-white rounded-lg shadow hover:bg-blue-50 transition"
-        >
-          <h2 className="text-xl font-semibold text-blue-600 mb-2">Job Applications</h2>
-          <p className="text-gray-600">Manage applications submitted for job openings.</p>
-        </Link>
-        <Link
-          href="/admin/newsletter-subscribers"
-          className="block p-6 bg-white rounded-lg shadow hover:bg-blue-50 transition"
-        >
-          <h2 className="text-xl font-semibold text-blue-600 mb-2">Newsletter Subscribers</h2>
-          <p className="text-gray-600">Manage subscribers to the newsletter list.</p>
-        </Link>
+    <div className="flex h-screen w-full overflow-hidden">
+      <Sidebar />
+      <div className="flex flex-col flex-1 overflow-y-auto">
+        <Topbar />
+
+        <main className="p-6 space-y-6">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-4xl font-bold">Admin Dashboard</h1>
+            <Button className="w-fit" variant={"default"}>View Report {'>'}</Button>
+          </div>
+          {/* Dashboard Overview */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <OverviewCard title="Total Orders" Icon={ShoppingCart} value="2,567" timeframe="Past 30 days" />
+            <OverviewCard title="Total Contacts" Icon={Mail} value="852" timeframe="This month" />
+            <OverviewCard title="Total Subscribers" Icon={User} value="1,204" timeframe="This month" />
+            <OverviewCard title="Total Blogs" Icon={FileText} value="128" timeframe="All time" />
+            <OverviewCard title="Total Job Listings" Icon={Briefcase} value="24" timeframe="Active now" />
+            <OverviewCard title="Total Applications" Icon={Clipboard} value="349" timeframe="Under review" />
+          </div>
+
+          {/* Charts Section */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <OrderVolumeChart />
+            <JobTrendsChart />
+          </div>
+
+          {/* Recent Activities */}
+          <div className="bg-white shadow rounded-xl p-4">
+            <h2 className="text-xl font-semibold mb-4">Recent Activities</h2>
+            <div className="space-y-3">
+              <ActivityItem activity="Order #BG2023-012 received" status="New" date="2025-07-12" />
+              <ActivityItem activity="Question about drug efficacy" status="New" date="2025-07-12" />
+              <ActivityItem activity="Article draft for 'Innovations in Vaccine'" status="Pending" date="2025-07-13" />
+              <ActivityItem activity="Order #BG2023-009 shipped" status="Completed" date="2025-07-14" />
+              <ActivityItem activity="New subscriber: biolead@email.com" status="New" date="2025-07-15" />
+            </div>
+          </div>
+        </main>
       </div>
     </div>
-    </ProtectedRoute>
   );
-};
-
-export default AdminDashboard;
+}
