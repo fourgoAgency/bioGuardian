@@ -44,6 +44,8 @@ const CartDrawer = () => {
                   <Image
                     src={item.image}
                     alt={item.name}
+                    width={50}
+                    height={50}
                     className="w-16 h-16 object-cover rounded-md"
                   />
                   <div className="flex-1">

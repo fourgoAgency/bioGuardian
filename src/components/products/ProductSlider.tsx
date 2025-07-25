@@ -83,7 +83,7 @@ const ProductSlider = () => {
                                         <p className="mt-4 font-semibold text-lg">{product.indication}</p>
                                     </div>
                                     <div className="relative h-64 md:h-auto md:self-stretch">
-                                        <Image src={product.images[0]} alt={product.name} className="w-full h-full object-contain drop-shadow-2xl transition-transform duration-500 hover:scale-105"/>
+                                        <Image src={product.images[0]} alt={product.name} width={1000} height={1000} className="w-full h-full object-contain drop-shadow-2xl transition-transform duration-500 hover:scale-105"/>
                                     </div>
                                 </div>
                             </CardContent>

@@ -1,6 +1,4 @@
 import { Home, Users, FileText, Briefcase, Mail, LayoutDashboard } from "lucide-react";
-import Image from "next/image";
-import Logo from '@/../public/Logo png.png'
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 export default function Sidebar() {
@@ -17,7 +15,6 @@ export default function Sidebar() {
   return (
     <aside className="w-64 bg-white border-r h-full p-4 hidden md:block mr-4">
   <div className="flex items-center mb-6">
-    <Image src={Logo} alt="BioGuardian Logo" className="w-12 h-auto mb-6 m-3" />
     <h1 className="text-xl font-bold mb-6">BioGuardian Admin</h1>
   </div>
   <nav className="space-y-4">

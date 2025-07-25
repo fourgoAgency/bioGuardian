@@ -45,6 +45,8 @@ const CartSummary = () => {
                 <Image
                   src={item.image}
                   alt={item.name}
+                  width={50}
+                  height={50}
                   className="w-12 h-12 object-cover rounded-md"
                 />
                 <div className="flex-1">
