@@ -1,7 +1,5 @@
 "use client";
 
-import Sidebar from "@/components/admin/Sidebar";
-import Topbar from "@/components/admin/Topbar";
 import OverviewCard from "@/components/admin/OverviewCard";
 import OrderVolumeChart from "@/components/admin/OrderVolumeChart";
 import JobTrendsChart from "@/components/admin/JobTrendsChart";
@@ -11,10 +9,7 @@ import { ShoppingCart, User, Mail, FileText, Briefcase, Clipboard } from "lucide
 
 export default function Dashboard() {
   return (
-    <div className="flex h-screen w-full overflow-hidden">
-      <Sidebar />
-      <div className="flex flex-col flex-1 overflow-y-auto">
-        <Topbar />
+    
 
         <main className="p-6 space-y-6">
           <div className="flex justify-between items-center mb-6">
@@ -49,7 +44,6 @@ export default function Dashboard() {
             </div>
           </div>
         </main>
-      </div>
-    </div>
+
   );
 }

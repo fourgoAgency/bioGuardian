@@ -1,17 +1,15 @@
 'use client'
 
 import React from 'react'
-import Sidebar from '@/components/admin/Sidebar'
-import Topbar from '@/components/admin/Topbar'
 import NewsletterSubscribersTable from '@/components/admin/NewsletterSubscribersTable'
 
 export default function NewsletterSubscribersPage() {
   return (
     <div className="flex h-screen">
-      <Sidebar />
+      
 
       <div className="flex flex-col flex-1">
-        <Topbar />
+        
 
         <main className="p-6 bg-gray-50 overflow-auto">
           <h1 className="text-2xl font-semibold mb-4">Newsletter Subscribers</h1>

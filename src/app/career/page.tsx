@@ -2,8 +2,6 @@
 // src/pages/Career.tsx
 
 import React, { useEffect, useState } from "react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import CareerHero from "@/components/career/CareerHero";
 import JobCard from "@/components/career/JobCard";
 import ApplicationForm from "@/components/career/ApplicationForm";
@@ -124,7 +122,6 @@ const CareerPage: React.FC = () => {
         created_at: Timestamp.now(),
       });
 
-      alert("Application submitted successfully!");
 
       setApplicationData({
         name: "",
@@ -147,7 +144,6 @@ const CareerPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <Navbar />
 
       <main className="pt-24 pb-16 px-4 max-w-6xl mx-auto">
         <CareerHero />
@@ -184,7 +180,7 @@ const CareerPage: React.FC = () => {
         )}
       </main>
 
-      <Footer />
+
     </div>
   );
 };

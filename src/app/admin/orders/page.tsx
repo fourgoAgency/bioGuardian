@@ -12,9 +12,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-
-import Sidebar from "@/components/admin/Sidebar";
-import Topbar from "@/components/admin/Topbar";
 import OverviewCard from "@/components/admin/OverviewCard";
 import { BaggageClaim, DollarSign, ShoppingBag, Truck } from "lucide-react";
 import { Timestamp } from "firebase/firestore";
@@ -88,9 +85,9 @@ export default function OrdersPage() {
 
   return (
     <div className="flex h-screen w-full overflow-hidden justify-center">
-      <Sidebar />
+      
       <div className="flex flex-col flex-1 overflow-y-auto">
-        <Topbar />
+        
         <h1 className="text-2xl font-bold mb-6">Orders Management</h1>
         
         {/* Overview Cards */}

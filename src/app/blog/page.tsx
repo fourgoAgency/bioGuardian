@@ -3,8 +3,6 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import UpdatePcosImage from '@/components/UpdatePcosImage';
 import BlogHero from '@/components/blog/BlogHero';
 import BlogGrid from '@/components/blog/BlogGrid';
@@ -51,9 +49,9 @@ const Blog = () => {
   if (isLoading) {
     return (
       <>
-        <Navbar />
+
         <BlogLoading />
-        <Footer />
+
       </>
     );
   }
@@ -61,9 +59,8 @@ const Blog = () => {
   if (error) {
     return (
       <>
-        <Navbar />
         <BlogError />
-        <Footer />
+
       </>
     );
   }
@@ -71,7 +68,7 @@ const Blog = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
       <UpdatePcosImage />
-      <Navbar />
+
       <div className="pt-20">
         <div className="max-w-7xl mx-auto px-4 py-12">
           <BlogHero />
@@ -82,7 +79,6 @@ const Blog = () => {
           )}
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

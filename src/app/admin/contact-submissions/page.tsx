@@ -1,8 +1,6 @@
 'use client';
 
 import ContactSubmissionsTable from '@/components/admin/ContactSubmissionsTable';
-import Sidebar from '@/components/admin/Sidebar';
-import Topbar from '@/components/admin/Topbar';
 import { useState } from 'react';
 
 const contactData = [
@@ -56,9 +54,9 @@ export default function ContactsPage() {
 
   return (
     <div className="flex h-screen w-full overflow-hidden justify-center ">
-      <Sidebar />
+      
       <div className="flex flex-col flex-1 overflow-y-auto">
-        <Topbar />
+       
       <h1 className="text-2xl font-semibold mb-6">Contact Inquiries</h1>
 
       <div className="flex flex-wrap gap-4 mb-4 ">

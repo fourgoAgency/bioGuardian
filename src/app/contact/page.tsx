@@ -2,8 +2,6 @@
 import React, { useState } from "react";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 const Contact = () => {
   const [fullName, setFullName] = useState("");
@@ -11,28 +9,41 @@ const Contact = () => {
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await addDoc(collection(db, "contact_submissions"), {
-        full_name: fullName,
-        email,
-        message,
-        created_at: Timestamp.now(),
-      });
-      setStatus("Message sent successfully!");
-      setFullName("");
-      setEmail("");
-      setMessage("");
-    } catch (error) {
-      setStatus("Error sending message.");
-      console.error(error);
-    }
-  };
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setStatus("Sending...");
+
+  try {
+    // 1. Save to Firestore
+    await addDoc(collection(db, "contact_submissions"), {
+      full_name: fullName,
+      email,
+      message,
+      created_at: Timestamp.now(),
+    });
+
+    // 2. Redirect to Gmail compose with pre-filled email
+    const subject = encodeURIComponent("Contact Form Submission from " + fullName);
+    const body = encodeURIComponent(`Name: ${fullName}\nEmail: ${email}\nMessage: ${message}`);
+    const mailtoUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=info@bioguardian.net&su=${subject}&body=${body}`;
+
+    window.location.href = mailtoUrl;
+
+    setStatus("Redirecting to Gmail...");
+
+    // Reset form
+    setFullName("");
+    setEmail("");
+    setMessage("");
+  } catch (error) {
+    console.error(error);
+    setStatus("Error submitting the form.");
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <Navbar />
 
       <section className="pt-24 pb-16 px-4">
         <div className="max-w-7xl mx-auto">
@@ -108,6 +119,7 @@ const Contact = () => {
                     className="w-full border border-gray-300 rounded px-4 py-2 resize-none"
                   />
                 </div>
+
                 <button
                   type="submit"
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-full"
@@ -123,7 +135,6 @@ const Contact = () => {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 };

@@ -1,21 +1,16 @@
 'use client';
 import React from 'react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import { useCart } from '@/contexts/CartContext';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useToast } from '@/hooks/use-toast';
 import CartDrawer from '@/components/cart/CartDrawer';
-import ProductCard, { Product } from '@/components/products/ProductCard';
+import ProductCard from '@/components/products/ProductCard';
 import ProductInfo from '@/components/products/ProductInfo';
 import { products } from '@/data/products';
 import Certifications from '@/components/products/Certifications';
 import ProductSlider from '@/components/products/ProductSlider';
+import AddToCartButton from '@/components/products/AddToCartButton';
 
 const Products = () => {
-  const { addToCart } = useCart();
   const { t } = useLanguage();
-  const { toast } = useToast();
 
   const [selectedImages, setSelectedImages] = React.useState(
     products.reduce((acc, _, index) => {
@@ -31,29 +26,9 @@ const Products = () => {
     }));
   };
 
-  const handleAddToCart = (product: Product) => {
-    // Apply 10% discount - subtract 10% from original price
-    const discountAmount = Math.round(product.price * 0.1);
-    const discountedPrice = product.price - discountAmount;
-    
-    addToCart({
-      id: product.id,
-      name: product.name,
-      composition: product.composition,
-      form: product.form,
-      image: product.images[0],
-      price: discountedPrice
-    });
-
-    toast({
-      title: "Added to Cart!",
-      description: `${product.name} has been added to your cart.`
-    });
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <Navbar />
+
       <CartDrawer />
       
       <section className="pt-24 pb-16 px-4">
@@ -74,13 +49,14 @@ const Products = () => {
           {/* Products Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
             {products.map((product, index) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                selectedImageIndex={selectedImages[index]}
-                onImageSelect={(imageIndex) => handleImageSelect(index, imageIndex)}
-                onAddToCart={handleAddToCart}
-              />
+              <div key={product.id}>
+                <ProductCard
+                  product={product}
+                  selectedImageIndex={selectedImages[index]}
+                  onImageSelect={(imageIndex) => handleImageSelect(index, imageIndex)}
+                />
+                <AddToCartButton product={product} className="mt-2 w-full" />
+              </div>
             ))}
           </div>
 
@@ -99,7 +75,7 @@ const Products = () => {
         </div>
       </section>
 
-      <Footer />
+
     </div>
   );
 };

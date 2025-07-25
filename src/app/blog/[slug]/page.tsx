@@ -1,8 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import { ArrowLeft, Calendar, User, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -120,13 +118,11 @@ useEffect(() => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <Navbar />
         <div className="pt-24 pb-16 px-4">
           <div className="max-w-4xl mx-auto text-center">
             <div className="text-lg text-gray-600">Loading article...</div>
           </div>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -134,7 +130,6 @@ useEffect(() => {
   if (!post) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <Navbar />
         <div className="pt-24 pb-16 px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-3xl font-bold text-gray-800 mb-4">Article Not Found</h1>
@@ -145,14 +140,12 @@ useEffect(() => {
             </Button>
           </div>
         </div>
-        <Footer />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <Navbar />
       
       <article className="pt-24 pb-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -222,7 +215,6 @@ useEffect(() => {
         </div>
       </article>
 
-      <Footer />
     </div>
   );
 };
