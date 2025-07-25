@@ -9,7 +9,7 @@ import {
   AccordionContent,
 } from '@/components/ui/accordion';
 import Lightbox from 'yet-another-react-lightbox';
-import 'yet-another-react-lightbox/style.css';
+import 'yet-another-react-lightbox/styles.css';
 import AddToCartButton from './AddToCartButton';
 
 export interface Product {
