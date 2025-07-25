@@ -8,8 +8,8 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from '@/components/ui/accordion';
-import Lightbox from 'react-image-lightbox';
-import 'react-image-lightbox/style.css';
+import Lightbox from 'yet-another-react-lightbox';
+import 'yet-another-react-lightbox/style.css';
 import AddToCartButton from './AddToCartButton';
 
 export interface Product {
@@ -81,16 +81,13 @@ const ProductDetailClient = ({ product }: ProductDetailClientProps) => {
               />
               {isLightboxOpen && (
                 <Lightbox
-                  mainSrc={product.images[selectedImageIndex]}
-                  nextSrc={product.images[(selectedImageIndex + 1) % product.images.length]}
-                  prevSrc={product.images[(selectedImageIndex + product.images.length - 1) % product.images.length]}
-                  onCloseRequest={() => setIsLightboxOpen(false)}
-                  onMovePrevRequest={() =>
-                    setSelectedImageIndex((selectedImageIndex + product.images.length - 1) % product.images.length)
-                  }
-                  onMoveNextRequest={() =>
-                    setSelectedImageIndex((selectedImageIndex + 1) % product.images.length)
-                  }
+                  open={isLightboxOpen}
+                  close={() => setIsLightboxOpen(false)}
+                  slides={product.images.map((img) => ({ src: img }))}
+                  index={selectedImageIndex}
+                  on={{
+                    view: ({ index }) => setSelectedImageIndex(index),
+                  }}
                 />
               )}
             </div>
