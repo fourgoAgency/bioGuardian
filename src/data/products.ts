@@ -10,6 +10,7 @@ export const products: Product[] = [
     form: 'Tablet',
     indication: 'Hyperprolactinemia, PMS, PMDD',
     price: 1888,
+    mainImage: '/lovable-uploads/d332d787-bed0-4a54-847b-2b3c265ec2b7.png',
     images: [
       '/Agnus High Res-01.png',
       '/Agnus High Res-02.png',
@@ -82,7 +83,6 @@ export const products: Product[] = [
       }
     ]
   },
-
   {
     id: 'sliczole',
     name: 'Sliczole',
@@ -92,6 +92,7 @@ export const products: Product[] = [
     indication: 'Anovulation, PCOS-related infertility, Ovulatory dysfunction',
     price: 6000,
     type: 'Prescription Medication',
+    mainImage: '/lovable-uploads/54590e95-2b72-422f-8bf3-60cfa9d25589.png',
     images: [
       '/Sliczole-1.png',
       '/Sliczole-2.png',
@@ -168,7 +169,6 @@ export const products: Product[] = [
       }
     ]
   },
-
   {
     id: 'insotek',
     name: 'Insotek',
@@ -178,6 +178,7 @@ export const products: Product[] = [
     type: 'Nutraceutical Supplement',
     indication: 'PCOS, Acne & Hirsutism, Menstrual irregularities, Gestational diabetes',
     price: 4307,
+    mainImage: '/lovable-uploads/9375a038-e9b9-4a82-b94c-e829cb7e8126.png',
     images: [
       '/insotek-1.png',
       '/insotek-2.png',
@@ -185,7 +186,6 @@ export const products: Product[] = [
       '/insotek-4.png',
       '/insotek-5.png',
       '/insotek-6.png'
-      
     ],
     color: 'from-orange-500 to-orange-600',
     description: `
@@ -197,89 +197,72 @@ export const products: Product[] = [
     ingredients: [
       {
         name: 'Myo-inositol',
-        benefit:
-          'Improves insulin sensitivity, restores ovulation, and regulates menstrual cycles.'
+        benefit: 'Improves insulin sensitivity, restores ovulation, and regulates menstrual cycles.'
       },
       {
         name: 'D-chiro inositol',
-        benefit:
-          'Enhances metabolic and hormonal balance; supports ovarian function.'
+        benefit: 'Enhances metabolic and hormonal balance; supports ovarian function.'
       },
       {
         name: 'L-methyl folate',
-        benefit:
-          'Active folate form that supports cellular methylation and embryonic development.'
+        benefit: 'Active folate form that supports cellular methylation and embryonic development.'
       },
       {
         name: 'Vitamin D3',
-        benefit:
-          'Regulates hormones, insulin metabolism, and supports immune & reproductive health.'
+        benefit: 'Regulates hormones, insulin metabolism, and supports immune & reproductive health.'
       }
     ],
     faqs: [
       {
         q: 'What is Insotek used for?',
-        a:
-          'Managing PCOS, acne, hirsutism, menstrual irregularities, and gestational diabetes by improving hormonal & metabolic balance.'
+        a: 'Managing PCOS, acne, hirsutism, menstrual irregularities, and gestational diabetes by improving hormonal & metabolic balance.'
       },
       {
         q: 'How does Insotek help in PCOS?',
-        a:
-          'Myo‑inositol and D‑chiro inositol work together to improve insulin sensitivity, restore ovulation, and reduce androgenic symptoms.'
+        a: 'Myo‑inositol and D‑chiro inositol work together to improve insulin sensitivity, restore ovulation, and reduce androgenic symptoms.'
       },
       {
         q: 'Is Insotek effective for acne and facial hair?',
-        a:
-          'Yes. By lowering androgen levels, it helps reduce acne and unwanted hair growth in PCOS.'
+        a: 'Yes. By lowering androgen levels, it helps reduce acne and unwanted hair growth in PCOS.'
       },
       {
         q: 'Can Insotek regulate irregular periods?',
-        a:
-          'Regular use helps restore ovulatory cycles and normalize menstrual periods.'
+        a: 'Regular use helps restore ovulatory cycles and normalize menstrual periods.'
       },
       {
         q: 'How does Insotek support gestational diabetes?',
-        a:
-          'Improves insulin metabolism and reduces resistance, supporting glycemic control in pregnancy.'
+        a: 'Improves insulin metabolism and reduces resistance, supporting glycemic control in pregnancy.'
       },
       {
         q: 'What is the recommended dosage of Insotek?',
-        a:
-          'One sachet daily in the morning on an empty stomach. Dissolve in water and consume immediately.'
+        a: 'One sachet daily in the morning on an empty stomach. Dissolve in water and consume immediately.'
       },
       {
         q: 'Is Insotek safe during pregnancy?',
-        a:
-          'Yes, its ingredients are safe and may support early pregnancy, but always consult your doctor first.'
+        a: 'Yes, its ingredients are safe and may support early pregnancy, but always consult your doctor first.'
       },
       {
         q: 'Can Insotek be used with other fertility treatments?',
-        a:
-          'Yes, but discuss combinations with your healthcare provider for best protocols.'
+        a: 'Yes, but discuss combinations with your healthcare provider for best protocols.'
       },
       {
         q: 'Does Insotek cause side effects?',
-        a:
-          'Generally well‑tolerated; occasional mild bloating or nausea may occur.'
+        a: 'Generally well‑tolerated; occasional mild bloating or nausea may occur.'
       },
       {
         q: 'How long to see results with Insotek?',
-        a:
-          'Results often start in 4–6 weeks; optimal benefits seen after 3–6 months of regular use.'
+        a: 'Results often start in 4–6 weeks; optimal benefits seen after 3–6 months of regular use.'
       },
       {
         q: 'Is Insotek suitable for all PCOS women?',
-        a:
-          'Yes, including those with insulin resistance or fertility issues, under medical guidance.'
+        a: 'Yes, including those with insulin resistance or fertility issues, under medical guidance.'
       },
       {
         q: 'Where can I buy Insotek?',
-        a:
-          'Available at pharmacies, nutraceutical outlets, and verified online healthcare platforms.'
+        a: 'Available at pharmacies, nutraceutical outlets, and verified online healthcare platforms.'
       }
     ]
   },
-
   {
     id: 'funzil',
     name: 'Funzil',
@@ -289,6 +272,7 @@ export const products: Product[] = [
     form: 'Oral Capsule',
     indication: 'Mucosal, vaginal, systemic fungal infections, and prophylaxis in immunocompromised patients',
     price: 198,
+    mainImage: '/lovable-uploads/ba33e426-f70b-4778-a6b8-f4859c836f02.png',
     images: [
       '/lovable-uploads/ba33e426-f70b-4778-a6b8-f4859c836f02.png',
       '/funzil-02.png',
@@ -353,5 +337,4 @@ export const products: Product[] = [
       }
     ]
   }
-
-];
+]
