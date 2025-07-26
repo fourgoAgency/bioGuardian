@@ -8,13 +8,12 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function ProductDetailPage({ params }: { params: { slug: string } }) {
-  const { slug } = await Promise.resolve(params); // ✅ await before using params.slug
+export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params; // ✅ await before using params.slug
   const product = products.find((p) => p.id === slug);
 
   if (!product) return notFound();
   return <ProductDetailClient product={product} />;
 }
-
 
 
