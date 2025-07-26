@@ -8,6 +8,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   
   const auth = useAuth();
   const router = useRouter();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     console.log('ProtectedRoute auth state:', auth);
     if (!auth?.loading) {
