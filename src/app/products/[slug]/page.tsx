@@ -1,18 +1,20 @@
-import { products } from "@/data/products"; // adjust path as needed
+import { products } from "@/data/products";
 import { notFound } from "next/navigation";
 import ProductDetailClient from "@/components/products/ProductDetailClient";
 
-
-interface ProductPageProps {
-  params: {
-    slug: string;
-  };
+export async function generateStaticParams() {
+  return products.map((product) => ({
+    slug: product.id,
+  }));
 }
 
-export default function ProductDetailPage({ params }: ProductPageProps) {
-  const product = products.find((p) => p.id === params.slug);
+export default async function ProductDetailPage({ params }: { params: { slug: string } }) {
+  const { slug } = await Promise.resolve(params); // ✅ await before using params.slug
+  const product = products.find((p) => p.id === slug);
 
   if (!product) return notFound();
-
-  return <ProductDetailClient product={product} />
+  return <ProductDetailClient product={product} />;
 }
+
+
+
