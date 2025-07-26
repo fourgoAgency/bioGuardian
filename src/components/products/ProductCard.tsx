@@ -11,6 +11,7 @@ export interface Product {
   form: string;
   indication: string;
   price: number;
+  mainImage:string;
   images: string[];
   color: string;
   category: string;
@@ -88,7 +89,7 @@ const ProductCard = ({ product, selectedImageIndex, onImageSelect, children }: P
           </div>
           <div className="relative z-10">
             <Image
-              src={product.images[selectedImageIndex]}
+              src={product.mainImage}
               alt={product.name}
               width={500}
               height={500}
