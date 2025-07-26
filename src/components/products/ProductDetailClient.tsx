@@ -1,32 +1,25 @@
-'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+
 import Image from 'next/image';
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from '@/components/ui/accordion';
-import Lightbox from 'yet-another-react-lightbox';
-import 'yet-another-react-lightbox/styles.css';
-import AddToCartButton from './AddToCartButton';
+import Link from 'next/link';
 
 export interface Product {
   id: string;
   name: string;
-  category: string;
-  type: string;
   composition: string;
   form: string;
   indication: string;
   price: number;
+  mainImage:string;
   images: string[];
   color: string;
+  category: string;
+  type: string;
   description: string;
   dosage: string;
   ingredients: {
-    name: string;
+    name:string;
     benefit: string;
   }[];
   faqs: {
@@ -35,134 +28,123 @@ export interface Product {
   }[];
 }
 
-interface ProductDetailClientProps {
+
+interface ProductCardProps {
   product: Product;
+  selectedImageIndex: number;
+  onImageSelect: (imageIndex: number) => void;
+  children?: React.ReactNode;
 }
 
-const ProductDetailClient = ({ product }: ProductDetailClientProps) => {
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+const ProductCard = ({ product, selectedImageIndex, onImageSelect, children }: ProductCardProps) => {
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSelectedImageIndex((prevIndex) => (prevIndex + 1) % product.images.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [product.images.length]);
+  // Calculate discounted price (10% off) - subtract 10% from original price
+  const discountAmount = Math.round(product.price * 0.1);
+  const discountedPrice = product.price - discountAmount;
+
+  // Get the appropriate colors based on product
+  const getProductColors = (productId: string) => {
+    switch (productId) {
+      case 'sliczole':
+        return {
+          background: 'bg-[#e6f2ff]', // lighter version of #0371AE
+          button: 'from-[#025a8a] to-[#024b75]', // darker version of #0371AE
+          dot: 'bg-[#025a8a]'
+        };
+      case 'insotek':
+        return {
+          background: 'bg-orange-50',
+          button: 'from-orange-500 to-orange-600',
+          dot: 'bg-orange-500'
+        };
+      case 'agnus':
+        return {
+          background: 'bg-[#f0ebf7]', // lighter version of #a1367f
+          button: 'from-[#8b2a6b] to-[#7a2459]', // darker version of #a1367f
+          dot: 'bg-[#8b2a6b]'
+        };
+      case 'funzil':
+        return {
+          background: 'bg-[#e8f1fd]', // lighter version of #3684b3
+          button: 'from-[#2a6ca8] to-[#245a92]', // darker version of #3684b3
+          dot: 'bg-[#2a6ca8]'
+        };
+      default:
+        return {
+          background: 'bg-gray-50',
+          button: 'from-gray-500 to-gray-600',
+          dot: 'bg-gray-500'
+        };
+    }
+  };
+
+  const colors = getProductColors(product.id);
 
   return (
-    <div className="max-w-6xl m-16 px-4 py-8 ">
-      {/* Top Section */}
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Image Carousel and Usage */}
-        <div className="w-full lg:w-1/2 flex flex-col gap-4">
-          <div className="flex flex-row gap-4 items-start">
-            <div className="flex flex-col gap-2">
-              {product.images.map((img, index) => (
-                <Image
+    <Link href={`/products/${product.id}`}>
+      <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer">
+        <div className={`${colors.background} p-6 text-center relative overflow-hidden`}>
+          <div className="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+            10% OFF
+          </div>
+          <div className="relative z-10">
+            <Image
+              src={product.mainImage}
+              alt={product.name}
+              width={500}
+              height={500}
+              className="w-32 h-32 mx-auto mb-4 object-contain drop-shadow-lg transition-all duration-300 hover:scale-110 cursor-pointer"
+            />
+            <h3 className="text-xl font-bold text-gray-800 mb-2">{product.name}</h3>
+            <p className="text-gray-600 text-sm">{product.composition}</p>
+          </div>
+        </div>
+
+        <div className="p-6">
+          <div className="mb-4">
+            <p className="text-gray-600 text-sm mb-1">
+              <span className="font-medium">Form:</span> {product.form}
+            </p>
+            <p className="text-gray-600 text-sm mb-3">
+              <span className="font-medium">Indication:</span> {product.indication}
+            </p>
+            <div className="flex items-center gap-2 mb-2">
+              <p className="text-lg text-gray-500 line-through">
+                PKR {product.price.toLocaleString()}
+              </p>
+              <p className="text-2xl font-bold text-green-600">
+                PKR {discountedPrice.toLocaleString()}
+              </p>
+            </div>
+            <p className="text-sm text-green-600 font-medium">
+              Save PKR {discountAmount.toLocaleString()}
+            </p>
+          </div>
+
+          {product.images.length > 1 && (
+            <div className="flex justify-center space-x-2 mb-4">
+              {product.images.map((_, index) => (
+                <button
                   key={index}
-                  src={img}
-                  alt="Thumbnail"
-                  width={80}
-                  height={80}
-                  onClick={() => setSelectedImageIndex(index)}
-                  className={`cursor-pointer border rounded ${selectedImageIndex === index ? 'ring-2 ring-blue-500' : ''}`}
-                />
-              ))}
-            </div>
-            <div className="flex-1">
-              <Image
-                src={product.images[selectedImageIndex]}
-                alt="Selected Product"
-                width={500}
-                height={500}
-                onClick={() => setIsLightboxOpen(true)}
-                className="rounded-lg border object-cover w-full h-auto transition-transform duration-300 hover:scale-105 cursor-zoom-in"
-              />
-              {isLightboxOpen && (
-                <Lightbox
-                  open={isLightboxOpen}
-                  close={() => setIsLightboxOpen(false)}
-                  slides={product.images.map((img) => ({ src: img }))}
-                  index={selectedImageIndex}
-                  on={{
-                    view: ({ index }) => setSelectedImageIndex(index),
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onImageSelect(index);
                   }}
+                  className={`w-3 h-3 rounded-full transition-all duration-200 hover:scale-125 ${
+                    selectedImageIndex === index
+                      ? `${colors.dot} scale-125 shadow-sm`
+                      : 'bg-gray-300 hover:bg-gray-400'
+                  }`}
                 />
-              )}
-            </div>
-          </div>
-
-          {/* Usage Instructions */}
-          <div className="mt-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Usage Instructions</h2>
-            <Accordion type="single" collapsible className="space-y-2">
-              <AccordionItem value="dosage">
-                <AccordionTrigger>Recommended Dosage</AccordionTrigger>
-                <AccordionContent>
-                  <p className="text-gray-700">{product.dosage}</p>
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="storage">
-                <AccordionTrigger>Storage Instructions</AccordionTrigger>
-                <AccordionContent>
-                  <p className="text-gray-700">Store in a cool, dry place away from direct sunlight.</p>
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="warnings">
-                <AccordionTrigger>Important Warnings</AccordionTrigger>
-                <AccordionContent>
-                  <p className="text-gray-700">Consult your healthcare provider before use if pregnant or nursing.</p>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
-        </div>
-
-        {/* Product Details */}
-        <div className="w-full lg:w-1/2 space-y-4">
-          <span className="text-sm text-blue-800 bg-blue-100 font-medium p-1 border-blue-400 border-2 rounded-full">BioGuardian Pharma</span>
-          <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
-          <p className="text-gray-700 max-w-2xl">{product.description}</p>
-          <div className="flex items-center gap-2 text-xl">
-            <span className="line-through text-gray-500">PKR {product.price.toFixed(0)}</span>
-            <span className="text-green-700 font-bold text-2xl">
-              PKR {(product.price * 0.9).toFixed(0)}
-            </span>
-          </div>
-
-          <AddToCartButton product={product} className="w-full" />
-
-          {/* Ingredients */}
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900 mt-6 mb-2">Composition / Ingredients</h2>
-            <ul className="list-disc list-inside space-y-1 text-gray-700">
-              {product.ingredients.map((item, i) => (
-                <li key={i}>
-                  <strong>{item.name}</strong>: {item.benefit}
-                </li>
               ))}
-            </ul>
-          </div>
+            </div>
+          )}
+
+          {children}
         </div>
       </div>
-
-      {/* FAQs */}
-      <div className="mt-12">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Frequently asked questions</h2>
-        <Accordion type="single" collapsible className="space-y-2">
-          {product.faqs.map((faq, i) => (
-            <AccordionItem key={i} value={`faq-${i}`}>
-              <AccordionTrigger>{faq.q}</AccordionTrigger>
-              <AccordionContent>
-                <p className="text-gray-700">{faq.a}</p>
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-      </div>
-    </div>
+    </Link>
   );
 };
 
-export default ProductDetailClient;
+export default ProductCard;
