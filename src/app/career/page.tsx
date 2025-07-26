@@ -122,7 +122,14 @@ const CareerPage: React.FC = () => {
         created_at: Timestamp.now(),
       });
 
+       // Redirect to Gmail compose with pre-filled email
+      const subject = encodeURIComponent("Job Application: " + applicationData.position);
+      const body = encodeURIComponent(
+        `Name: ${applicationData.name}\nEmail: ${applicationData.email}\nPhone: ${applicationData.phone}\nPosition: ${applicationData.position}\nExperience: ${applicationData.experience}\nEducation: ${applicationData.education}\nCover Letter:\n${applicationData.coverLetter}`
+      );
+      const mailtoUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=hr@bioguardian.net&su=${subject}&body=${body}`;
 
+      window.location.href = mailtoUrl;
       setApplicationData({
         name: "",
         email: "",
