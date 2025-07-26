@@ -88,12 +88,20 @@ const Footer = () => {
           {/* Quick Links */}
           <div className="md:col-span-2 md:col-start-6">
             <h3 className="font-semibold mb-4 text-sm">Company</h3>
-            <div className="space-y-3">
+            <ul className="space-y-3">
+              <li>
               <Link href="/about">About Us</Link>
+              </li>
+              <li>
               <Link href="/products">Products</Link>
+              </li>
+              <li>
               <Link href="/blog">Blog</Link>
+              </li>
+              <li>
               <Link href="/career">Career</Link>
-            </div>
+              </li>
+            </ul>
           </div>
 
           {/* Newsletter */}
