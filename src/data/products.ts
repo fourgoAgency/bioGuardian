@@ -292,7 +292,8 @@ export const products: Product[] = [
     images: [
       '/lovable-uploads/ba33e426-f70b-4778-a6b8-f4859c836f02.png',
       '/funzil-02.png',
-      '/funzil-03.png'
+      '/funzil-03.png',
+      '/funzil-04.png'
     ],
     color: 'from-[#2a6ca8] to-[#245a92]',
     description: `
