@@ -23,7 +23,7 @@ const AddToCartButton = ({ product, className }: AddToCartButtonProps) => {
       name: product.name,
       composition: product.composition,
       form: product.form,
-      image: product.images[0],
+      image: product.mainImage,
       price: discountedPrice,
     });
 
