@@ -82,12 +82,12 @@ const ProductCard = ({ product, selectedImageIndex, onImageSelect, children }: P
 
   return (
     <Link href={`/products/${product.id}`}>
-      <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer h-full">
+      <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer md:h-full">
         <div className={`${colors.background} p-6 text-center relative overflow-hidden`}>
           <div className="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
             10% OFF
           </div>
-          <div className="relative z-10">
+          <div className="relative z-10 h-56">
             <Image
               src={product.mainImage}
               alt={product.name}
