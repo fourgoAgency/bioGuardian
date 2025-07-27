@@ -124,7 +124,7 @@ const ProductDetailClient = ({ product }: ProductDetailClientProps) => {
 
         {/* Product Details */}
         <div className="w-full lg:w-1/2 space-y-4 text-left">
-          <span className="text-sm text-blue-800 bg-blue-100 font-medium p-1 border-blue-400 border-2 rounded-full">BioGuardian Pharma</span>
+          <span className="text-sm text-blue-800 bg-blue-100 font-medium p-1 border-blue-400 border-2 rounded-full">{product.category}</span>
           <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
           <p className="text-gray-700 max-w-2xl">{product.description}</p>
           <div className="flex items-center gap-2 text-xl">
