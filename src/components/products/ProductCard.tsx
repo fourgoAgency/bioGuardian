@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
 
 export interface Product {
@@ -12,7 +12,7 @@ export interface Product {
   indication: string;
   price: number;
   mainImage:string;
-  images: string[];
+  images: StaticImageData[];
   color: string;
   category: string;
   type: string;
@@ -82,7 +82,7 @@ const ProductCard = ({ product, selectedImageIndex, onImageSelect, children }: P
 
   return (
     <Link href={`/products/${product.id}`}>
-      <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer">
+      <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer h-full">
         <div className={`${colors.background} p-6 text-center relative overflow-hidden`}>
           <div className="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
             10% OFF
@@ -100,15 +100,15 @@ const ProductCard = ({ product, selectedImageIndex, onImageSelect, children }: P
           </div>
         </div>
 
-        <div className="p-6">
+        <div className="p-6 *:items-stretch">
           <div className="mb-4">
-            <p className="text-gray-600 text-sm mb-1">
+            <p className="text-gray-600 text-sm mb-4">
               <span className="font-medium">Form:</span> {product.form}
             </p>
-            <p className="text-gray-600 text-sm mb-3">
+            <p className="text-gray-600 text-sm mb-7">
               <span className="font-medium">Indication:</span> {product.indication}
             </p>
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-3">
               <p className="text-lg text-gray-500 line-through">
                 PKR {product.price.toLocaleString()}
               </p>
@@ -116,13 +116,13 @@ const ProductCard = ({ product, selectedImageIndex, onImageSelect, children }: P
                 PKR {discountedPrice.toLocaleString()}
               </p>
             </div>
-            <p className="text-sm text-green-600 font-medium">
+            <p className="text-sm text-green-600 font-medium mb-2">
               Save PKR {discountAmount.toLocaleString()}
             </p>
           </div>
 
           {product.images.length > 1 && (
-            <div className="flex justify-center space-x-2 mb-4">
+            <div className="flex justify-center space-x-2 mt-4">
               {product.images.map((_, index) => (
                 <button
                   key={index}
