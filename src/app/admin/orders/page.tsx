@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import OverviewCard from "@/components/admin/OverviewCard";
 import { BaggageClaim, DollarSign, ShoppingBag, Truck } from "lucide-react";
 import OrdersTable from "@/components/admin/OrdersTable";
-import type {Order, OrderItem} from './order_type'
+import type { Order, OrderItem } from './order_type'
 
 export default function OrdersPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -45,7 +45,7 @@ export default function OrdersPage() {
 
       // ✅ FIX: Calculate revenue from items array
       const totalRevenue = fetchedOrders.reduce((acc, order) => {
-        const orderItems = (order as any).items || [];
+        const orderItems = (order).items || [];
         const orderTotal = orderItems.reduce(
           (sum: number, item: OrderItem) =>
             sum + (Number(item.price) || 0) * (Number(item.quantity) || 1),
@@ -114,10 +114,14 @@ export default function OrdersPage() {
         />
         <OverviewCard
           title="Total Revenue"
-          value={`PKR ${totalRevenue.toLocaleString()}`}
+          value={`PKR ${statusFilter === "all"
+              ? totalRevenue.toLocaleString()
+              : filteredRevenue.toLocaleString()
+            }`}
           timeframe="All time"
           Icon={DollarSign}
         />
+
       </div>
 
       {/* Filters */}
