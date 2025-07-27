@@ -24,7 +24,7 @@ const ClientLayoutWrapper = ({ children }: ClientLayoutWrapperProps) => {
             <Navbar />
             <CartDrawer />
             {children}
-            <Toaster />
+            <Toaster/>
             <Whatsapp />
             <Footer />
           </AuthProvider>

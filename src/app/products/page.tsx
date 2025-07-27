@@ -66,7 +66,7 @@ const Products = () => {
           </div>
 
           {/* Product Slider */}
-          <div className="mb-12">
+          <div className="mb-12 max-sm:hidden">
             <ProductSlider />
           </div>
 
