@@ -18,8 +18,8 @@ export default function OrderVolumeChart() {
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
-          <Bar dataKey="Pharmaceuticals" fill="#3b82f6" />
-          <Bar dataKey="Equipment" fill="#10b981" />
+          <Bar dataKey="Slizcole" fill="#3b82f6" />
+          <Bar dataKey="Equipmen" fill="#10b981" />
           <Bar dataKey="Services" fill="#f59e0b" />
         </BarChart>
       </ResponsiveContainer>

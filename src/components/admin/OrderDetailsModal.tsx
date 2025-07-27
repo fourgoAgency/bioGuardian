@@ -11,25 +11,7 @@ import { cn } from '@/lib/utils';
 import { doc, Timestamp, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { toast } from 'sonner';
-
-export interface Order {
-  id: string;
-  customer_name: string;
-  customer_email: string;
-  customer_phone: string;
-  payment_method: string;
-  shipping_address: string;
-  status: string;
-  created_at: Timestamp | Date;
-  updated_at: Timestamp;
-  total_items: number;
-  items: {
-    name: string;
-    quantity: number;
-    price: number;
-  }[];
-  notes?: string;
-}
+import type {Order} from '@/app/admin/orders/order_type'
 
 interface OrderDetailsModalProps {
   order: Order | null;
@@ -44,8 +26,13 @@ const OrderDetailsModal = ({ order, isOpen, onClose }: OrderDetailsModalProps) =
 
   if (!order) return null;
 
-  const items = order.items;
-  const grandTotal = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const items = order?.items ?? [];
+  const grandTotal = items.reduce(
+  (acc: number, item: { price: number; quantity: number }) =>
+    acc + item.price * item.quantity,
+  0
+);
+
 
   const handleStatusChange = async (newStatus: string) => {
     try {
@@ -145,7 +132,7 @@ const OrderDetailsModal = ({ order, isOpen, onClose }: OrderDetailsModalProps) =
           <div className="bg-gray-50 p-4 rounded-lg">
             <h3 className="font-semibold text-lg mb-3">Order Items ({order.total_items})</h3>
             <div className="space-y-3">
-              {items.map((item, index) => (
+              {items.map((item: { name: string; price: number; quantity: number }, index: number) => (
                 <div key={index} className="bg-white p-3 rounded border flex justify-between items-center">
                   <div>
                     <p className="font-medium">{item.name}</p>
