@@ -4,7 +4,7 @@ interface WhatsappProps {
   whatsappLink?: string;
 }
 
-const Whatsapp: React.FC<WhatsappProps> = ({ whatsappLink = 'https://wa.me/0334-0063616' }) => {
+const Whatsapp: React.FC<WhatsappProps> = ({ whatsappLink = 'wa.link/1bk0di' }) => {
   const handleClick = () => {
     window.open(whatsappLink, '_blank');
   };
