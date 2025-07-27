@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { doc, updateDoc, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import type {Order, OrderItem} from '@/app/admin/orders/order_type'
+import type {Order} from '@/app/admin/orders/order_type'
 import OrderDetailsModal from "./OrderDetailsModal";
 import {
   Table,
@@ -43,6 +43,7 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
       toast.success("Order status updated successfully!");
     } catch (err) {
       toast.error("Failed to update order status.");
+      console.error(err)
     }
   };
 
