@@ -16,11 +16,11 @@ const CallToAction = () => {
                                 Ready to Join Our Mission?
                             </h2>
                             <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                                Be part of a team dedicated to improving women&#39;s health across Pakistan. 
+                                Be part of a team dedicated to improving women&#39;s health across Pakistan.
                                 Together, we&#39;re making quality healthcare accessible and affordable for all.
                             </p>
                         </div>
-                        
+
                         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                             <Link href="/career">
                                 <Button size="lg" className="bg-sky-600 text-white hover:bg-sky-700 px-8 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
@@ -28,7 +28,7 @@ const CallToAction = () => {
                                     <ArrowRight className="ml-2 w-5 h-5" />
                                 </Button>
                             </Link>
-                            
+
                             <Link href="/contact">
                                 <Button variant="outline" size="lg" className="border-2 border-gray-300 text-gray-700 hover:bg-gray-100 px-8 py-3 rounded-full font-semibold">
                                     <Mail className="mr-2 w-5 h-5" />
@@ -36,17 +36,23 @@ const CallToAction = () => {
                                 </Button>
                             </Link>
                         </div>
-                        
+
                         <div className="pt-6 border-t border-gray-200">
                             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-gray-500">
-                                <a href="tel:+923340063616" className="flex items-center gap-2 hover:text-sky-600 transition-colors cursor-pointer">
+                                <a href="https://wa.link/1bk0di" className="flex items-center gap-2 hover:text-sky-600 transition-colors cursor-pointer">
                                     <Phone className="w-4 h-4" />
                                     <span>+92 334 0063616</span>
                                 </a>
-                                <a href="mailto:info@bioguardian.net" className="flex items-center gap-2 hover:text-sky-600 transition-colors cursor-pointer">
+                                <a
+                                    href="https://mail.google.com/mail/?view=cm&fs=1&to=info@bioguardian.net"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2 hover:text-sky-600 transition-colors cursor-pointer"
+                                >
                                     <Mail className="w-4 h-4" />
                                     <span>info@bioguardian.net</span>
                                 </a>
+
                             </div>
                         </div>
                     </div>
