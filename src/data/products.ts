@@ -1,4 +1,25 @@
 import { Product } from '@/components/products/ProductCard';
+import Agnus1 from '@/../public/Agnus High Res-01.png';
+import Agnus2 from '@/../public/Agnus High Res-02.png';
+import Agnus3 from '@/../public/Agnus High Res-03.png';
+import Agnus4 from '@/../public/Agnus High Res-04.png';
+import Agnus5 from '@/../public/Agnus High Res-05.png';
+import Sliczole1 from '@/../public/Sliczole-1.png';
+import Sliczole2 from '@/../public/Sliczole-2.png';
+import Sliczole3 from '@/../public/Sliczole-3.png';
+import Sliczole4 from '@/../public/Sliczole-4.png';
+import Sliczole5 from '@/../public/Sliczole-5.png';
+import Sliczole6 from '@/../public/Sliczole-6.png';
+import insotek1 from '@/../public/insotek-1.png';
+import insotek2 from '@/../public/insotek-2.png';
+import insotek3 from '@/../public/insotek-3.png';
+import insotek4 from '@/../public/insotek-4.png';
+import insotek5 from '@/../public/insotek-5.png';
+import insotek6 from '@/../public/insotek-6.png';
+import funzil1 from '@/../public/funzil-02.png';
+import funzil2 from '@/../public/funzil-03.png';
+import funzil3 from '@/../public/funzil-04.png';
+
 
 export const products: Product[] = [
   {
@@ -12,11 +33,11 @@ export const products: Product[] = [
     price: 1888,
     mainImage: '/lovable-uploads/d332d787-bed0-4a54-847b-2b3c265ec2b7.png',
     images: [
-      '/Agnus High Res-01.png',
-      '/Agnus High Res-02.png',
-      '/Agnus High Res-03.png',
-      '/Agnus High Res-04.png',
-      '/Agnus High Res-05.png'
+      Agnus1,
+      Agnus2,
+      Agnus3,
+      Agnus4,
+      Agnus5
     ],
     color: 'from-[#8b2a6b] to-[#7a2459]',
     description: `
@@ -94,12 +115,12 @@ export const products: Product[] = [
     type: 'Prescription Medication',
     mainImage: '/lovable-uploads/54590e95-2b72-422f-8bf3-60cfa9d25589.png',
     images: [
-      '/Sliczole-1.png',
-      '/Sliczole-2.png',
-      '/Sliczole-3.png',
-      '/Sliczole-4.png',
-      '/Sliczole-5.png',
-      '/Sliczole-6.png'
+      Sliczole1,
+      Sliczole2,
+      Sliczole3,
+      Sliczole4,
+      Sliczole5,
+      Sliczole6
     ],
     color: 'from-[#025a8a] to-[#024b75]',
     description: `
@@ -180,12 +201,12 @@ export const products: Product[] = [
     price: 4307,
     mainImage: '/lovable-uploads/9375a038-e9b9-4a82-b94c-e829cb7e8126.png',
     images: [
-      '/insotek-1.png',
-      '/insotek-2.png',
-      '/insotek-3.png',
-      '/insotek-4.png',
-      '/insotek-5.png',
-      '/insotek-6.png'
+      insotek1,
+      insotek2,
+      insotek3,
+      insotek4,
+      insotek5,
+      insotek6
     ],
     color: 'from-orange-500 to-orange-600',
     description: `
@@ -274,10 +295,9 @@ export const products: Product[] = [
     price: 198,
     mainImage: '/lovable-uploads/ba33e426-f70b-4778-a6b8-f4859c836f02.png',
     images: [
-      '/lovable-uploads/ba33e426-f70b-4778-a6b8-f4859c836f02.png',
-      '/funzil-02.png',
-      '/funzil-03.png',
-      '/funzil-04.png'
+      funzil1,
+      funzil2,
+      funzil3
     ],
     color: 'from-[#2a6ca8] to-[#245a92]',
     description: `
