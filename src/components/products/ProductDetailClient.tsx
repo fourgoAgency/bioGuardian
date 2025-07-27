@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 import {
   Accordion,
   AccordionItem,
@@ -22,7 +22,7 @@ export interface Product {
   indication: string;
   price: number;
   mainImage:string;
-  images: string[];
+  images: StaticImageData[];
   color: string;
   description: string;
   dosage: string;
@@ -85,7 +85,7 @@ const ProductDetailClient = ({ product }: ProductDetailClientProps) => {
                 <Lightbox
                   open={isLightboxOpen}
                   close={() => setIsLightboxOpen(false)}
-                  slides={product.images.map((img) => ({ src: img }))}
+                  slides={product.images.map((img) => ({ src: img.src }))}
                   index={selectedImageIndex}
                   on={{
                     view: ({ index }) => setSelectedImageIndex(index),
