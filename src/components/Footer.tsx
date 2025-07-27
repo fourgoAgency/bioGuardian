@@ -80,7 +80,7 @@ const Footer = () => {
             </p>
             <div className="flex space-x-4">
               <a href="https://www.facebook.com/bioguardianpharma/" target="_blank" rel="noopener noreferrer"><Facebook size={20} /></a>
-              <a href="https://www.instagram.com/bioguardianpharma/" target="_blank" rel="noopener noreferrer"><Instagram size={20} /></a>
+              <a href="https://www.instagram.com/bioguardian_pharma/" target="_blank" rel="noopener noreferrer"><Instagram size={20} /></a>
               <a href="https://www.linkedin.com/company/bioguardian-pharma-pvt-ltd" target="_blank" rel="noopener noreferrer"><Linkedin size={20} /></a>
             </div>
           </div>
@@ -115,6 +115,7 @@ const Footer = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
+                className='text-black'
                 required
               />
               <Button type="submit" disabled={loading}>
