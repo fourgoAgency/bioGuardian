@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "bioguardian-website"
-  }
+    "default": "bioguardian-website",
+    "defualt": "bioguardian-website"
+  },
+  "targets": {},
+  "etags": {}
 }

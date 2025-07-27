@@ -1,47 +1,9 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Jobs listing: public read
-    match /jobs/{jobId} {
-      allow read: if true;
-    }
-
-    // Orders: allow read/write for everyone (consider restricting in future)
-    match /orders/{orderId} {
-      allow read, write: if true;
-    }
-
-    // Contact form submissions: allow public write
-    match /contact_submissions/{submissionId} {
-      allow write: if true;
-      allow read: if request.auth != null; // Only signed-in users can read
-    }
-
-    // Blog posts: public read
-    match /posts/{postsId} {
-      allow read: if true;
-      allow write: if request.auth != null; // Only admin can write
-    }
-
-    // Job applications: public write
-    match /job_applications/{applicationId} {
-      allow write: if true;
-      allow read: if request.auth != null;
-    }
-    match /resumes/{allPaths=**}{
-      allow read, write: if request.auth != null;
-    }
-
-    // Newsletter subscribers: public write
-    match /newsletter_subscriptions/{subscriberId} {
-      allow write: if true;
-      allow read: if request.auth != null;
-    }
-
-    // Prevent accidental access to everything else
     match /{document=**} {
-      allow read, write: if false;
+      allow read, write: if true; // ⚠️ only for testing
     }
   }
 }
