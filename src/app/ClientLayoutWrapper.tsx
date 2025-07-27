@@ -9,6 +9,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/cart/CartDrawer';
 import Whatsapp from '@/components/Whatsapp';
+import { Toaster } from '@/components/ui/toaster';
 
 interface ClientLayoutWrapperProps {
   children: React.ReactNode;
@@ -23,6 +24,7 @@ const ClientLayoutWrapper = ({ children }: ClientLayoutWrapperProps) => {
             <Navbar />
             <CartDrawer />
             {children}
+            <Toaster />
             <Whatsapp />
             <Footer />
           </AuthProvider>
