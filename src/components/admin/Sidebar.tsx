@@ -18,7 +18,7 @@ export default function Sidebar({ open, setOpen }: { open: boolean; setOpen: (v:
 
   return (
     <aside
-      className={`fixed md:static top-0 left-0 z-50 h-full w-64 bg-white border-r p-4 transform transition-transform duration-300 ${
+      className={`fixed md:static top-5 left-0 z-50 h-full w-64 bg-white border-r p-4 transform transition-transform duration-300 ${
         open ? "translate-x-0" : "-translate-x-full"
       } md:translate-x-0`}
     >
