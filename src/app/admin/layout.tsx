@@ -2,11 +2,13 @@
 import { useState } from "react";
 import { Menu } from "lucide-react";
 import Sidebar from "@/components/admin/Sidebar";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
 
   return (
+    <ProtectedRoute>
     <div className="flex">
       {/* Sidebar */}
       <Sidebar open={open} setOpen={setOpen} />
@@ -31,5 +33,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <main className="p-4 sm:p-6">{children}</main>
       </div>
     </div>
+    </ProtectedRoute>
   );
 }
