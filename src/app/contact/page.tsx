@@ -2,44 +2,44 @@
 import React, { useState } from "react";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { useToast } from "@/hooks/use-toast";
+import Link from "next/link";
+import ContactSection from "@/components/about/ContactSection";
+import ContactForm from "@/components/about/ContactForm";
 
 const Contact = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState("");
+  const {toast} = useToast();
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setStatus("Sending...");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  try {
-    // 1. Save to Firestore
-    await addDoc(collection(db, "contact_submissions"), {
-      full_name: fullName,
-      email,
-      message,
-      created_at: Timestamp.now(),
-    });
+    try {
+      // 1. Save to Firestore
+      await addDoc(collection(db, "contact_submissions"), {
+        full_name: fullName,
+        email,
+        message,
+        created_at: Timestamp.now(),
+      });
 
-    // 2. Redirect to Gmail compose with pre-filled email
-    const subject = encodeURIComponent("Contact Form Submission from " + fullName);
-    const body = encodeURIComponent(`Name: ${fullName}\nEmail: ${email}\nMessage: ${message}`);
-    const mailtoUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=info@bioguardian.net&su=${subject}&body=${body}`;
+      toast({
+        title: "Message Sent!",
+        description: "Thank you for your inquiry. We'll get back to you soon."
+      });
 
-    window.location.href = mailtoUrl;
-
-    setStatus("Redirecting to Gmail...");
-
-    // Reset form
-    setFullName("");
-    setEmail("");
-    setMessage("");
-  } catch (error) {
-    console.error(error);
-    setStatus("Error submitting the form.");
-  }
-};
+      // Reset form
+      setFullName("");
+      setEmail("");
+      setMessage("");
+    } catch (error) {
+      console.error(error);
+      setStatus("Error submitting the form.");
+    }
+  };
 
 
   return (
@@ -61,8 +61,10 @@ const handleSubmit = async (e: React.FormEvent) => {
                 <p>Office No. SF-25-26-27, Vincy Tower, Clifton Block-9, Karachi, Pakistan</p>
               </div>
               <div>
+                <Link href='https://wa.link/1bk0di'>
                 <h3 className="text-xl font-semibold">Phone</h3>
                 <p>+92 334 0063616</p>
+                </Link>
               </div>
               <div>
                 <h3 className="text-xl font-semibold">Hours</h3>
@@ -71,15 +73,15 @@ const handleSubmit = async (e: React.FormEvent) => {
 
 
 
-<iframe
-  title="company-location-map"
-  width="100%"
-  height="250"
-  className="rounded shadow"
-  loading="lazy"
-  allowFullScreen
-  src="https://maps.google.com/maps?q=24.82747937992193,67.0395989695417&z=15&output=embed"
-/>
+              <iframe
+                title="company-location-map"
+                width="100%"
+                height="250"
+                className="rounded shadow"
+                loading="lazy"
+                allowFullScreen
+                src="https://maps.google.com/maps?q=24.82747937992193,67.0395989695417&z=15&output=embed"
+              />
 
 
 
@@ -88,48 +90,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
             {/* Right: Contact Form */}
             <div className="bg-white shadow-md rounded-lg p-6">
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div>
-                  <label className="block font-medium mb-1">Full Name</label>
-                  <input
-                    type="text"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    required
-                    className="w-full border border-gray-300 rounded px-4 py-2"
-                  />
-                </div>
-                <div>
-                  <label className="block font-medium mb-1">Email</label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="w-full border border-gray-300 rounded px-4 py-2"
-                  />
-                </div>
-                <div>
-                  <label className="block font-medium mb-1">Comments / Query</label>
-                  <textarea
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    required
-                    rows={4}
-                    className="w-full border border-gray-300 rounded px-4 py-2 resize-none"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-full"
-                >
-                  Submit
-                </button>
-                {status && (
-                  <p className="text-sm text-green-600 mt-2">{status}</p>
-                )}
-              </form>
+              <ContactForm/>
             </div>
           </div>
         </div>
