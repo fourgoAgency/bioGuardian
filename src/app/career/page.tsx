@@ -2,10 +2,11 @@
 import React, { useEffect, useState } from "react";
 import CareerHero from "@/components/career/CareerHero";
 import JobCard from "@/components/career/JobCard";
+import { collection, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
+import { db, storage } from '@/lib/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ApplicationData } from "@/components/career/ApplicationForm";
 import ApplicationForm from "@/components/career/ApplicationForm";
-import { collection, getDocs, addDoc, Timestamp } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { db, storage } from "@/lib/firebase";
 
 interface JobListing {
   id: string;
@@ -21,19 +22,21 @@ interface JobListing {
 const CareerPage: React.FC = () => {
   const [jobListings, setJobListings] = useState<JobListing[]>([]);
   const [showApplicationForm, setShowApplicationForm] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0); // ✅ New state
-  const [resumeFile, setResumeFile] = useState<File | null>(null);
 
-  const [applicationData, setApplicationData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    position: "",
-    experience: "",
-    education: "",
-    coverLetter: "",
+  const [applicationData, setApplicationData] = useState<ApplicationData>({
+    name: '',
+    email: '',
+    phone: '',
+    position: '',
+    experience: '',
+    education: '',
+    coverLetter: '',
   });
+
+  const [cvFile, setCvFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   // ✅ Fetch jobs from Firestore
   useEffect(() => {
@@ -66,79 +69,46 @@ const CareerPage: React.FC = () => {
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    setApplicationData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setApplicationData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    console.log("📂 Selected File:", file);
-    setResumeFile(file);
+    const file = e.target.files?.[0];
+    setCvFile(file || null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!applicationData.name || !applicationData.email) {
-      alert("Please fill all required fields");
-      return;
-    }
+    if (!cvFile) return alert('Please upload your CV.');
 
     setIsSubmitting(true);
-    setUploadProgress(0);
 
     try {
-      let resumeUrl = "";
+      const fileRef = ref(storage, `resumes/${applicationData.name.replace(/\s+/g, '-')}-${Date.now()}`);
+      const snap = await uploadBytes(fileRef, cvFile);
+      const resume_url = await getDownloadURL(snap.ref);
 
-      // ✅ Upload file with progress
-      if (resumeFile) {
-        const fileRef = ref(storage, `resumes/${Date.now()}_${resumeFile.name}`);
-        const uploadTask = uploadBytesResumable(fileRef, resumeFile);
-
-        await new Promise<void>((resolve, reject) => {
-          uploadTask.on(
-            "state_changed",
-            (snapshot) => {
-              const progress =
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-              setUploadProgress(progress); // ✅ Show progress
-            },
-            (error) => reject(error),
-            () => resolve()
-          );
-        });
-
-        resumeUrl = await getDownloadURL(fileRef);
-      }
-
-      // ✅ Save application to Firestore
-      await addDoc(collection(db, "job_applications"), {
+      await addDoc(collection(db, 'job_applications'), {
         ...applicationData,
-        resume_url: resumeUrl,
-        created_at: Timestamp.now(),
+        resume_url,
+        created_at: serverTimestamp(),
       });
 
-      // ✅ Send Email via API route
-      await fetch("/api/send-application", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...applicationData, resumeUrl }),
-      });
-
-      alert("✅ Application submitted successfully!");
+      alert('Application submitted!');
       setApplicationData({
-        name: "",
-        email: "",
-        phone: "",
-        position: "",
-        experience: "",
-        education: "",
-        coverLetter: "",
+        name: '',
+        email: '',
+        phone: '',
+        position: '',
+        experience: '',
+        education: '',
+        coverLetter: '',
       });
-      setResumeFile(null);
-      setShowApplicationForm(false);
-      setUploadProgress(0);
-    } catch (error) {
-      console.error("❌ Error submitting application:", error);
-      alert("❌ Failed to submit application.");
+      setCvFile(null);
+    } catch (err) {
+      console.error(err);
+      alert('Something went wrong.');
     } finally {
       setIsSubmitting(false);
     }
@@ -175,16 +145,16 @@ const CareerPage: React.FC = () => {
                 ></div>
               </div>
             )}
-
             <ApplicationForm
               applicationData={applicationData}
               onInputChange={handleInputChange}
               onSubmit={handleSubmit}
               isSubmitting={isSubmitting}
-              showApplicationForm={showApplicationForm}
+              showApplicationForm={!!applicationData.position}
               jobListings={jobListings}
               onFileChange={handleFileChange}
             />
+
           </section>
         )}
       </main>
