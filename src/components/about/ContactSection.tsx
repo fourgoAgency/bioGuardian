@@ -1,6 +1,6 @@
 'use client';
-import React, { useState } from 'react';
-import { Send, Phone, Mail, MapPin } from 'lucide-react';
+import React from 'react';
+import { Phone, Mail, MapPin } from 'lucide-react';
 
 import { useLanguage } from '@/contexts/LanguageContext';
 import Link from 'next/link';
