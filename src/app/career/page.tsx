@@ -22,7 +22,6 @@ interface JobListing {
 const CareerPage: React.FC = () => {
   const [jobListings, setJobListings] = useState<JobListing[]>([]);
   const [showApplicationForm, setShowApplicationForm] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState<number>(0); // ✅ New state
 
   const [applicationData, setApplicationData] = useState<ApplicationData>({
     name: '',
@@ -136,15 +135,6 @@ const CareerPage: React.FC = () => {
           <section className="max-w-3xl mx-auto">
             <h2 className="text-2xl font-semibold mb-4 text-center">Apply Now</h2>
 
-            {/* ✅ Upload Progress Bar */}
-            {uploadProgress > 0 && uploadProgress < 100 && (
-              <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
-                <div
-                  className="bg-blue-600 h-3 rounded-full"
-                  style={{ width: `${uploadProgress}%` }}
-                ></div>
-              </div>
-            )}
             <ApplicationForm
               applicationData={applicationData}
               onInputChange={handleInputChange}
