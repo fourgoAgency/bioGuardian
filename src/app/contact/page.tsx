@@ -1,45 +1,11 @@
 'use client';
-import React, { useState } from "react";
-import { collection, addDoc, Timestamp } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import { useToast } from "@/hooks/use-toast";
+import React from "react";
 import Link from "next/link";
-import ContactSection from "@/components/about/ContactSection";
 import ContactForm from "@/components/about/ContactForm";
 
 const Contact = () => {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [status, setStatus] = useState("");
-  const {toast} = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
 
-    try {
-      // 1. Save to Firestore
-      await addDoc(collection(db, "contact_submissions"), {
-        full_name: fullName,
-        email,
-        message,
-        created_at: Timestamp.now(),
-      });
-
-      toast({
-        title: "Message Sent!",
-        description: "Thank you for your inquiry. We'll get back to you soon."
-      });
-
-      // Reset form
-      setFullName("");
-      setEmail("");
-      setMessage("");
-    } catch (error) {
-      console.error(error);
-      setStatus("Error submitting the form.");
-    }
-  };
 
 
   return (
