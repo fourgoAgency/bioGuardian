@@ -106,9 +106,9 @@ const ContactSection = () => {
                   <Link href='https://wa.link/1bk0di'>
                   <p>Mobile: +92 334 0063616</p>
                   </Link>
-                  <Link href=''>
+                  <a href='tel:+922133517948'>
                   <p>Landline: +92 21 335 179 48</p>
-                  </Link>
+                  </a>
                 </div>
               </div>
             </div>
