@@ -12,7 +12,7 @@ interface JobListing {
   responsibilities: string[];
 }
 
-interface ApplicationData {
+export interface ApplicationData {
   name: string;
   email: string;
   phone: string;
