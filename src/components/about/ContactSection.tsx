@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { db } from '@/lib/firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import { useLanguage } from '@/contexts/LanguageContext';
+import Link from 'next/link';
 
 interface ContactFormData {
   firstName: string;
@@ -102,8 +103,12 @@ const ContactSection = () => {
               <div>
                 <h3 className="text-lg font-semibold text-gray-800">{t('phone_numbers')}</h3>
                 <div className="space-y-1 text-gray-600">
+                  <Link href='https://wa.link/1bk0di'>
                   <p>Mobile: +92 334 0063616</p>
+                  </Link>
+                  <Link href=''>
                   <p>Landline: +92 21 335 179 48</p>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -113,8 +118,10 @@ const ContactSection = () => {
                 <Mail className="w-6 h-6 text-green-600" />
               </div>
               <div>
+                <Link href='https://mail.google.com/mail/?view=cm&fs=1&to=info@bioguardian.ne'>
                 <h3 className="text-lg font-semibold text-gray-800">{t('email')}</h3>
                 <p className="text-gray-600">info@bioguardian.net</p>
+                </Link>
               </div>
             </div>
           </div>
