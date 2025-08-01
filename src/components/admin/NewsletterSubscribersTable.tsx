@@ -1,6 +1,16 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useMemo, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { collection, getDocs, query, orderBy, Timestamp } from 'firebase/firestore';
+import {
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  Timestamp,
+  deleteDoc,
+  doc,
+} from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import {
   Table,
@@ -10,12 +20,19 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
+import { saveAs } from 'file-saver';
 
-interface Subscription {
+export interface Subscription {
   id: string;
   email: string;
-  created_at: Timestamp| Date | string;
+  created_at: Timestamp | Date | string;
 }
 
 const fetchSubscribers = async (): Promise<Subscription[]> => {
@@ -28,47 +45,143 @@ const fetchSubscribers = async (): Promise<Subscription[]> => {
   }));
 };
 
-const NewsletterSubscribersTable = () => {
-  const { data: subscribers, isLoading, error } = useQuery<Subscription[]>({
+const normalizeDate = (created_at: any): Date | null => {
+  if (created_at && typeof created_at === 'object' && 'toDate' in created_at) {
+    return (created_at as Timestamp).toDate();
+  }
+  const d = new Date(created_at as string);
+  return isNaN(d.getTime()) ? null : d;
+};
+
+const NewsletterSubscribersTable: React.FC<{ filterEmail: string }> = ({ filterEmail }) => {
+  const { data: subscribers, isLoading, error, refetch } = useQuery<Subscription[]>({
     queryKey: ['subscribers'],
     queryFn: fetchSubscribers,
   });
 
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [selectAll, setSelectAll] = useState(false);
+
+  const filtered = useMemo(() => {
+    if (!subscribers) return [];
+    return subscribers.filter(sub =>
+      sub.email?.toLowerCase().includes(filterEmail.toLowerCase())
+    );
+  }, [subscribers, filterEmail]);
+
+  useEffect(() => {
+    if (selectAll) {
+      setSelectedIds(filtered.map(sub => sub.id));
+    } else {
+      setSelectedIds([]);
+    }
+  }, [selectAll, filtered]);
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds(prev =>
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+
+  const handleDelete = async () => {
+    if (selectedIds.length === 0) return;
+    if (!window.confirm(`Are you sure you want to delete ${selectedIds.length} subscriber(s)?`)) return;
+
+    for (const id of selectedIds) {
+      await deleteDoc(doc(db, 'newsletter_subscriptions', id));
+    }
+
+    setSelectedIds([]);
+    setSelectAll(false);
+    await refetch();
+    alert('Deleted successfully');
+  };
+
+  const handleExport = () => {
+    const rows = filtered.filter(sub => selectedIds.includes(sub.id));
+    if (rows.length === 0) return;
+
+    const csv = [
+      ['Email', 'Created At'],
+      ...rows.map(sub => [
+        sub.email,
+        normalizeDate(sub.created_at)?.toISOString() ?? ''
+      ]),
+    ].map(row => row.join(',')).join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    saveAs(blob, 'subscribers.csv');
+  };
+
   return (
-    <Card>
+    <Card className="w-full">
       <CardHeader>
-        <CardTitle>Newsletter Subscribers</CardTitle>
-        <CardDescription>
-          A list of all users subscribed to the newsletter.
-        </CardDescription>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 w-full">
+          <div>
+            <CardTitle>Newsletter Subscribers</CardTitle>
+            <CardDescription>Manage your list of subscribers.</CardDescription>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={handleDelete}
+              className="px-3 py-2 bg-red-600 text-white rounded disabled:opacity-50"
+              disabled={selectedIds.length === 0}
+            >
+              Delete Selected
+            </button>
+            <button
+              onClick={handleExport}
+              className="px-3 py-2 bg-green-600 text-white rounded disabled:opacity-50"
+              disabled={selectedIds.length === 0}
+            >
+              Export Selected
+            </button>
+          </div>
+        </div>
       </CardHeader>
+
       <CardContent>
-        {isLoading ? (
-          <div className="p-4 text-center">Loading subscribers...</div>
-        ) : error ? (
-          <div className="p-4 text-red-500 text-center">Error fetching subscribers: {error.message}</div>
-        ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Email</TableHead>
-                <TableHead className="text-right">Subscribed At</TableHead>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>
+                <input
+                  type="checkbox"
+                  checked={selectAll}
+                  onChange={e => setSelectAll(e.target.checked)}
+                />
+              </TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead className="text-right">Subscribed At</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filtered.map(sub => (
+              <TableRow key={sub.id}>
+                <TableCell>
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.includes(sub.id)}
+                    onChange={() => toggleSelect(sub.id)}
+                  />
+                </TableCell>
+                <TableCell>{sub.email}</TableCell>
+                <TableCell className="text-right">
+                  {normalizeDate(sub.created_at)?.toLocaleDateString()}
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {subscribers?.map((subscriber) => (
-                <TableRow key={subscriber.id}>
-                  <TableCell className="font-medium">{subscriber.email}</TableCell>
-                  <TableCell className="text-right"> {new Date(
-    (subscriber.created_at as Timestamp).toDate?.() ?? subscriber.created_at
-  ).toLocaleDateString()}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        )}
+            ))}
+            {filtered.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={3} className="text-center py-4">
+                  No subscribers found.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       </CardContent>
-    </Card>
+    </Card >
   );
 };
 
