@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { collection, getDocs, query, orderBy, where } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import type { Timestamp } from 'firebase/firestore';
 
@@ -24,7 +24,7 @@ const fetchSubmissions = async (): Promise<Submission[]> => {
   const querySnapshot = await getDocs(q);
 
   return querySnapshot.docs.map(doc => {
-    const data = doc.data() as any;
+    const data = doc.data();
     return {
       id: doc.id,
       name: data.name || '',

@@ -21,9 +21,9 @@ const fetchSubscribers = async (): Promise<Subscription[]> => {
   });
 };
 
-const normalizeDate = (created_at: any): Date | null => {
+const normalizeDate = (created_at: string | Date | Timestamp | null | undefined ): Date | null => {
   if (created_at && typeof created_at === 'object' && 'toDate' in created_at) {
-    return (created_at as Timestamp).toDate();
+    return (created_at).toDate();
   }
   const d = new Date(created_at as string);
   return isNaN(d.getTime()) ? null : d;
@@ -59,7 +59,7 @@ export default function NewsletterSubscribersPage() {
       ];
     }
 
-    let total = allSubscribers.length;
+    const total = allSubscribers.length;
     let newLast30 = 0;
     let newPrev30 = 0;
 
