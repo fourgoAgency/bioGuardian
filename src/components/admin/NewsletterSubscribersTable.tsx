@@ -45,7 +45,8 @@ const fetchSubscribers = async (): Promise<Subscription[]> => {
   }));
 };
 
-const normalizeDate = (created_at: any): Date | null => {
+const normalizeDate = (created_at: string | Date | Timestamp | null | undefined
+): Date | null => {
   if (created_at && typeof created_at === 'object' && 'toDate' in created_at) {
     return (created_at as Timestamp).toDate();
   }
@@ -54,7 +55,7 @@ const normalizeDate = (created_at: any): Date | null => {
 };
 
 const NewsletterSubscribersTable: React.FC<{ filterEmail: string }> = ({ filterEmail }) => {
-  const { data: subscribers, isLoading, error, refetch } = useQuery<Subscription[]>({
+  const { data: subscribers, refetch } = useQuery<Subscription[]>({
     queryKey: ['subscribers'],
     queryFn: fetchSubscribers,
   });

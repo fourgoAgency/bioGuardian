@@ -8,9 +8,7 @@ import {
   query,
   orderBy,
   doc,
-  updateDoc,
-  Timestamp as FirestoreTimestamp,
-  type Timestamp as FirestoreTsType,
+  updateDoc
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import {
@@ -55,8 +53,16 @@ interface Props {
   onMetaChange?: (meta: { totalCount: number; loading: boolean; error?: Error }) => void;
 }
 
-const isFirestoreTimestamp = (v: any): v is FirestoreTsType =>
-  v && typeof v.toDate === 'function';
+type FirestoreTsType = {
+  toDate: () => Date;
+};
+
+const isFirestoreTimestamp = (v: unknown): v is FirestoreTsType =>
+  typeof v === 'object' &&
+  v !== null &&
+  'toDate' in v &&
+  typeof (v).toDate === 'function';
+
 
 const normalizeDate = (input: string | FirestoreTsType | undefined): string => {
   if (!input) return '—';
@@ -75,7 +81,7 @@ const fetchSubmissions = async (): Promise<Submission[]> => {
   const q = query(submissionsRef, orderBy('created_at', 'desc'));
   const snapshot = await getDocs(q);
   return snapshot.docs.map((docSnap) => {
-    const data = docSnap.data() as any;
+    const data = docSnap.data();
     return {
       id: docSnap.id,
       name: data.name || '',
