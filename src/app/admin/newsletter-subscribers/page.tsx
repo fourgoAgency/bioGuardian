@@ -1,127 +1,160 @@
 'use client'
 
-import React from 'react'
-import NewsletterSubscribersTable from '@/components/admin/NewsletterSubscribersTable'
+import React, { useState, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import NewsletterSubscribersTable, {
+  Subscription,
+} from '@/components/admin/NewsletterSubscribersTable';
+import { collection, getDocs, query, orderBy, Timestamp } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+
+const fetchSubscribers = async (): Promise<Subscription[]> => {
+  const subsRef = collection(db, 'newsletter_subscriptions');
+  const q = query(subsRef, orderBy('created_at', 'desc'));
+  const querySnapshot = await getDocs(q);
+
+  return querySnapshot.docs.map(doc => {
+    const data = doc.data() as Subscription;
+    return {
+      ...data,
+    };
+  });
+};
+
+const normalizeDate = (created_at: any): Date | null => {
+  if (created_at && typeof created_at === 'object' && 'toDate' in created_at) {
+    return (created_at as Timestamp).toDate();
+  }
+  const d = new Date(created_at as string);
+  return isNaN(d.getTime()) ? null : d;
+};
 
 export default function NewsletterSubscribersPage() {
+  const [search, setSearch] = useState('');
+
+  const { data: allSubscribers } = useQuery<Subscription[]>({
+    queryKey: ['subscribers-overview'],
+    queryFn: fetchSubscribers,
+    staleTime: 1000 * 60 * 2,
+  });
+
+  const now = useMemo(() => new Date(), []);
+  const thirtyDaysAgo = useMemo(() => {
+    const d = new Date(now);
+    d.setDate(d.getDate() - 30);
+    return d;
+  }, [now]);
+  const sixtyDaysAgo = useMemo(() => {
+    const d = new Date(now);
+    d.setDate(d.getDate() - 60);
+    return d;
+  }, [now]);
+
+  const computedStats = useMemo(() => {
+    if (!allSubscribers) {
+      return [
+        { label: 'Total Subscribers', value: 0, change: '' },
+        { label: 'New Subscribers (30d)', value: 0, change: '' },
+        { label: 'Growth (vs prior 30d)', value: '—', change: '' },
+      ];
+    }
+
+    let total = allSubscribers.length;
+    let newLast30 = 0;
+    let newPrev30 = 0;
+
+    allSubscribers.forEach(sub => {
+      const dateObj = normalizeDate(sub.created_at);
+      if (!dateObj) return;
+
+      if (dateObj >= thirtyDaysAgo) {
+        newLast30 += 1;
+      } else if (dateObj >= sixtyDaysAgo) {
+        newPrev30 += 1;
+      }
+    });
+
+    let growthLabel = '—';
+    if (newPrev30 > 0) {
+      const delta = ((newLast30 - newPrev30) / newPrev30) * 100;
+      const sign = delta >= 0 ? '+' : '';
+      growthLabel = `${sign}${delta.toFixed(1)}%`;
+    } else if (newLast30 > 0) {
+      growthLabel = '+100%';
+    }
+
+    return [
+      { label: 'Total Subscribers', value: total, change: '' },
+      { label: 'New Subscribers (30d)', value: newLast30, change: '' },
+      { label: 'Growth (vs prior 30d)', value: growthLabel, change: '' },
+    ];
+  }, [allSubscribers, thirtyDaysAgo, sixtyDaysAgo]);
+
   return (
-    <div className="flex h-screen">
-      
-
-      <div className="flex flex-col flex-1">
-        
-
-        <main className="p-6 bg-gray-50 overflow-auto">
-          <h1 className="text-2xl font-semibold mb-4">Newsletter Subscribers</h1>
-
-          {/* Overview cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            {[
-              { label: 'Total Subscribers', value: 1250, change: '+10%' },
-              { label: 'New Subscribers (30d)', value: 45, change: '+5%' },
-              { label: 'Unsubscribed (30d)', value: 8, change: '-2%' },
-              { label: 'Active Subscribers', value: 1197, change: '+98%' },
-            ].map((card, i) => (
-              <div key={i} className="bg-white p-4 shadow rounded-lg">
-                <div className="text-sm text-gray-500">{card.label}</div>
-                <div className="text-xl font-bold">{card.value}</div>
-                <div className="text-xs text-green-600">{card.change} this month</div>
-              </div>
-            ))}
+    <div className="flex flex-col min-h-screen">
+      <main className="p-4 md:p-6 bg-gray-50 flex-1 overflow-auto">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <div>
+            <h1 className="text-2xl font-semibold">Newsletter Subscribers</h1>
+            <p className="text-sm text-gray-600 mt-1">
+              Manage and review your email list.
+            </p>
           </div>
+        </div>
 
-          {/* Search + Filters + Bulk Actions */}
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+        {/* Overview cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+          {computedStats.map((card, i) => (
+            <div
+              key={i}
+              className="bg-white p-4 shadow rounded-lg flex flex-col justify-between"
+            >
+              <div className="text-sm text-gray-500">{card.label}</div>
+              <div className="text-xl font-bold">{card.value}</div>
+              {card.change && card.change !== '—' && (
+                <div
+                  className={`text-xs font-medium mt-1 ${
+                    card.change.startsWith('+') ? 'text-green-600' : 'text-red-600'
+                  }`}
+                >
+                  {card.change} vs prior window
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Search + Actions */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+          <div className="flex flex-col sm:flex-row gap-2 flex-1">
             <input
+              aria-label="Search by email"
               type="text"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
               placeholder="Search by email..."
-              className="px-4 py-2 border rounded w-full md:w-auto"
+              className="px-4 py-2 border rounded w-full sm:w-auto flex-1"
             />
-
-            <select className="px-3 py-2 border rounded text-sm">
-              <option>All Statuses</option>
-              <option>Active</option>
-              <option>Unsubscribed</option>
-            </select>
-
-            <div className="space-x-2">
-              <button className="px-3 py-2 bg-blue-600 text-white rounded">Apply Filters</button>
-              <button className="px-3 py-2 border rounded">Reset Filters</button>
-              <button className="px-3 py-2 border rounded">Bulk Actions</button>
-            </div>
           </div>
 
-          {/* Subscriber Table */}
-          <NewsletterSubscribersTable/>
-          {/* <div className="overflow-auto">
-            <table className="min-w-full bg-white rounded shadow">
-              <thead className="bg-gray-100 text-left text-sm">
-                <tr>
-                  <th className="p-3">Email</th>
-                  <th className="p-3">Subscription Date</th>
-                  <th className="p-3">Source</th>
-                  <th className="p-3">Status</th>
-                  <th className="p-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="text-sm text-gray-700">
-                {[
-                  {
-                    email: 'john.doe@example.com',
-                    date: '2023-06-15',
-                    source: 'Website',
-                    status: 'Active',
-                  },
-                  {
-                    email: 'peter.jones@example.com',
-                    date: '2023-08-01',
-                    source: 'Event Signup',
-                    status: 'Unsubscribed',
-                  },
-                  {
-                    email: 'grace.wilson@example.com',
-                    date: '2023-09-01',
-                    source: 'Event Signup',
-                    status: 'Active',
-                  },
-                ].map((row, i) => (
-                  <tr key={i} className="border-t">
-                    <td className="p-3">{row.email}</td>
-                    <td className="p-3">{row.date}</td>
-                    <td className="p-3">{row.source}</td>
-                    <td className="p-3">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          row.status === 'Active'
-                            ? 'bg-blue-100 text-blue-700'
-                            : 'bg-red-100 text-red-700'
-                        }`}
-                      >
-                        {row.status}
-                      </span>
-                    </td>
-                    <td className="p-3 space-x-2">
-                      <button className="text-sm text-red-600 hover:underline">Unsubscribe</button>
-                      <button className="text-sm text-gray-600 hover:underline">Details</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div> */}
-
-          {/* Pagination */}
-          <div className="mt-4 flex justify-between items-center text-sm">
-            <p className="text-gray-600">Page 1 of 2</p>
-            <div className="space-x-2">
-              <button className="px-3 py-1 border rounded">Previous</button>
-              <button className="px-3 py-1 border rounded bg-blue-600 text-white">1</button>
-              <button className="px-3 py-1 border rounded">2</button>
-              <button className="px-3 py-1 border rounded">Next</button>
-            </div>
+          <div className="flex flex-wrap gap-2">
+            <button className="px-3 py-2 bg-blue-600 text-white rounded text-sm">
+              Apply
+            </button>
+            <button
+              onClick={() => {
+                setSearch('');
+              }}
+              className="px-3 py-2 border rounded text-sm"
+            >
+              Reset
+            </button>
           </div>
-        </main>
-      </div>
+        </div>
+
+        {/* Table */}
+        <NewsletterSubscribersTable filterEmail={search} />
+      </main>
     </div>
-  )
+  );
 }

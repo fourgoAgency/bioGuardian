@@ -74,12 +74,12 @@ const BlogsPage = () => {
   );
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="max-w-7xl mx-auto px-4 py-10 space-y-6">
       {/* Header and Add Button */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <h1 className="text-2xl font-semibold">Blogs Management</h1>
-        <Link href="/admin/blogs/newblog" className="ml-auto w-fit">
-          <Button>
+        <Link href="/admin/blogs/newblog" className="w-full md:w-auto">
+          <Button className="w-full md:w-fit">
             <Plus className="w-4 h-4 mr-2" />
             Add New Blog Post
           </Button>
@@ -102,7 +102,7 @@ const BlogsPage = () => {
       ) : filteredBlogs.length === 0 ? (
         <p className="text-center text-gray-500 py-10">No blogs found.</p>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredBlogs.map((blog) => (
             <Card key={blog.id} className="flex flex-col justify-between h-full">
               <CardContent className="p-4 flex flex-col gap-3">
@@ -128,12 +128,7 @@ const BlogsPage = () => {
                 <p className="text-xs text-gray-500">Created on {blog.created_at}</p>
 
                 {/* Actions */}
-                <div className="mt-4 flex gap-2">
-                  <Link href={`/admin/blogs/edit/${blog.slug}`} className="w-full">
-                    <Button size="sm" variant="outline" className="w-full">
-                      View / Edit
-                    </Button>
-                  </Link>
+                <div className="mt-4 flex flex-col sm:flex-row gap-2">
                   <Button
                     size="sm"
                     variant="destructive"

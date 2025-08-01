@@ -5,32 +5,23 @@ import Sidebar from "@/components/admin/Sidebar";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <ProtectedRoute>
-    <div className="flex">
-      {/* Sidebar */}
-      <Sidebar open={open} setOpen={setOpen} />
+    <div className="flex pt-24 px-4 sm:px-6">
+      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
 
-      {/* Overlay for Mobile */}
-      {open && (
-        <div
-          className="fixed inset-0 bg-black/40 md:hidden"
-          onClick={() => setOpen(false)}
-        ></div>
-      )}
-
-      {/* Main Content */}
       <div className="flex-1">
-        {/* Top Bar (Navbar already hai, isliye sirf hamburger button dikhayenge mobile par) */}
-        <div className="md:hidden p-3 border-b bg-white">
-          <button onClick={() => setOpen(true)}>
+        {/* Mobile Menu Button */}
+        <div className="md:hidden p-4">
+          <button onClick={() => setSidebarOpen(true)}>
             <Menu className="w-6 h-6" />
           </button>
         </div>
 
-        <main className="p-4 sm:p-6">{children}</main>
+        {/* Page Content */}
+        <div className="p-4">{children}</div>
       </div>
     </div>
     </ProtectedRoute>

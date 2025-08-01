@@ -89,7 +89,7 @@ export default function OrdersPage() {
   }, 0);
 
   return (
-    <div className="space-y-6">
+     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Orders Management</h1>
 
       {/* Overview Cards */}
@@ -125,32 +125,35 @@ export default function OrdersPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4">
+      <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
         <Input
           type="text"
           placeholder="Search order ID or customer name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="mb-2 sm:mb-0"
+          className="w-full md:w-1/3"
         />
 
-        <Select onValueChange={(value) => setStatusFilter(value)} value={statusFilter}>
-          <SelectTrigger>
-            <SelectValue placeholder="All Statuses" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Statuses</SelectItem>
-            <SelectItem value="New">New</SelectItem>
-            <SelectItem value="Pending">Pending</SelectItem>
-            <SelectItem value="Processing">Processing</SelectItem>
-            <SelectItem value="Delivered">Delivered</SelectItem>
-            <SelectItem value="Cancelled">Cancelled</SelectItem>
-            <SelectItem value="Completed">Completed</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="w-full md:w-1/4">
+          <Select onValueChange={(value) => setStatusFilter(value)} value={statusFilter}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="All Statuses" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Statuses</SelectItem>
+              <SelectItem value="New">New</SelectItem>
+              <SelectItem value="Pending">Pending</SelectItem>
+              <SelectItem value="Processing">Processing</SelectItem>
+              <SelectItem value="Delivered">Delivered</SelectItem>
+              <SelectItem value="Cancelled">Cancelled</SelectItem>
+              <SelectItem value="Completed">Completed</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
         <Button
           variant="outline"
+          className="w-full md:w-fit"
           onClick={() => {
             setSearchTerm("");
             setStatusFilter("all");
@@ -160,11 +163,19 @@ export default function OrdersPage() {
         </Button>
       </div>
 
+
       {/* Orders Table */}
-      <Card>
-        <CardContent className="p-4">
-          <h1 className="text-2xl font-semibold mb-4">Orders</h1>
-          {orders.length === 0 ? <p>No orders found.</p> : <OrdersTable orders={filteredOrders} />}
+        <Card>
+        <CardContent className="p-0 md:p-4">
+          <h1 className="text-xl md:text-2xl font-semibold p-4 pb-0">Orders</h1>
+
+          <div className="overflow-x-auto w-full">
+            {filteredOrders.length === 0 ? (
+              <p className="p-4">No orders found.</p>
+            ) : (
+              <OrdersTable orders={filteredOrders} />
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>

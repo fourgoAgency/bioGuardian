@@ -1,139 +1,177 @@
 'use client';
 
+import { useState, useEffect, useMemo } from 'react';
 import ContactSubmissionsTable from '@/components/admin/ContactSubmissionsTable';
-import { useState } from 'react';
-
-const contactData = [
-  {
-    id: 'C0001',
-    name: 'Alice Johnson',
-    email: 'alice.johnson@example.com',
-    subject: 'Product Inquiry: BioGlyph 5000',
-    status: 'New',
-    date: '2024-07-26',
-  },
-  {
-    id: 'C0002',
-    name: 'Robert Smith',
-    email: 'robert.smith@example.com',
-    subject: 'Technical Support: PlantMatrix Diagnostics',
-    status: 'In Progress',
-    date: '2024-07-27',
-  },
-  {
-    id: 'C0003',
-    name: 'Maria Garcia',
-    email: 'maria.garcia@example.com',
-    subject: 'Partnership Opportunity',
-    status: 'New',
-    date: '2024-07-25',
-  },
-  {
-    id: 'C0004',
-    name: 'David Lee',
-    email: 'david.lee@example.com',
-    subject: 'Feedback on BioPulse Monitor',
-    status: 'Resolved',
-    date: '2024-07-25',
-  },
-  // ...add more
-];
-
+import useDebounce from '@/hooks/useDebounce'; 
 
 export default function ContactsPage() {
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
-  const [dateRange, setDateRange] = useState('');
+  const [status, setStatus] = useState('');
+  const [date, setDate] = useState(''); // could be expanded to { from: '', to: '' } for ranges
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const filteredContacts = contactData.filter(
-    (contact) =>
-      contact.name.toLowerCase().includes(search.toLowerCase()) ||
-      contact.email.toLowerCase().includes(search.toLowerCase()) ||
-      contact.subject.toLowerCase().includes(search.toLowerCase())
-  );
+  // Debounce search to avoid over-updating
+  const debouncedSearch = useDebounce(search, 300);
+
+  // Handler to reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch, status, date]);
+
+  // Callback props to receive metadata from the table
+  const [totalResults, setTotalResults] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Derived display text
+  const resultSummary = useMemo(() => {
+    const start = (currentPage - 1) * 8 + 1;
+    const end = Math.min(currentPage * 8, totalResults);
+    if (totalResults === 0) return 'No results found';
+    return `Showing ${start} to ${end} of ${totalResults} result${totalResults > 1 ? 's' : ''}`;
+  }, [currentPage, totalResults]);
+
+  const handleClearFilters = () => {
+    setSearch('');
+    setStatus('');
+    setDate('');
+  };
 
   return (
-    <div className="flex h-screen w-full overflow-hidden justify-center ">
-      
-      <div className="flex flex-col flex-1 overflow-y-auto">
-       
-      <h1 className="text-2xl font-semibold mb-6">Contact Inquiries</h1>
+    <div className="flex h-full w-full overflow-hidden justify-center bg-slate-50 p-4">
+      <div className="flex flex-col flex-1 overflow-y-auto max-w-[1200px] w-full">
+        <header className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <h1 className="text-2xl font-semibold">Contact Inquiries</h1>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={handleClearFilters}
+              className="text-sm px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100"
+            >
+              Clear Filters
+            </button>
+          </div>
+        </header>
 
-      <div className="flex flex-wrap gap-4 mb-4 ">
-        <input
-          type="text"
-          placeholder="Search by name or keyword..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border border-gray-300 rounded-md px-4 py-2 w-full sm:w-64"
-        />
+        <div className="flex flex-col md:flex-row md:items-end gap-4 mb-4">
+          <div className="flex-1 min-w-0">
+            <label htmlFor="search" className="sr-only">
+              Search by name or keyword
+            </label>
+            <input
+              id="search"
+              type="text"
+              placeholder="Search by name or keyword..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              aria-label="Search contacts"
+              className="w-full border border-gray-300 rounded-md px-4 py-2"
+            />
+          </div>
 
-        <select
-          className="border border-gray-300 rounded-md px-4 py-2"
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-        >
-          <option value="">Filter by Status</option>
-          <option value="New">New</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Resolved">Resolved</option>
-        </select>
+          <div className="flex-shrink-0">
+            <label htmlFor="status" className="sr-only">
+              Filter by status
+            </label>
+            <select
+              id="status"
+              className="border border-gray-300 rounded-md px-4 py-2"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              aria-label="Filter by status"
+            >
+              <option value="">Filter by Status</option>
+              <option value="New">New</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Resolved">Resolved</option>
+            </select>
+          </div>
 
-        <input
-          type="date"
-          className="border border-gray-300 rounded-md px-4 py-2"
-          value={dateRange}
-          onChange={(e) => setDateRange(e.target.value)}
-        />
-      </div>
+          <div className="flex-shrink-0">
+            <label htmlFor="date" className="sr-only">
+              Filter by date
+            </label>
+            <input
+              id="date"
+              type="date"
+              className="border border-gray-300 rounded-md px-4 py-2"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              aria-label="Filter by date"
+            />
+          </div>
+        </div>
 
-      {/* <div className="overflow-x-auto mr-6">
-        <table className="min-w-full bg-white border rounded-lg">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="text-left p-4">ID</th>
-              <th className="text-left p-4">Name</th>
-              <th className="text-left p-4">Email</th>
-              <th className="text-left p-4">Subject</th>
-              <th className="text-left p-4">Status</th>
-              <th className="text-left p-4">Received Date</th>
-              <th className="text-left p-4">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredContacts.map((contact) => (
-              <tr key={contact.id} className="border-b">
-                <td className="p-4">{contact.id}</td>
-                <td className="p-4">{contact.name}</td>
-                <td className="p-4">{contact.email}</td>
-                <td className="p-4">{contact.subject}</td>
-                <td className="p-4">
-                  <span className={`text-xs px-2 py-1 rounded-full text-center ${getStatusColor(contact.status)}`}>
-                    {contact.status}
-                  </span>
-                </td>
-                <td className="p-4">{contact.date}</td>
-                <td className="p-4">
-                  <button className="text-blue-600 hover:underline text-sm">View</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div> */}
-      <ContactSubmissionsTable/>
+        <div className="overflow-x-auto bg-white rounded-lg shadow-sm">
+          <ContactSubmissionsTable
+            filters={{ search: debouncedSearch, status, date, page: currentPage }}
+            onMetaChange={({ totalCount, loading }) => {
+              setTotalResults(totalCount);
+              setIsLoading(loading);
+            }}
+          />
+        </div>
 
-      {/* Pagination (UI only) */}
-      <div className="mt-6 flex justify-between items-center mr-6">
-        <p className="text-sm text-gray-500">Showing 1 to 8 of {filteredContacts.length} results</p>
-        <div className="flex space-x-2">
-          <button className="px-3 py-1 rounded bg-gray-200 text-sm">Previous</button>
-          <button className="px-3 py-1 rounded bg-blue-500 text-white text-sm">1</button>
-          <button className="px-3 py-1 rounded bg-gray-200 text-sm">2</button>
-          <button className="px-3 py-1 rounded bg-gray-200 text-sm">Next</button>
+        {/* Pagination & summary */}
+        <div className="mt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <p className="text-sm text-gray-600">{isLoading ? 'Loading...' : resultSummary}</p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1 || isLoading}
+              className={`px-3 py-1 rounded-md text-sm border ${
+                currentPage === 1 || isLoading
+                  ? 'border-gray-200 text-gray-400 cursor-not-allowed'
+                  : 'border-gray-300 hover:bg-gray-100'
+              }`}
+            >
+              Previous
+            </button>
+
+            {/* Simple numeric pagination; could be enhanced to show ranges */}
+            <button
+              type="button"
+              aria-current={currentPage === 1 ? 'page' : undefined}
+              onClick={() => setCurrentPage(1)}
+              className={`px-3 py-1 rounded-md text-sm ${
+                currentPage === 1
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+              disabled={isLoading}
+            >
+              1
+            </button>
+
+            <button
+              type="button"
+              aria-current={currentPage === 2 ? 'page' : undefined}
+              onClick={() => setCurrentPage(2)}
+              className={`px-3 py-1 rounded-md text-sm ${
+                currentPage === 2
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+              disabled={isLoading}
+            >
+              2
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setCurrentPage((p) => p + 1)}
+              disabled={isLoading || (totalResults > 0 && currentPage * 8 >= totalResults)}
+              className={`px-3 py-1 rounded-md text-sm border ${
+                isLoading || (totalResults > 0 && currentPage * 8 >= totalResults)
+                  ? 'border-gray-200 text-gray-400 cursor-not-allowed'
+                  : 'border-gray-300 hover:bg-gray-100'
+              }`}
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
-    </div>
     </div>
   );
 }
