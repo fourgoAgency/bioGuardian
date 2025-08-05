@@ -1,8 +1,8 @@
-import { Job } from "@/app/admin/job-listing/page";
+import { JobListing } from "@/app/admin/job-listing/page";
 import { Dialog } from "@headlessui/react";
 
 const JobDetailsModal: React.FC<{
-  job: Job | null;
+  job: JobListing | null;
   open: boolean;
   onClose: () => void;
 }> = ({ job, open, onClose }) => {

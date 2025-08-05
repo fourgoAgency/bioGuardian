@@ -51,7 +51,7 @@ export default function OrderVolumeChart() {
 
         if (!monthlyData[month]) monthlyData[month] = {};
 
-        data.items.forEach((item: any) => {
+        data.items.forEach((item: {name:string, quantity?: number}) => {
           const productName = item.name;
           const quantity = item.quantity ?? 1;
 

@@ -1,4 +1,17 @@
-import { Job, JobStatus } from "@/app/admin/job-listing/page";
+type JobStatus = "Active" | "Pending Review" | "Closed";
+
+export type Job = {
+  id: string;
+  title: string;
+  department?: string;
+  type?: string;
+  location?: string;
+  experience?: string;
+  posted?: Date;
+  deadline?: Date;
+  status?: JobStatus;
+};
+
 
 
 const formatDate = (d?: Date) =>

@@ -396,7 +396,7 @@ const JobApplicationsTable: React.FC = () => {
                           application={openApp}
                           open={!!openApp}
                           onClose={() => setOpenApp(null)}
-                          onStatusUpdated={(newStatus) => {
+                          onStatusUpdated={() => {
                             queryClient.invalidateQueries({ queryKey: ['jobApplications'] });
                           }}
                         />

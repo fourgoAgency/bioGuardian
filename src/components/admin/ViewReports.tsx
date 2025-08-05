@@ -148,7 +148,7 @@ export default function ViewReportButton() {
             const orderItems = data.items || [];
 
             const orderTotal = orderItems.reduce(
-                (sum: number, item: any) =>
+                (sum: number, item: {price: number, quantity: number}) =>
                     sum + (Number(item.price) || 0) * (Number(item.quantity) || 1),
                 0
             );
