@@ -5,20 +5,28 @@ import {
   query,
   orderBy,
   limit,
+  Timestamp,
 } from "firebase/firestore";
 
+// Type for each activity item returned
 export interface ActivityItem {
   activity: string;
   status: "New" | "Pending" | "Completed";
   date: string;
 }
 
+// Flexible type for Firestore documents used in getActivity
+type FirestoreDocData = {
+  id: string;
+  [key: string]: unknown;
+};
+
 export const getRecentActivities = async (): Promise<ActivityItem[]> => {
   const collections = [
     {
       name: "orders",
       label: "Order",
-      getActivity: (doc: any) => `Order #${doc.id} received`,
+      getActivity: (doc: FirestoreDocData) => `Order #${doc.id} received`,
       status: "New",
     },
     {
@@ -30,19 +38,19 @@ export const getRecentActivities = async (): Promise<ActivityItem[]> => {
     {
       name: "subscribers",
       label: "Subscriber",
-      getActivity: (doc: any) => `New subscriber: ${doc.email}`,
+      getActivity: (doc: FirestoreDocData) => `New subscriber: ${doc.email}`,
       status: "New",
     },
     {
       name: "blogs",
       label: "Blog",
-      getActivity: (doc: any) => `Blog published: ${doc.title}`,
+      getActivity: (doc: FirestoreDocData) => `Blog published: ${doc.title}`,
       status: "Pending",
     },
     {
       name: "jobListings",
       label: "Job",
-      getActivity: (doc: any) => `Job posted: ${doc.title}`,
+      getActivity: (doc: FirestoreDocData) => `Job posted: ${doc.title}`,
       status: "Pending",
     },
     {
@@ -61,11 +69,13 @@ export const getRecentActivities = async (): Promise<ActivityItem[]> => {
       orderBy("created_at", "desc"),
       limit(5)
     );
+
     const snapshot = await getDocs(q);
+
     snapshot.forEach((doc) => {
       const data = doc.data();
       const date =
-        data.created_at?.toDate?.()?.toISOString().split("T")[0] ??
+        (data.created_at as Timestamp)?.toDate?.()?.toISOString().split("T")[0] ??
         new Date().toISOString().split("T")[0];
 
       allActivities.push({

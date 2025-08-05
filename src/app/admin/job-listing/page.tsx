@@ -10,7 +10,6 @@ import { motion } from 'framer-motion';
 import { collection, getDocs, deleteDoc, orderBy, query, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 
 export interface JobListing {
   id: string;
@@ -67,7 +66,6 @@ const ITEMS_PER_PAGE = 6;
 
 const JobListingPage: React.FC = () => {
   const [jobs, setJobs] = useState<JobListing[]>([]);
-  const { id: jobId } = useParams();
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('All');
   const [locationFilter, setLocationFilter] = useState('');

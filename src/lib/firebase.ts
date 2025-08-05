@@ -1,7 +1,7 @@
 // firebase.ts
 import { initializeApp } from 'firebase/app';
 
-import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { getStorage } from 'firebase/storage'; // ✅ Add this for file uploads
 

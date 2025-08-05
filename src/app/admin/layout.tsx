@@ -2,11 +2,7 @@
 "use client";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import React, { useState } from "react";
-import { Menu } from "lucide-react";
 import Sidebar from "@/components/admin/Sidebar";
-import Navbar from "@/components/Navbar"; // agar separate hai
-import Footer from "@/components/Footer";
-// ... baki imports
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);

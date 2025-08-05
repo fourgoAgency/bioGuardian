@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import OverviewCard from "@/components/admin/OverviewCard";
 import OrderVolumeChart from "@/components/admin/OrderVolumeChart";
 import JobTrendsChart from "@/components/admin/JobTrendsChart";
-import ActivityItem from "@/components/admin/ActivityItem";
-import { Button } from "@/components/ui/button";
 import {
   ShoppingCart,
   User,
@@ -24,8 +22,11 @@ import RecentActivities from "@/components/admin/RecentActivity";
 import ViewReportButton from "@/components/admin/ViewReports";
 
 export default function Dashboard() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [activities, setActivities] = useState<Activity[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(true);
+
   const [counts, setCounts] = useState({
     orders: 0,
     contacts: 0,
@@ -76,7 +77,7 @@ export default function Dashboard() {
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
           Admin Dashboard
         </h1>
-        <ViewReportButton/>
+        <ViewReportButton />
       </div>
 
       {/* Dashboard Overview */}
@@ -131,7 +132,7 @@ export default function Dashboard() {
 
       {/* Recent Activities */}
       <div className="bg-white shadow rounded-xl p-4 w-full">
-        <RecentActivities/>
+        <RecentActivities />
       </div>
     </main>
   );
