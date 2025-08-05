@@ -190,10 +190,10 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
               <p><strong>Email:</strong> {order.customer_email}</p>
               <p><strong>Items:</strong> {order.total_items} items</p>
               <p><strong>Address:</strong> {order.shipping_address}</p>
-              <p>
+              <div>
                 <strong>Status:</strong>{" "}
                 <Badge className="ml-1 capitalize">{order.status}</Badge>
-              </p>
+              </div>
               <p><strong>Placed:</strong> {order.created_at instanceof Timestamp
                 ? format(order.created_at.toDate(), "MMM dd, yyyy HH:mm")
                 : "N/A"}</p>
