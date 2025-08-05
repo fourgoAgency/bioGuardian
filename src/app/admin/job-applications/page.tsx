@@ -7,8 +7,6 @@ const JobApplicationsPage: React.FC = () => {
   return (
     <ProtectedRoute>
       <div className="flex min-h-screen">
-        
-
         {/* Main content */}
         <main className="flex-1 bg-gray-50 p-8">
           <JobApplicationsTable />

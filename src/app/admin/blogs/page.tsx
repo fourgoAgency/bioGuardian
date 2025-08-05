@@ -132,7 +132,7 @@ const BlogsPage = () => {
                   <Button
                     size="sm"
                     variant="destructive"
-                    className="w-full"
+                    className='w-full'
                     disabled={deletingId === blog.id}
                     onClick={() => handleDelete(blog.id)}
                   >

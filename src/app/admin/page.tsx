@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import OverviewCard from "@/components/admin/OverviewCard";
 import OrderVolumeChart from "@/components/admin/OrderVolumeChart";
 import JobTrendsChart from "@/components/admin/JobTrendsChart";
@@ -13,8 +14,61 @@ import {
   Briefcase,
   Clipboard,
 } from "lucide-react";
+import {
+  getRecentActivities,
+  ActivityItem as Activity,
+} from "@/lib/RecentActivities";
+import { db } from "@/lib/firebase";
+import { collection, onSnapshot } from "firebase/firestore";
+import RecentActivities from "@/components/admin/RecentActivity";
+import ViewReportButton from "@/components/admin/ViewReports";
 
 export default function Dashboard() {
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [counts, setCounts] = useState({
+    orders: 0,
+    contacts: 0,
+    subscribers: 0,
+    blogs: 0,
+    jobListings: 0,
+    applications: 0,
+  });
+
+  useEffect(() => {
+    const unsubscribers = [
+      onSnapshot(collection(db, "orders"), (snap) =>
+        setCounts((prev) => ({ ...prev, orders: snap.size }))
+      ),
+      onSnapshot(collection(db, "contact_submissions"), (snap) =>
+        setCounts((prev) => ({ ...prev, contacts: snap.size }))
+      ),
+      onSnapshot(collection(db, "newsletter_subscriptions"), (snap) =>
+        setCounts((prev) => ({ ...prev, subscribers: snap.size }))
+      ),
+      onSnapshot(collection(db, "posts"), (snap) =>
+        setCounts((prev) => ({ ...prev, blogs: snap.size }))
+      ),
+      onSnapshot(collection(db, "jobs"), (snap) =>
+        setCounts((prev) => ({ ...prev, jobListings: snap.size }))
+      ),
+      onSnapshot(collection(db, "job_applications"), (snap) =>
+        setCounts((prev) => ({ ...prev, applications: snap.size }))
+      ),
+    ];
+
+    return () => unsubscribers.forEach((unsub) => unsub());
+  }, []);
+
+  useEffect(() => {
+    const fetchActivities = async () => {
+      const data = await getRecentActivities();
+      setActivities(data);
+      setLoading(false);
+    };
+    fetchActivities();
+  }, []);
+
   return (
     <main className=" sm:px-6 space-y-6">
       {/* Header */}
@@ -22,9 +76,7 @@ export default function Dashboard() {
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
           Admin Dashboard
         </h1>
-        <Button className="w-full sm:w-fit" variant="default">
-          View Report &gt;
-        </Button>
+        <ViewReportButton/>
       </div>
 
       {/* Dashboard Overview */}
@@ -32,37 +84,37 @@ export default function Dashboard() {
         <OverviewCard
           title="Total Orders"
           Icon={ShoppingCart}
-          value="2,567"
+          value={counts.orders.toLocaleString()}
           timeframe="Past 30 days"
         />
         <OverviewCard
           title="Total Contacts"
           Icon={Mail}
-          value="852"
+          value={counts.contacts.toLocaleString()}
           timeframe="This month"
         />
         <OverviewCard
           title="Total Subscribers"
           Icon={User}
-          value="1,204"
+          value={counts.subscribers.toLocaleString()}
           timeframe="This month"
         />
         <OverviewCard
           title="Total Blogs"
           Icon={FileText}
-          value="128"
+          value={counts.blogs.toLocaleString()}
           timeframe="All time"
         />
         <OverviewCard
           title="Total Job Listings"
           Icon={Briefcase}
-          value="24"
+          value={counts.jobListings.toLocaleString()}
           timeframe="Active now"
         />
         <OverviewCard
           title="Total Applications"
           Icon={Clipboard}
-          value="349"
+          value={counts.applications.toLocaleString()}
           timeframe="Under review"
         />
       </div>
@@ -79,36 +131,7 @@ export default function Dashboard() {
 
       {/* Recent Activities */}
       <div className="bg-white shadow rounded-xl p-4 w-full">
-        <h2 className="text-lg sm:text-xl font-semibold mb-4">
-          Recent Activities
-        </h2>
-        <div className="space-y-3">
-          <ActivityItem
-            activity="Order #BG2023-012 received"
-            status="New"
-            date="2025-07-12"
-          />
-          <ActivityItem
-            activity="Question about drug efficacy"
-            status="New"
-            date="2025-07-12"
-          />
-          <ActivityItem
-            activity="Article draft for 'Innovations in Vaccine'"
-            status="Pending"
-            date="2025-07-13"
-          />
-          <ActivityItem
-            activity="Order #BG2023-009 shipped"
-            status="Completed"
-            date="2025-07-14"
-          />
-          <ActivityItem
-            activity="New subscriber: biolead@email.com"
-            status="New"
-            date="2025-07-15"
-          />
-        </div>
+        <RecentActivities/>
       </div>
     </main>
   );

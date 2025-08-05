@@ -1,29 +1,31 @@
+// In your layout/root component
 "use client";
-import { useState } from "react";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import React, { useState } from "react";
 import { Menu } from "lucide-react";
 import Sidebar from "@/components/admin/Sidebar";
-import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import Navbar from "@/components/Navbar"; // agar separate hai
+import Footer from "@/components/Footer";
+// ... baki imports
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
 
   return (
     <ProtectedRoute>
-    <div className="flex pt-24 px-4 sm:px-6">
-      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+      <div className="min-h-screen flex flex-col">
 
-      <div className="flex-1">
-        {/* Mobile Menu Button */}
-        <div className="md:hidden p-4">
-          <button onClick={() => setSidebarOpen(true)}>
-            <Menu className="w-6 h-6" />
-          </button>
+        {/* Body */}
+        <div className="flex flex-1 relative h-full">
+          <Sidebar open={open} setOpen={setOpen} />
+
+          <div className="flex-1 mt-20 mb-8 overflow-auto md:pl-64">
+            {children}
+          </div>
         </div>
-
-        {/* Page Content */}
-        <div className="p-4">{children}</div>
       </div>
-    </div>
     </ProtectedRoute>
   );
 }
+
+
