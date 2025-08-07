@@ -9,7 +9,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col mt-16">
 
         {/* Body */}
         <div className="flex flex-1 relative h-full">
@@ -23,5 +23,6 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     </ProtectedRoute>
   );
 }
+
 
 
