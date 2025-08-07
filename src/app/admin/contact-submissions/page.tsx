@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import ContactSubmissionsTable from '@/components/admin/ContactSubmissionsTable';
-import useDebounce from '@/hooks/useDebounce'; 
+import useDebounce from '@/hooks/useDebounce';
 
 export default function ContactsPage() {
   const [search, setSearch] = useState('');
@@ -52,8 +52,8 @@ export default function ContactsPage() {
           </div>
         </header>
 
-        <div className="flex flex-col md:flex-row md:items-end gap-4 mb-4">
-          <div className="flex-1 min-w-0">
+        <div className="flex flex-wrap gap-4 mb-4">
+          <div className="flex-1 min-w-[200px]">
             <label htmlFor="search" className="sr-only">
               Search by name or keyword
             </label>
@@ -68,13 +68,13 @@ export default function ContactsPage() {
             />
           </div>
 
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 min-w-[150px]">
             <label htmlFor="status" className="sr-only">
               Filter by status
             </label>
             <select
               id="status"
-              className="border border-gray-300 rounded-md px-4 py-2"
+              className="w-full border border-gray-300 rounded-md px-4 py-2"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
               aria-label="Filter by status"
@@ -86,20 +86,21 @@ export default function ContactsPage() {
             </select>
           </div>
 
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 min-w-[150px]">
             <label htmlFor="date" className="sr-only">
               Filter by date
             </label>
             <input
               id="date"
               type="date"
-              className="border border-gray-300 rounded-md px-4 py-2"
+              className="w-full border border-gray-300 rounded-md px-4 py-2"
               value={date}
               onChange={(e) => setDate(e.target.value)}
               aria-label="Filter by date"
             />
           </div>
         </div>
+
 
         <div className="overflow-x-auto bg-white rounded-lg shadow-sm">
           <ContactSubmissionsTable
@@ -119,11 +120,10 @@ export default function ContactsPage() {
               type="button"
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1 || isLoading}
-              className={`px-3 py-1 rounded-md text-sm border ${
-                currentPage === 1 || isLoading
+              className={`px-3 py-1 rounded-md text-sm border ${currentPage === 1 || isLoading
                   ? 'border-gray-200 text-gray-400 cursor-not-allowed'
                   : 'border-gray-300 hover:bg-gray-100'
-              }`}
+                }`}
             >
               Previous
             </button>
@@ -133,11 +133,10 @@ export default function ContactsPage() {
               type="button"
               aria-current={currentPage === 1 ? 'page' : undefined}
               onClick={() => setCurrentPage(1)}
-              className={`px-3 py-1 rounded-md text-sm ${
-                currentPage === 1
+              className={`px-3 py-1 rounded-md text-sm ${currentPage === 1
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
+                }`}
               disabled={isLoading}
             >
               1
@@ -147,11 +146,10 @@ export default function ContactsPage() {
               type="button"
               aria-current={currentPage === 2 ? 'page' : undefined}
               onClick={() => setCurrentPage(2)}
-              className={`px-3 py-1 rounded-md text-sm ${
-                currentPage === 2
+              className={`px-3 py-1 rounded-md text-sm ${currentPage === 2
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
+                }`}
               disabled={isLoading}
             >
               2
@@ -161,11 +159,10 @@ export default function ContactsPage() {
               type="button"
               onClick={() => setCurrentPage((p) => p + 1)}
               disabled={isLoading || (totalResults > 0 && currentPage * 8 >= totalResults)}
-              className={`px-3 py-1 rounded-md text-sm border ${
-                isLoading || (totalResults > 0 && currentPage * 8 >= totalResults)
+              className={`px-3 py-1 rounded-md text-sm border ${isLoading || (totalResults > 0 && currentPage * 8 >= totalResults)
                   ? 'border-gray-200 text-gray-400 cursor-not-allowed'
                   : 'border-gray-300 hover:bg-gray-100'
-              }`}
+                }`}
             >
               Next
             </button>

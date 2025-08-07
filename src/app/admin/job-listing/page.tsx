@@ -122,8 +122,8 @@ const JobListingPage: React.FC = () => {
     <div className="max-w-7xl mx-auto py-8 px-4">
       <div className="flex w-full justify-between mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Job Listings</h1>
-        <Link href="/admin/job-listing/new-job" className="w-full md:w-auto">
-          <Button className="w-full md:w-fit">
+        <Link href="/admin/job-listing/new-job" className="md:w-auto">
+          <Button className="justify-items-end w-fit">
             <Plus className="w-4 h-4 mr-2" />
             Add New Job
           </Button>

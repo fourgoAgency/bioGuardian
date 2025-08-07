@@ -90,7 +90,7 @@ export default function OrdersPage() {
 
   return (
      <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Orders Management</h1>
+      <h1 className="text-2xl font-bold m-4">Orders Management</h1>
 
       {/* Overview Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">

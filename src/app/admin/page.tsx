@@ -73,8 +73,8 @@ export default function Dashboard() {
   return (
     <main className=" sm:px-6 space-y-6">
       {/* Header */}
-      <div className="flex flex-col justify-between sm:items-center gap-4 mb-6">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
+      <div className="flex flex-col sm:flex-row md:justify-between sm:items-center justify-center gap-4 mb-6">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold ml-4">
           Admin Dashboard
         </h1>
         <ViewReportButton />
@@ -83,37 +83,37 @@ export default function Dashboard() {
       {/* Dashboard Overview */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         <OverviewCard
-          title="Total Orders Received"
+          title="Total Orders"
           Icon={ShoppingCart}
           value={counts.orders.toLocaleString()}
           timeframe="Past 30 days"
         />
         <OverviewCard
-          title="Total Contact Forms Submissions"
+          title="Total Contacts"
           Icon={Mail}
           value={counts.contacts.toLocaleString()}
           timeframe="This month"
         />
         <OverviewCard
-          title="Total Subscribers List"
+          title="Total Subscribers"
           Icon={User}
           value={counts.subscribers.toLocaleString()}
           timeframe="This month"
         />
         <OverviewCard
-          title="Total Blogs Management"
+          title="Total Blogs"
           Icon={FileText}
           value={counts.blogs.toLocaleString()}
           timeframe="All time"
         />
         <OverviewCard
-          title="Total Job Vacancies Management"
+          title="Total Job Listings"
           Icon={Briefcase}
           value={counts.jobListings.toLocaleString()}
           timeframe="Active now"
         />
         <OverviewCard
-          title="Total Job Applications"
+          title="Total Applications"
           Icon={Clipboard}
           value={counts.applications.toLocaleString()}
           timeframe="Under review"

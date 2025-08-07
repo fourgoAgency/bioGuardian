@@ -7,6 +7,11 @@ import { Menu } from "lucide-react";
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false); // Start closed on mobile
 
+  // Correctly defined function
+  const GotoWebsite = () => {
+    window.location.href = "https://bio-guardian-tau.vercel.app";
+  };
+
   return (
     <ProtectedRoute>
       <div className="min-h-screen flex flex-col">
@@ -21,7 +26,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           >
             <Menu className="w-6 h-6" />
           </button>
-          <h1 className="text-lg font-semibold">Admin Panel</h1>
+          <button className="text-sm font-semibold" onClick={GotoWebsite}>
+            Back to website
+          </button>
         </div>
 
         {/* Body */}
