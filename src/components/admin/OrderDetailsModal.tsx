@@ -11,7 +11,10 @@ import { cn } from '@/lib/utils';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { toast } from 'sonner';
-import type {Order} from '@/app/admin/orders/order_type'
+import type { Order } from '@/app/admin/orders/order_type'
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import OrderSlip from '@/components/admin/OrderSlip'; 
+
 
 interface OrderDetailsModalProps {
   order: Order | null;
@@ -28,10 +31,10 @@ const OrderDetailsModal = ({ order, isOpen, onClose }: OrderDetailsModalProps) =
 
   const items = order?.items ?? [];
   const grandTotal = items.reduce(
-  (acc: number, item: { price: number; quantity: number }) =>
-    acc + item.price * item.quantity,
-  0
-);
+    (acc: number, item: { price: number; quantity: number }) =>
+      acc + item.price * item.quantity,
+    0
+  );
 
 
   const handleStatusChange = async (newStatus: string) => {
@@ -63,7 +66,7 @@ const OrderDetailsModal = ({ order, isOpen, onClose }: OrderDetailsModalProps) =
         <DialogHeader>
           <DialogTitle>Order Details - #{order.id?.slice(0, 8)}</DialogTitle>
         </DialogHeader>
-        
+
         <div className="space-y-6">
           {/* Customer Information */}
           <div className="bg-gray-50 p-4 rounded-lg">
@@ -101,8 +104,8 @@ const OrderDetailsModal = ({ order, isOpen, onClose }: OrderDetailsModalProps) =
               <Badge
                 variant={
                   order.status === 'cancelled' ? 'destructive'
-                  : order.status === 'pending' ? 'default'
-                  : 'secondary'
+                    : order.status === 'pending' ? 'default'
+                      : 'secondary'
                 }
                 className={cn({
                   "bg-green-100 text-green-800 border-green-200 hover:bg-green-100/80": order.status === 'delivered',
@@ -162,12 +165,17 @@ const OrderDetailsModal = ({ order, isOpen, onClose }: OrderDetailsModalProps) =
             </div>
           )}
         </div>
-        <Button
-          className="mt-6"
-          onClick={onClose}
+        <PDFDownloadLink
+          document={<OrderSlip order={order} />}
+          fileName={`order-slip-${order.id?.slice(0, 8)}.pdf`}
         >
-          Print
-        </Button>
+          {({ loading }) => (
+            <Button className="mt-6" disabled={loading}>
+              {loading ? 'Preparing Slip...' : 'Download Slip'}
+            </Button>
+          )}
+        </PDFDownloadLink>
+
       </DialogContent>
     </Dialog>
   );
