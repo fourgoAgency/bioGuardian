@@ -87,42 +87,36 @@ export default function Dashboard() {
           Icon={ShoppingCart}
           value={counts.orders.toLocaleString()}
           timeframe="Past 30 days"
-          link='/admin/orders'
         />
         <OverviewCard
           title="Total Contact Forms Submissions"
           Icon={Mail}
           value={counts.contacts.toLocaleString()}
           timeframe="This month"
-          link='/admin/contact-submissions'
         />
         <OverviewCard
           title="Total Subscribers List"
           Icon={User}
           value={counts.subscribers.toLocaleString()}
           timeframe="This month"
-          link='/admin/newsletter-subscribers'
         />
         <OverviewCard
           title="Total Blogs Management"
           Icon={FileText}
           value={counts.blogs.toLocaleString()}
           timeframe="All time"
-          link= "/admin/blogs"
         />
         <OverviewCard
           title="Total Job Vacancies Management"
           Icon={Briefcase}
           value={counts.jobListings.toLocaleString()}
           timeframe="Active now"
-          link= "/admin/job-listing"
         />
         <OverviewCard
           title="Total Job Applications"
           Icon={Clipboard}
           value={counts.applications.toLocaleString()}
           timeframe="Under review"
-          link= "/admin/job-applications"
         />
       </div>
 
