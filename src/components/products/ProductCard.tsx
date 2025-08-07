@@ -87,7 +87,7 @@ const ProductCard = ({ product, selectedImageIndex, onImageSelect, children }: P
           <div className="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
             10% OFF
           </div>
-          <div className="relative z-10 h-56">
+          <div className="flex flex-col h-56">
             <Image
               src={product.mainImage}
               alt={product.name}
