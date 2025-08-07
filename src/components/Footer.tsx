@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Mail, Map, Facebook, Instagram, Linkedin } from 'lucide-react';
 import { db } from '@/lib/firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -16,44 +16,49 @@ const Footer = () => {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) {
+  e.preventDefault();
+  if (!email) {
+    toast({
+      title: "Error",
+      description: "Please enter your email address.",
+      variant: "destructive",
+    });
+    return;
+  }
+
+  setLoading(true);
+  try {
+    await addDoc(collection(db, "newsletter_subscriptions"), {
+      email,
+      created_at: serverTimestamp(), // ✅ added timestamp
+    });
+
+    toast({
+      title: "Success!",
+      description: "You've been subscribed to our newsletter. Welcome!",
+    });
+    setEmail('');
+  } catch (error: unknown) {
+    if (
+      error instanceof Error &&
+      (error as FirebaseError).code === 'already-exists'
+    ) {
+      toast({
+        title: "Already Subscribed",
+        description: "This email is already subscribed.",
+      });
+    } else {
+      console.error('Error subscribing to newsletter:', error);
       toast({
         title: "Error",
-        description: "Please enter your email address.",
+        description: "There was an error subscribing. Please try again later.",
         variant: "destructive",
       });
-      return;
     }
+  }
+  setLoading(false);
+};
 
-    setLoading(true);
-    try {
-      await addDoc(collection(db, "newsletter_subscriptions"), { email });
-      toast({
-        title: "Success!",
-        description: "You've been subscribed to our newsletter. Welcome!",
-      });
-      setEmail('');
-    } catch (error: unknown) {
-  if (
-    error instanceof Error &&
-    (error as FirebaseError).code === 'already-exists'
-  ) {
-    toast({
-      title: "Already Subscribed",
-      description: "This email is already subscribed.",
-    });
-      } else {
-        console.error('Error subscribing to newsletter:', error);
-        toast({
-          title: "Error",
-          description: "There was an error subscribing. Please try again later.",
-          variant: "destructive",
-        });
-      }
-    }
-    setLoading(false);
-  };
 
   return (
     <footer className="bg-gradient-to-br from-slate-900 to-slate-800 text-white">
