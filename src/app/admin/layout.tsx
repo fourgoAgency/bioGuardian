@@ -1,15 +1,28 @@
-// In your layout/root component
 "use client";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import React, { useState } from "react";
 import Sidebar from "@/components/admin/Sidebar";
+import { Menu } from "lucide-react";
 
-export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useState(true);
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = useState(false); // Start closed on mobile
 
   return (
     <ProtectedRoute>
       <div className="min-h-screen flex flex-col">
+
+        {/* Topbar */}
+        <div className="fixed top-0 left-0 right-0 z-50 h-16 bg-white border-b shadow-sm flex items-center justify-between px-4 md:hidden">
+          {/* Hamburger Button */}
+          <button
+            onClick={() => setOpen(true)}
+            className="p-2"
+            aria-label="Open sidebar"
+          >
+            <Menu className="w-6 h-6" />
+          </button>
+          <h1 className="text-lg font-semibold">Admin Panel</h1>
+        </div>
 
         {/* Body */}
         <div className="flex flex-1 relative h-full">
@@ -23,7 +36,3 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     </ProtectedRoute>
   );
 }
-
-
-
-
