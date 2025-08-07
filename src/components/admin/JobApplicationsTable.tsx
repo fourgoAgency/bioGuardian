@@ -206,8 +206,7 @@ const JobApplicationsTable: React.FC = () => {
 
   return (
     <>
-    <h1 className='md:hidden block text-lg font-bold'>See on desktop</h1>
-    <Card className='hidden md:block'>
+    <Card className=''>
       <CardHeader className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <CardTitle>Job Applications</CardTitle>
