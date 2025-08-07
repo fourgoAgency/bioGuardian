@@ -52,13 +52,13 @@ export default function Sidebar({
       <aside
         aria-label="Main navigation"
         className={clsx(
-          "absolute top-20 left-0 bg-white border-r shadow-md flex flex-col p-4 transition-transform duration-300",
+          "fixed md:absolute top-20 left-0 bg-white border-r shadow-md flex flex-col p-4 transition-transform duration-300",
           "w-full max-w-[16rem] md:w-64",
-          open ? "translate-x-0" : "-translate-x-full",
-          "md:translate-x-0",
-          "md:z-0" // ensure sidebar is above overlay on desktop / clickable
+          open ? "translate-x-0 z-50" : "-translate-x-full z-0",
+          "md:translate-x-0 md:z-0"
         )}
       >
+
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-lg font-bold text-gray-800">BioGuardian Admin</h1>

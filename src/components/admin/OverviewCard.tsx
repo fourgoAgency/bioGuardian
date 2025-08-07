@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function OverviewCard({ title, Icon, value, timeframe }: { title: string; Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>; value: string | number; timeframe: string}) {
+export default function OverviewCard({ title, Icon, value, timeframe }: { title: string; Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>; value: string | number; timeframe: string }) {
   return (
     <div className="bg-white shadow-xl border rounded-xl p-4 m-4">
       <h3 className="text-sm text-gray-500">{title}</h3>
@@ -14,5 +14,3 @@ export default function OverviewCard({ title, Icon, value, timeframe }: { title:
     </div>
   );
 }
-
-

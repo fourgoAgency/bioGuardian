@@ -171,13 +171,13 @@ const ContactSubmissionsTable: React.FC<Props> = ({ filters = {}, onMetaChange }
       (old) =>
         old
           ? old.map((s) =>
-              s.id === submission.id
-                ? {
-                    ...s,
-                    status: newStatus,
-                  }
-                : s
-            )
+            s.id === submission.id
+              ? {
+                ...s,
+                status: newStatus,
+              }
+              : s
+          )
           : old
     );
 
@@ -217,7 +217,7 @@ const ContactSubmissionsTable: React.FC<Props> = ({ filters = {}, onMetaChange }
           <div className="p-4 text-center">No submissions match the current filters.</div>
         ) : (
           <Table>
-            <TableHeader>
+            <TableHeader className="hidden md:table-header-group">
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
@@ -229,15 +229,21 @@ const ContactSubmissionsTable: React.FC<Props> = ({ filters = {}, onMetaChange }
                 <TableHead className="text-center">Actions</TableHead>
               </TableRow>
             </TableHeader>
+
             <TableBody>
               {paginated.map((submission) => (
-                <TableRow key={submission.id}>
-                  <TableCell className="font-medium">{submission.name}</TableCell>
+                <TableRow
+                  key={submission.id}
+                  className="flex flex-col md:table-row border md:border-0 p-4 md:p-0 mb-4 md:mb-0 rounded-lg md:rounded-none shadow md:shadow-none"
+                >
+                  {/* Show only on desktop */}
+                  <TableCell className="hidden md:table-cell font-medium">{submission.name}</TableCell>
                   <TableCell>{submission.email}</TableCell>
-                  <TableCell>{submission.phone || 'N/A'}</TableCell>
-                  <TableCell>
+                  <TableCell className="hidden md:table-cell">{submission.phone || 'N/A'}</TableCell>
+                  <TableCell className="hidden md:table-cell">
                     <Badge variant="outline">{submission.subject}</Badge>
                   </TableCell>
+
                   <TableCell>
                     <Dialog>
                       <DialogTrigger asChild>
@@ -253,14 +259,12 @@ const ContactSubmissionsTable: React.FC<Props> = ({ filters = {}, onMetaChange }
                       </DialogContent>
                     </Dialog>
                   </TableCell>
-                  <TableCell>
+
+                  <TableCell className="hidden md:table-cell">
                     <Select
                       value={submission.status || 'New'}
                       onValueChange={(val) =>
-                        updateStatus(
-                          submission,
-                          val as Submission['status']
-                        )
+                        updateStatus(submission, val as Submission['status'])
                       }
                       disabled={updatingId === submission.id}
                     >
@@ -274,10 +278,12 @@ const ContactSubmissionsTable: React.FC<Props> = ({ filters = {}, onMetaChange }
                       </SelectContent>
                     </Select>
                   </TableCell>
-                  <TableCell className="text-right">
+
+                  <TableCell className="text-right hidden md:table-cell">
                     {normalizeDate(submission.created_at)}
                   </TableCell>
-                  <TableCell className="text-center">
+
+                  <TableCell className="text-center hidden md:table-cell">
                     {submission.status !== 'Resolved' ? (
                       <Button
                         size="sm"
@@ -294,8 +300,10 @@ const ContactSubmissionsTable: React.FC<Props> = ({ filters = {}, onMetaChange }
               ))}
             </TableBody>
           </Table>
+
         )}
       </CardContent>
+      <h1 className='flex md:hidden text-lg font-bold'>for More details go to desktop</h1>
     </Card>
   );
 };

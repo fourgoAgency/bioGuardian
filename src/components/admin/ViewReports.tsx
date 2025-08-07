@@ -180,7 +180,7 @@ export default function ViewReportButton() {
             fileName="company-report.pdf"
         >
             {({ loading }) => (
-                <Button className="btn">
+                <Button className="btn ml-4">
                     {loading ? "Generating PDF..." : "View Report"}
                 </Button>
             )}
