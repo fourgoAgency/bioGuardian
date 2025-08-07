@@ -83,40 +83,46 @@ export default function Dashboard() {
       {/* Dashboard Overview */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         <OverviewCard
-          title="Total Orders"
+          title="Total Orders Received"
           Icon={ShoppingCart}
           value={counts.orders.toLocaleString()}
           timeframe="Past 30 days"
+          link='/admin/orders'
         />
         <OverviewCard
-          title="Total Contacts"
+          title="Total Contact Forms Submissions"
           Icon={Mail}
           value={counts.contacts.toLocaleString()}
           timeframe="This month"
+          link='/admin/contact-submissions'
         />
         <OverviewCard
-          title="Total Subscribers"
+          title="Total Subscribers List"
           Icon={User}
           value={counts.subscribers.toLocaleString()}
           timeframe="This month"
+          link='/admin/newsletter-subscribers'
         />
         <OverviewCard
-          title="Total Blogs"
+          title="Total Blogs Management"
           Icon={FileText}
           value={counts.blogs.toLocaleString()}
           timeframe="All time"
+          link= "/admin/blogs"
         />
         <OverviewCard
-          title="Total Job Listings"
+          title="Total Job Vacancies Management"
           Icon={Briefcase}
           value={counts.jobListings.toLocaleString()}
           timeframe="Active now"
+          link= "/admin/job-listing"
         />
         <OverviewCard
-          title="Total Applications"
+          title="Total Job Applications"
           Icon={Clipboard}
           value={counts.applications.toLocaleString()}
           timeframe="Under review"
+          link= "/admin/job-applications"
         />
       </div>
 
