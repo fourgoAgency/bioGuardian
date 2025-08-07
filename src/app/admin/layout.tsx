@@ -5,11 +5,11 @@ import React, { useState } from "react";
 import Sidebar from "@/components/admin/Sidebar";
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen flex flex-col mt-16">
+      <div className="min-h-screen flex flex-col">
 
         {/* Body */}
         <div className="flex flex-1 relative h-full">
@@ -23,6 +23,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
     </ProtectedRoute>
   );
 }
+
 
 
 
