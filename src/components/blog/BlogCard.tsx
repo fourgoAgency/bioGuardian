@@ -19,13 +19,32 @@ interface BlogCardProps {
 }
 
 const BlogCard = ({ post, onClick }: BlogCardProps) => {
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
+  const formatDate = (dateValue: string | number | { seconds: number; nanoseconds: number }) => {
+  let date: Date;
+
+  if (!dateValue) return "N/A";
+
+  // If Firestore Timestamp
+  if (typeof dateValue === "object" && "seconds" in dateValue) {
+    date = new Date(dateValue.seconds * 1000);
+  }
+  // If it's a number (milliseconds)
+  else if (typeof dateValue === "number") {
+    date = new Date(dateValue);
+  }
+  // If it's a string
+  else {
+    date = new Date(dateValue);
+  }
+
+  return isNaN(date.getTime())
+    ? "N/A"
+    : date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+};
 
   const getCategoryDisplayName = (category: string) => {
     const categoryMap: { [key: string]: string } = {
