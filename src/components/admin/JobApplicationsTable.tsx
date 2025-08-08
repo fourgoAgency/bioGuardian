@@ -42,7 +42,7 @@ const fetchApplications = async (): Promise<Application[]> => {
   const snapshot = await getDocs(q);
 
   return snapshot.docs.map(docSnap => {
-    const data = docSnap.data() as any;
+    const data = docSnap.data();
     return {
       id: docSnap.id,
       name: data.name || '',
