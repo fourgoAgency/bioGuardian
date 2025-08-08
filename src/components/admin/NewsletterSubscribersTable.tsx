@@ -40,19 +40,29 @@ const fetchSubscribers = async (): Promise<Subscription[]> => {
   const q = query(subsRef, orderBy('created_at', 'desc'));
   const querySnapshot = await getDocs(q);
 
-  return querySnapshot.docs.map(doc => ({
-    ...(doc.data() as Subscription),
-  }));
+  return querySnapshot.docs.map(docSnap => {
+    const data = docSnap.data() as Subscription;
+    return {
+      id: docSnap.id,
+      email: data.email,
+      created_at: data.created_at
+    };
+  });
 };
 
-const normalizeDate = (created_at: string | Date | Timestamp | null | undefined
+const normalizeDate = (
+  created_at: string | Date | Timestamp | null | undefined
 ): Date | null => {
-  if (created_at && typeof created_at === 'object' && 'toDate' in created_at) {
-    return (created_at as Timestamp).toDate();
+  if (created_at instanceof Timestamp) {
+    return created_at.toDate();
+  }
+  if (created_at instanceof Date) {
+    return created_at;
   }
   const d = new Date(created_at as string);
   return isNaN(d.getTime()) ? null : d;
 };
+
 
 const NewsletterSubscribersTable: React.FC<{ filterEmail: string }> = ({ filterEmail }) => {
   const { data: subscribers, refetch } = useQuery<Subscription[]>({
@@ -98,21 +108,31 @@ const NewsletterSubscribersTable: React.FC<{ filterEmail: string }> = ({ filterE
     alert('Deleted successfully');
   };
 
-  const handleExport = () => {
-    const rows = filtered.filter(sub => selectedIds.includes(sub.id));
-    if (rows.length === 0) return;
+ const handleExport = () => {
+  const rows = filtered.filter(sub => selectedIds.includes(sub.id));
+  if (rows.length === 0) return;
 
-    const csv = [
-      ['Email', 'Created At'],
-      ...rows.map(sub => [
+  const csv = [
+    ['Email', 'Created At (UTC+5)'],
+    ...rows.map(sub => {
+      const date = normalizeDate(sub.created_at);
+      if (!date) return [sub.email, ''];
+
+      // Convert to UTC+5 manually
+      const utc5Date = new Date(date.getTime() + 5 * 60 * 60 * 1000);
+      return [
         sub.email,
-        normalizeDate(sub.created_at)?.toISOString() ?? ''
-      ]),
-    ].map(row => row.join(',')).join('\n');
+        utc5Date.toISOString().replace('Z', '+05:00')
+      ];
+    }),
+  ]
+    .map(row => row.join(','))
+    .join('\n');
 
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    saveAs(blob, 'subscribers.csv');
-  };
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  saveAs(blob, 'subscribers.csv');
+};
+
 
   return (
     <Card className="w-full">

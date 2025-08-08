@@ -29,7 +29,8 @@ export interface Application {
   position: string;
   experience: string;
   education: string;
-  cover_letter: string;
+  cover_letter?: string;
+  coverLetter? : string;
   resume_url: string;
   created_at: Timestamp;
   application_status?: string;
@@ -40,11 +41,24 @@ const fetchApplications = async (): Promise<Application[]> => {
   const q = query(appsRef, orderBy('created_at', 'desc'));
   const snapshot = await getDocs(q);
 
-  return snapshot.docs.map(doc => ({
-    ...(doc.data() as Application),
-    id: doc.id,
-  }));
+  return snapshot.docs.map(docSnap => {
+    const data = docSnap.data() as any;
+    return {
+      id: docSnap.id,
+      name: data.name || '',
+      email: data.email || '',
+      phone: data.phone || '',
+      position: data.position || '',
+      experience: data.experience || '',
+      education: data.education || '',
+      cover_letter: data.cover_letter || data.coverLetter || '',
+      resume_url: data.resume_url || data.resumeUrl || '',
+      created_at: data.created_at,
+      application_status: data.application_status || data.applicationStatus || '',
+    };
+  });
 };
+
 
 const formatDate = (created_at: Timestamp | undefined) => {
   if (created_at?.seconds) {

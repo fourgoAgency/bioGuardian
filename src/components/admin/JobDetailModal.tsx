@@ -173,7 +173,7 @@ const JobApplicationDetailModal: React.FC<Props> = ({
           <div>
             <h3 className="text-sm font-semibold mb-1">Cover Letter</h3>
             <div className="bg-gray-50 border rounded p-3 text-sm whitespace-pre-line">
-              {application.cover_letter || 'N/A'}
+              {application.cover_letter || application.coverLetter || 'N/A'}
             </div>
           </div>
 
