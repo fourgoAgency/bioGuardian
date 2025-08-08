@@ -15,7 +15,7 @@ interface JobListing {
   description?: string;
   requirements?: string[];
   responsibilities?: string[];
-  created_at?: Timestamp | string;
+  created_at?: Timestamp | undefined;
 }
 
 interface JobCardProps {
@@ -84,7 +84,7 @@ const JobCard: React.FC<JobCardProps> = ({ job, onReadClick }) => {
   );
 };
 
-function formatRelativeDate(dateInput: any) {
+function formatRelativeDate(dateInput : Timestamp | undefined) {
   let d: Date;
 
   if (!dateInput) return "";
