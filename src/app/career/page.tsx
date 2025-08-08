@@ -2,13 +2,24 @@
 import React, { useEffect, useState } from "react";
 import CareerHero from "@/components/career/CareerHero";
 import JobCard from "@/components/career/JobCard";
-import { collection, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, getDocs, addDoc, serverTimestamp, Timestamp } from "firebase/firestore";
 import { db, storage } from '@/lib/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { ApplicationData } from "@/components/career/ApplicationForm";
 import ApplicationForm from "@/components/career/ApplicationForm";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import JobDetailDialog from "@/components/career/JobDailog";
 
-interface JobListing {
+
+export interface JobListing {
   id: string;
   title: string;
   location: string;
@@ -17,11 +28,15 @@ interface JobListing {
   description: string;
   requirements: string[];
   responsibilities: string[];
+  created_at?: Timestamp | string;
 }
 
 const CareerPage: React.FC = () => {
   const [jobListings, setJobListings] = useState<JobListing[]>([]);
   const [showApplicationForm, setShowApplicationForm] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<JobListing | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
 
   const [applicationData, setApplicationData] = useState<ApplicationData>({
     name: '',
@@ -123,13 +138,23 @@ const CareerPage: React.FC = () => {
             <JobCard
               key={job.id}
               job={job}
-              onApplyClick={() => {
-                setApplicationData((prev) => ({ ...prev, position: job.title }));
-                setShowApplicationForm(true);
+              onReadClick={() => {
+                setSelectedJob(job);
+                setIsDialogOpen(true);
               }}
             />
           ))}
         </div>
+        <JobDetailDialog
+          job={selectedJob}
+          open={isDialogOpen}
+          onClose={setIsDialogOpen}
+          onApply={() => {
+            setShowApplicationForm(true);
+            setIsDialogOpen(false);
+          }}
+        />
+
 
         {showApplicationForm && (
           <section className="max-w-3xl mx-auto">
