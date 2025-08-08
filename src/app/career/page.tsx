@@ -19,7 +19,7 @@ export interface JobListing {
   description: string;
   requirements: string[];
   responsibilities: string[];
-  created_at?: Timestamp | string;
+  created_at?: Timestamp | undefined;
 }
 
 const CareerPage: React.FC = () => {
