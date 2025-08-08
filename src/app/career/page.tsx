@@ -7,7 +7,6 @@ import { db, storage } from '@/lib/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { ApplicationData } from "@/components/career/ApplicationForm";
 import ApplicationForm from "@/components/career/ApplicationForm";
-import { Button } from "@/components/ui/button";
 import JobDetailDialog from "@/components/career/JobDailog";
 
 
