@@ -146,18 +146,20 @@ export default function OrdersPage() {
         />
         <OverviewCard
           title="Total Revenue"
-          value={`PKR ${filteredRevenue.toLocaleString()}`}
+          value={`PKR ${(startDate || endDate ? filteredRevenue : totalRevenue).toLocaleString()
+            }`}
           timeframe={
             startDate && endDate
               ? `${startDate} → ${endDate}`
               : startDate
-              ? `From ${startDate}`
-              : endDate
-              ? `Until ${endDate}`
-              : "All time"
+                ? `From ${startDate}`
+                : endDate
+                  ? `Until ${endDate}`
+                  : "All time"
           }
           Icon={DollarSign}
         />
+
       </div>
 
       {/* Filters */}
@@ -193,26 +195,26 @@ export default function OrdersPage() {
 
         {/* Date Range Inputs */}
         <div className="flex mb-4">
-        <div>
-        <p className="text-sm text-gray-600 mb-1">Start Date</p>
-        <Input
-          type="date"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          className="w-full"
-          placeholder="Start Date"
-        />
-        </div>
-        <div>
-        <p className="text-sm text-gray-600 mb-1">End Date</p>
-        <Input
-          type="date"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          className="w-full"
-          placeholder="End Date"
-        />
-        </div>
+          <div>
+            <p className="text-sm text-gray-600 mb-1">Start Date</p>
+            <Input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="w-full"
+              placeholder="Start Date"
+            />
+          </div>
+          <div>
+            <p className="text-sm text-gray-600 mb-1">End Date</p>
+            <Input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="w-full"
+              placeholder="End Date"
+            />
+          </div>
         </div>
 
         <Button
