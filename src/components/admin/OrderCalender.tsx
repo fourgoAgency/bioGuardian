@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface DateRangePickerProps {
   onDateChange?: (start: Date | null, end: Date | null) => void;
@@ -39,3 +39,4 @@ export default function DateRangePicker({ onDateChange }: DateRangePickerProps) 
     </div>
   );
 }
+
