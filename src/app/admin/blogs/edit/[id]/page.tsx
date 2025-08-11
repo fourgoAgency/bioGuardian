@@ -37,8 +37,8 @@ export default function EditBlogPage() {
         setTitle(data.title);
         setExcerpt(data.excerpt);
         setContent(data.content);
-        setCategory(data.category);
-        setAuthor(data.author);
+        setCategory(data.category ?? '');
+        setAuthor(data.author ?? '');
         setExistingImageUrl(data.image_url);
       } else {
         alert('Post not found');
@@ -49,39 +49,39 @@ export default function EditBlogPage() {
   }, [id, router]);
 
   const handleSubmit = async (e: FormEvent) => {
-  e.preventDefault();
-  setLoading(true);
+    e.preventDefault();
+    setLoading(true);
 
-  try {
-    let imageUrl = existingImageUrl;
+    try {
+      let imageUrl = existingImageUrl;
 
-    // Upload only if a new file is selected
-    if (image) {
-      const imageRef = ref(storage, `posts/${image.name}`);
-      await uploadBytes(imageRef, image);
-      imageUrl = await getDownloadURL(imageRef);
+      // Upload only if a new file is selected
+      if (image) {
+        const imageRef = ref(storage, `posts/${image.name}`);
+        await uploadBytes(imageRef, image);
+        imageUrl = await getDownloadURL(imageRef);
+      }
+
+      const docRef = doc(db, 'posts', id as string);
+      await updateDoc(docRef, {
+        title,
+        excerpt,
+        content,
+        category,
+        author,
+        slug: slugify(title, { lower: true }),
+        image_url: imageUrl,
+      });
+
+      toast({ title: 'Success', description: 'Post updated successfully!' });
+      router.push('/admin/blogs');
+    } catch (error) {
+      console.error(error);
+      toast({ title: 'Error', description: 'Failed to update post', variant: 'destructive' });
+    } finally {
+      setLoading(false);
     }
-
-    const docRef = doc(db, 'posts', id as string);
-    await updateDoc(docRef, {
-      title,
-      excerpt,
-      content,
-      category,
-      author,
-      slug: slugify(title, { lower: true }),
-      image_url: imageUrl,
-    });
-
-    toast({ title: 'Success', description: 'Post updated successfully!' });
-    router.push('/admin/blogs');
-  } catch (error) {
-    console.error(error);
-    toast({ title: 'Error', description: 'Failed to update post', variant: 'destructive' });
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <div className="p-6 space-y-6">
@@ -139,7 +139,7 @@ export default function EditBlogPage() {
               {existingImageUrl && (
                 <div>
                   <p className="mb-2">Current Image:</p>
-                  <Image src={existingImageUrl} alt="Current" className="w-48 rounded"  width={256} height={256} />
+                  <Image src={existingImageUrl} alt="Current" className="w-48 rounded" width={256} height={256} />
                 </div>
               )}
               <input
@@ -205,4 +205,3 @@ export default function EditBlogPage() {
     </div>
   );
 }
-
