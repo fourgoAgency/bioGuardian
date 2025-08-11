@@ -4,7 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Calendar, User, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import Image from 'next/image';
 
@@ -13,7 +13,7 @@ interface Post {
   title: string;
   content: string;
   excerpt: string | null;
-  created_at: string;
+  created_at: string | Date | Timestamp | null | undefined;
   slug: string;
   category: string | null;
   image_url: string | null;
@@ -74,15 +74,26 @@ useEffect(() => {
 }, [slug, toast]);
 
 
+const formatDate = (dateValue: string | Date | Timestamp | null | undefined) => {
+  if (!dateValue) return "No date";
 
+  let date: Date;
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
+  if (dateValue instanceof Timestamp) {
+    date = dateValue.toDate();
+  } else if (dateValue instanceof Date) {
+    date = dateValue;
+  } else {
+    date = new Date(dateValue);
+  }
+
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+
 
   const formatContent = (content: string) => {
     return content.split('\n').map((paragraph, index) => {
