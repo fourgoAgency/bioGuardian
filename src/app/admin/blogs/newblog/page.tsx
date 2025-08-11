@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef, ChangeEvent, FormEvent } from 'react';
+import { useState, FormEvent } from 'react';
 import { db, storage } from '@/lib/firebase';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -11,7 +11,6 @@ import { Label } from '@/components/ui/label';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-import { Switch } from '@/components/ui/switch';
 
 export default function AddBlogPage() {
   const [title, setTitle] = useState('');
@@ -20,19 +19,10 @@ export default function AddBlogPage() {
   const [category, setCategory] = useState('');
   const [author, setAuthor] = useState('');
   const [image, setImage] = useState<File | null>(null);
-  const textareaRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
 
-  const handleTextareaChange = (index: number, value: string, setter: (val: string) => void) => {
-    setter(value);
-    const textarea = textareaRefs.current[index];
-    if (textarea) {
-      textarea.style.height = 'auto';
-      textarea.style.height = `${textarea.scrollHeight}px`;
-    }
-  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -42,9 +32,10 @@ export default function AddBlogPage() {
         description: 'Please fill in all fields.',
         variant: 'destructive'
       });
+      setLoading(false);
       return;
     }
-
+    setLoading(true);
     let imageUrl = '';
     if (image) {
       const imageRef = ref(storage, `posts/${image.name}`);
@@ -66,6 +57,7 @@ export default function AddBlogPage() {
     toast({
       title: 'Blog post created successfully!',
       description: 'Your new blog post has been published.'});
+    setLoading(false);
     setTitle('');
     setExcerpt('');
     setContent('');

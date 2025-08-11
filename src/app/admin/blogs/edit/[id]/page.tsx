@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef, ChangeEvent, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { db, storage } from '@/lib/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
@@ -11,7 +11,8 @@ import slugify from 'slugify';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-import { Switch } from '@/components/ui/switch';
+import Image from 'next/image';
+
 
 export default function EditBlogPage() {
   const { id } = useParams();
@@ -24,7 +25,6 @@ export default function EditBlogPage() {
   const [author, setAuthor] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [existingImageUrl, setExistingImageUrl] = useState('');
-  const textareaRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
 
@@ -47,15 +47,6 @@ export default function EditBlogPage() {
     };
     fetchPost();
   }, [id, router]);
-
-  const handleTextareaChange = (index: number, value: string, setter: (val: string) => void) => {
-    setter(value);
-    const textarea = textareaRefs.current[index];
-    if (textarea) {
-      textarea.style.height = 'auto';
-      textarea.style.height = `${textarea.scrollHeight}px`;
-    }
-  };
 
   const handleSubmit = async (e: FormEvent) => {
   e.preventDefault();
@@ -148,7 +139,7 @@ export default function EditBlogPage() {
               {existingImageUrl && (
                 <div>
                   <p className="mb-2">Current Image:</p>
-                  <img src={existingImageUrl} alt="Current" className="w-48 rounded" />
+                  <Image src={existingImageUrl} alt="Current" className="w-48 rounded" />
                 </div>
               )}
               <input
