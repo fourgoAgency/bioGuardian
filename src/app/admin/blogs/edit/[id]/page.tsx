@@ -1,29 +1,52 @@
 'use client';
-import { useState, useRef, ChangeEvent, FormEvent } from 'react';
+import { useState, useEffect, useRef, ChangeEvent, FormEvent } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import { db, storage } from '@/lib/firebase';
-import { collection, addDoc, Timestamp } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import slugify from 'slugify';
 import { Label } from '@/components/ui/label';
-import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 
-export default function AddBlogPage() {
+export default function EditBlogPage() {
+  const { id } = useParams();
+  const router = useRouter();
+
   const [title, setTitle] = useState('');
   const [excerpt, setExcerpt] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('');
   const [author, setAuthor] = useState('');
   const [image, setImage] = useState<File | null>(null);
+  const [existingImageUrl, setExistingImageUrl] = useState('');
   const textareaRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
-  const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      const docRef = doc(db, 'posts', id as string);
+      const snap = await getDoc(docRef);
+      if (snap.exists()) {
+        const data = snap.data();
+        setTitle(data.title);
+        setExcerpt(data.excerpt);
+        setContent(data.content);
+        setCategory(data.category);
+        setAuthor(data.author);
+        setExistingImageUrl(data.image_url);
+      } else {
+        alert('Post not found');
+        router.push('/admin/blogs');
+      }
+    };
+    fetchPost();
+  }, [id, router]);
 
   const handleTextareaChange = (index: number, value: string, setter: (val: string) => void) => {
     setter(value);
@@ -35,24 +58,21 @@ export default function AddBlogPage() {
   };
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!title || !excerpt || !content || !category || !author) {
-      toast({
-        title: 'Error',
-        description: 'Please fill in all fields.',
-        variant: 'destructive'
-      });
-      return;
-    }
+  e.preventDefault();
+  setLoading(true);
 
-    let imageUrl = '';
+  try {
+    let imageUrl = existingImageUrl;
+
+    // Upload only if a new file is selected
     if (image) {
       const imageRef = ref(storage, `posts/${image.name}`);
       await uploadBytes(imageRef, image);
       imageUrl = await getDownloadURL(imageRef);
     }
 
-    await addDoc(collection(db, 'posts'), {
+    const docRef = doc(db, 'posts', id as string);
+    await updateDoc(docRef, {
       title,
       excerpt,
       content,
@@ -60,26 +80,21 @@ export default function AddBlogPage() {
       author,
       slug: slugify(title, { lower: true }),
       image_url: imageUrl,
-      created_at: Timestamp.now(),
     });
 
-    toast({
-      title: 'Blog post created successfully!',
-      description: 'Your new blog post has been published.'});
-    setTitle('');
-    setExcerpt('');
-    setContent('');
-    setCategory('');
-    setAuthor('');
-    setImage(null);
+    toast({ title: 'Success', description: 'Post updated successfully!' });
     router.push('/admin/blogs');
-  };
+  } catch (error) {
+    console.error(error);
+    toast({ title: 'Error', description: 'Failed to update post', variant: 'destructive' });
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold">Add New Blog Post</h1>
-      <p className="text-sm text-muted-foreground">Create engaging content for your audience.</p>
-
+      <h1 className="text-3xl font-bold">Edit Blog</h1>
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Blog Details */}
         <div className="space-y-4">
@@ -130,67 +145,72 @@ export default function AddBlogPage() {
           <div className="space-y-2">
             <Label htmlFor="image">Thumbnail Image</Label>
             <div className="border border-dashed border-gray-300 rounded-lg p-6 text-center">
+              {existingImageUrl && (
+                <div>
+                  <p className="mb-2">Current Image:</p>
+                  <img src={existingImageUrl} alt="Current" className="w-48 rounded" />
+                </div>
+              )}
               <input
                 id="image"
                 type="file"
                 accept="image/*"
                 onChange={(e) => setImage(e.target.files?.[0] || null)}
                 disabled={loading}
-                required
               />
               <p className="text-sm text-gray-500 mt-2">PNG, JPG, or GIF (up to 5MB)</p>
             </div>
           </div>
+
         </div>
-        {/* Additional Details */}
+
+        {/* Additional Options */}
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold">Additional Details</h2>
-          <div className="space-y-2">
+          <h2 className="text-lg font-semibold">Additional Options</h2>
+          <div className="flex items-center space-x-4">
             <Label htmlFor="category">Category</Label>
             <Input
               id="category"
-              placeholder="Enter blog category"
+              placeholder="Enter category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               disabled={loading}
-              required
             />
-            <div className="space-y-2">
-              <Label htmlFor="tags">Author</Label>
-              <Input
-                id="author"
-                placeholder="Enter author's name"
-                value={author}
-                onChange={(e) => setAuthor(e.target.value)}
-                disabled={loading}
-                required
-              />
-            </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <Label htmlFor="author">Author</Label>
+            <Input
+              id="author"
+              placeholder="Enter author name"
+              value={author}
+              onChange={(e) => setAuthor(e.target.value)}
+              disabled={loading}
+            />
           </div>
 
-        {/* Submit */}
-        <div className="flex justify-end gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => router.push('/admin/blogs')}
-            disabled={loading}
-          >
-            Cancel
-          </Button>
-          <Button type="submit" disabled={loading}>
-            {loading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                Publishing...
-              </>
-            ) : (
-              'Publish Blog'
-            )}
-          </Button>
-        </div>
+          {/* Submit */}
+          <div className="flex justify-end gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.push('/admin/blogs')}
+              disabled={loading}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={loading}>
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  Saving...
+                </>
+              ) : (
+                'Update Blog'
+              )}
+            </Button>
+          </div>
         </div>
       </form>
-      </div>
+    </div>
   );
 }

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -25,6 +26,7 @@ const BlogsPage = () => {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -129,6 +131,14 @@ const BlogsPage = () => {
 
                 {/* Actions */}
                 <div className="mt-4 flex flex-col sm:flex-row gap-2">
+                  <Button
+                    onClick={() => router.push(`/admin/blogs/edit/${blog.id}`)}
+                    size="sm"
+                    className="bg-blue-500 hover:bg-blue-600 text-white w-full"
+                  >
+                    Edit
+                  </Button>
+
                   <Button
                     size="sm"
                     variant="destructive"
