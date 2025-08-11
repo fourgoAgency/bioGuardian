@@ -139,7 +139,7 @@ export default function EditBlogPage() {
               {existingImageUrl && (
                 <div>
                   <p className="mb-2">Current Image:</p>
-                  <Image src={existingImageUrl} alt="Current" className="w-48 rounded" />
+                  <Image src={existingImageUrl} alt="Current" className="w-48 rounded"  width={256} height={256} />
                 </div>
               )}
               <input
@@ -205,3 +205,4 @@ export default function EditBlogPage() {
     </div>
   );
 }
+
