@@ -19,6 +19,7 @@ export interface JobListing {
   description: string;
   requirements: string[];
   responsibilities: string[];
+  whatWeOffer?: string[];
   created_at?: Timestamp | undefined;
 }
 
@@ -143,6 +144,13 @@ const CareerPage: React.FC = () => {
           onApply={() => {
             setShowApplicationForm(true);
             setIsDialogOpen(false);
+            // Scroll to application form after a brief delay
+            setTimeout(() => {
+              const formElement = document.getElementById('application-form');
+              if (formElement) {
+                formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            }, 100);
           }}
         />
 

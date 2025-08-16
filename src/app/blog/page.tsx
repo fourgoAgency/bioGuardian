@@ -1,7 +1,6 @@
 'use client';
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import React, { useState, useEffect } from 'react';
+import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import UpdatePcosImage from '@/components/UpdatePcosImage';
 import BlogHero from '@/components/blog/BlogHero';
@@ -20,33 +19,55 @@ interface Post {
   category: string;
   image_url: string;
   author: string;
-  [key: string]: unknown;
 }
 
 const Blog = () => {
-  const { data: posts, isLoading, error } = useQuery<Post[]>({
-    queryKey: ['posts'],
-    queryFn: async () => {
-      const q = query(collection(db, 'posts'), orderBy('created_at', 'desc'));
-      const snapshot = await getDocs(q);
-      return snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          title: data.title ?? '',
-          content: data.content ?? '',
-          created_at: data.created_at ?? '',
-          excerpt: data.excerpt ?? '',
-          slug: data.slug ?? '',
-          category: data.category ?? '',
-          image_url: data.image_url ?? '',
-          author: data.author ?? '',
-        };
-      }) as Post[];
-    },
-  });
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (isLoading) {
+  useEffect(() => {
+    const q = collection(db, 'posts');
+    
+    const unsubscribe = onSnapshot(q, 
+      (snapshot) => {
+        const fetchedPosts = snapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            title: data.title ?? '',
+            content: data.content ?? '',
+            created_at: data.created_at ?? '',
+            updated_at: data.updated_at ?? data.created_at ?? '',
+            excerpt: data.excerpt ?? '',
+            slug: data.slug ?? '',
+            category: data.category ?? '',
+            image_url: data.image_url ?? '',
+            author: data.author ?? '',
+          };
+        });
+        
+        // Sort posts: prioritize updated_at if it exists, otherwise use created_at
+        const sortedPosts = fetchedPosts.sort((a, b) => {
+          const dateA = a.updated_at ? new Date(a.updated_at) : new Date(a.created_at);
+          const dateB = b.updated_at ? new Date(b.updated_at) : new Date(b.created_at);
+          return dateB.getTime() - dateA.getTime();
+        });
+        
+        setPosts(sortedPosts);
+        setLoading(false);
+      },
+      (error) => {
+        console.error('Error fetching posts:', error);
+        setError('Could not load articles from the database.');
+        setLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
     return (
       <>
 

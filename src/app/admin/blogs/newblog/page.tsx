@@ -11,6 +11,8 @@ import { Label } from '@/components/ui/label';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
+import Image from 'next/image';
+
 
 export default function AddBlogPage() {
   const [title, setTitle] = useState('');
@@ -23,6 +25,32 @@ export default function AddBlogPage() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
 
+  const quillModules = {
+    toolbar: [
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'script': 'sub'}, { 'script': 'super' }],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'indent': '-1'}, { 'indent': '+1' }],
+      [{ 'direction': 'rtl' }],
+      [{ 'align': [] }],
+      ['link', 'image', 'video'],
+      ['clean']
+    ],
+  };
+
+  const quillFormats = [
+    'header',
+    'bold', 'italic', 'underline', 'strike',
+    'color', 'background',
+    'script',
+    'list', 'bullet',
+    'indent',
+    'direction',
+    'align',
+    'link', 'image', 'video'
+  ];
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -49,7 +77,7 @@ export default function AddBlogPage() {
       content,
       category,
       author,
-      slug: slugify(title, { lower: true }),
+      slug: slugify(title.replace(/:/g, ''), { lower: true }),
       image_url: imageUrl,
       created_at: Timestamp.now(),
     });
@@ -93,14 +121,14 @@ export default function AddBlogPage() {
             <Label htmlFor="content">Blog Content</Label>
             <Textarea
               id="content"
-              placeholder="Write your blog post content here..."
-              rows={8}
+              placeholder="Write your blog content here..."
+              rows={10}
               value={content}
               onChange={(e) => setContent(e.target.value)}
               disabled={loading}
               required
             />
-          </div>
+            </div>
         </div>
 
         {/* Categorization & Media */}
@@ -112,6 +140,7 @@ export default function AddBlogPage() {
             <Textarea
               id="excerpt"
               placeholder="Short preview of your blog..."
+              rows={4}
               value={excerpt}
               onChange={(e) => setExcerpt(e.target.value)}
               disabled={loading}
@@ -122,6 +151,18 @@ export default function AddBlogPage() {
           <div className="space-y-2">
             <Label htmlFor="image">Thumbnail Image</Label>
             <div className="border border-dashed border-gray-300 rounded-lg p-6 text-center">
+              {image && (
+                <div className="mb-4">
+                  <p className="mb-2">Selected Image:</p>
+                  <Image 
+                    src={URL.createObjectURL(image)} 
+                    alt="Preview" 
+                    className="w-48 rounded mx-auto" 
+                    width={256} 
+                    height={256} 
+                  />
+                </div>
+              )}
               <input
                 id="image"
                 type="file"
@@ -134,6 +175,7 @@ export default function AddBlogPage() {
             </div>
           </div>
         </div>
+        
         {/* Additional Details */}
         <div className="space-y-4">
           <h2 className="text-lg font-semibold">Additional Details</h2>
@@ -148,7 +190,7 @@ export default function AddBlogPage() {
               required
             />
             <div className="space-y-2">
-              <Label htmlFor="tags">Author</Label>
+              <Label htmlFor="author">Author</Label>
               <Input
                 id="author"
                 placeholder="Enter author's name"
@@ -159,9 +201,10 @@ export default function AddBlogPage() {
               />
             </div>
           </div>
+        </div>
 
         {/* Submit */}
-        <div className="flex justify-end gap-2">
+        <div className="flex justify-end gap-2 mt-16">
           <Button
             type="button"
             variant="outline"
@@ -181,8 +224,7 @@ export default function AddBlogPage() {
             )}
           </Button>
         </div>
-        </div>
       </form>
-      </div>
+    </div>
   );
 }

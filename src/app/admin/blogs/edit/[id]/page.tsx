@@ -12,7 +12,41 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
+import "react-quill-new/dist/quill.snow.css";
+import Quill from "quill";
 
+// ✅ Define proper type for Quill formats
+interface QuillFormat {
+  whitelist: string[];
+}
+
+// ✅ Fonts
+const Font = Quill.import("formats/font") as QuillFormat;
+Font.whitelist = [
+  "arial",
+  "times-new-roman",
+  "courier-new",
+  "georgia",
+  "poppins",
+  "roboto",
+  "montserrat",
+  "verdana",
+  "tahoma",
+  "serif",
+  "sans-serif",
+  "monospace",
+];
+Quill.register("formats/font", Font);
+
+
+// ✅ Font Sizes
+const Size = Quill.import("formats/size") as QuillFormat;
+Size.whitelist = ["small", "normal", "large", "huge"];
+Quill.register("formats/size", Size);
+
+// ✅ Dynamic Import of ReactQuill
+const QuillEditor = dynamic(() => import("react-quill-new"), { ssr: false });
 
 export default function EditBlogPage() {
   const { id } = useParams();
@@ -27,6 +61,36 @@ export default function EditBlogPage() {
   const [existingImageUrl, setExistingImageUrl] = useState('');
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+
+  const quillModules = {
+    toolbar: [
+      [{ 'font': Font.whitelist }],
+      [{ 'size': Size.whitelist }],
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'script': 'sub' }, { 'script': 'super' }],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      [{ 'indent': '-1' }, { 'indent': '+1' }],
+      [{ 'direction': 'rtl' }],
+      [{ 'align': [] }],
+      ['link', 'image', 'video'],
+      ['clean']
+    ],
+  };
+
+  const quillFormats = [
+    'font', 'size',
+    'header',
+    'bold', 'italic', 'underline', 'strike',
+    'color', 'background',
+    'script',
+    'list',
+    'indent',
+    'direction',
+    'align',
+    'link', 'image', 'video'
+  ];
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -55,7 +119,6 @@ export default function EditBlogPage() {
     try {
       let imageUrl = existingImageUrl;
 
-      // Upload only if a new file is selected
       if (image) {
         const imageRef = ref(storage, `posts/${image.name}`);
         await uploadBytes(imageRef, image);
@@ -69,7 +132,7 @@ export default function EditBlogPage() {
         content,
         category,
         author,
-        slug: slugify(title, { lower: true }),
+        slug: slugify(title.replace(/:/g, ''), { lower: true }),
         image_url: imageUrl,
       });
 
@@ -105,15 +168,129 @@ export default function EditBlogPage() {
 
           <div className="space-y-2">
             <Label htmlFor="content">Blog Content</Label>
-            <Textarea
-              id="content"
-              placeholder="Write your blog post content here..."
-              rows={8}
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              disabled={loading}
-              required
-            />
+            <div className="border rounded-md">
+              <QuillEditor
+                value={content}
+                onChange={setContent}
+                modules={quillModules}
+                formats={quillFormats}
+                placeholder="Write your blog post content here..."
+                className="h-96"
+              />
+            </div>
+            <style jsx global>{`
+              .ql-editor {
+                min-height: 300px;
+                font-size: 16px;
+                line-height: 1.6;
+              }
+              .ql-container {
+                font-size: 16px;
+              }
+              /* Quill font labels */
+              .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="arial"]::before,
+              .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="arial"]::before {
+                content: "Arial";
+                font-family: Arial, sans-serif;
+              }
+
+              .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="times-new-roman"]::before,
+              .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="times-new-roman"]::before {
+                content: "Times New Roman";
+                font-family: "Times New Roman", serif;
+              }
+
+              .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="courier-new"]::before,
+              .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="courier-new"]::before {
+                content: "Courier New";
+                font-family: "Courier New", monospace;
+              }
+
+              .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="georgia"]::before,
+              .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="georgia"]::before {
+                content: "Georgia";
+                font-family: Georgia, serif;
+              }
+
+              .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="poppins"]::before,
+              .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="poppins"]::before {
+                content: "Poppins";
+                font-family: var(--font-poppins), sans-serif;
+              }
+
+              .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="roboto"]::before,
+              .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="roboto"]::before {
+                content: "Roboto";
+                font-family: var(--font-roboto), sans-serif;
+              }
+
+              .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="montserrat"]::before,
+              .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="montserrat"]::before {
+                content: "Montserrat";
+                font-family: var(--font-montserrat), sans-serif;
+              }
+
+              .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="verdana"]::before,
+              .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="verdana"]::before {
+                content: "Verdana";
+                font-family: Verdana, sans-serif;
+              }
+
+              .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="tahoma"]::before,
+              .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="tahoma"]::before {
+                content: "Tahoma";
+                font-family: Tahoma, sans-serif;
+              }
+
+              /* Ensure fonts are applied to editor content */
+              .ql-editor.ql-font-arial {
+                font-family: Arial, sans-serif;
+              }
+
+              .ql-editor.ql-font-times-new-roman {
+                font-family: "Times New Roman", serif;
+              }
+
+              .ql-editor.ql-font-courier-new {
+                font-family: "Courier New", monospace;
+              }
+
+              .ql-editor.ql-font-georgia {
+                font-family: Georgia, serif;
+              }
+
+              .ql-editor.ql-font-poppins {
+                font-family: var(--font-poppins), sans-serif;
+              }
+
+              .ql-editor.ql-font-roboto {
+                font-family: var(--font-roboto), sans-serif;
+              }
+
+              .ql-editor.ql-font-montserrat {
+                font-family: var(--font-montserrat), sans-serif;
+              }
+
+              .ql-editor.ql-font-verdana {
+                font-family: Verdana, sans-serif;
+              }
+
+              .ql-editor.ql-font-tahoma {
+                font-family: Tahoma, sans-serif;
+              }
+
+              .ql-editor.ql-font-serif {
+                font-family: serif;
+              }
+
+              .ql-editor.ql-font-sans-serif {
+                font-family: sans-serif;
+              }
+
+              .ql-editor.ql-font-monospace {
+                font-family: monospace;
+              }
+            `}</style>
           </div>
         </div>
 
@@ -126,6 +303,7 @@ export default function EditBlogPage() {
             <Textarea
               id="excerpt"
               placeholder="Short preview of your blog..."
+              rows={4}
               value={excerpt}
               onChange={(e) => setExcerpt(e.target.value)}
               disabled={loading}
@@ -152,7 +330,6 @@ export default function EditBlogPage() {
               <p className="text-sm text-gray-500 mt-2">PNG, JPG, or GIF (up to 5MB)</p>
             </div>
           </div>
-
         </div>
 
         {/* Additional Options */}
@@ -180,7 +357,7 @@ export default function EditBlogPage() {
           </div>
 
           {/* Submit */}
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 mt-16">
             <Button
               type="button"
               variant="outline"
@@ -205,3 +382,4 @@ export default function EditBlogPage() {
     </div>
   );
 }
+// end of file

@@ -164,3 +164,52 @@ body {
   @apply bg-gradient-to-br from-blue-50 via-white to-purple-50;
   min-height: 100vh;
 }
+
+/* Quill Editor Font Styles */
+.ql-font-arial {
+  font-family: Arial, sans-serif;
+}
+
+.ql-font-times-new-roman {
+  font-family: "Times New Roman", serif;
+}
+
+.ql-font-courier-new {
+  font-family: "Courier New", monospace;
+}
+
+.ql-font-georgia {
+  font-family: Georgia, serif;
+}
+
+.ql-font-poppins {
+  font-family: var(--font-poppins), sans-serif;
+}
+
+.ql-font-roboto {
+  font-family: var(--font-roboto), sans-serif;
+}
+
+.ql-font-montserrat {
+  font-family: var(--font-montserrat), sans-serif;
+}
+
+.ql-font-verdana {
+  font-family: Verdana, sans-serif;
+}
+
+.ql-font-tahoma {
+  font-family: Tahoma, sans-serif;
+}
+
+.ql-font-serif {
+  font-family: serif;
+}
+
+.ql-font-sans-serif {
+  font-family: sans-serif;
+}
+
+.ql-font-monospace {
+  font-family: monospace;
+}

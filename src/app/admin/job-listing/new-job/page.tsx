@@ -17,6 +17,7 @@ export default function AddJobPage() {
     description: '',
     requirements: '',
     responsibilities: '',
+    whatWeOffer: '',
     deadline: '',
     created_at: new Date(),
   });
@@ -55,6 +56,7 @@ export default function AddJobPage() {
         created_at: formData.created_at,
         requirements: formData.requirements.split('\n').filter(Boolean),
         responsibilities: formData.responsibilities.split('\n').filter(Boolean),
+        whatWeOffer: formData.whatWeOffer.split('\n').filter(Boolean),
       });
 
       alert('Job added successfully!');
@@ -156,7 +158,7 @@ export default function AddJobPage() {
             className="w-full border border-gray-300 rounded p-3"
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <textarea
               name="requirements"
               placeholder="Enter each requirement on a new line"
@@ -174,6 +176,14 @@ export default function AddJobPage() {
               className="w-full border border-gray-300 rounded p-2"
             />
           </div>
+          <textarea
+            name="whatWeOffer"
+            placeholder="Enter each benefit/perk on a new line (what we offer)"
+            value={formData.whatWeOffer}
+            onChange={handleChange}
+            rows={4}
+            className="w-full border border-gray-300 rounded p-2 mt-4"
+          />
         </div>
 
         {/* Deadline */}

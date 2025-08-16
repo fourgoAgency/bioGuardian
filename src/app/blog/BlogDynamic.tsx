@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
@@ -36,34 +36,35 @@ const BlogDynamic = () => {
     { id: 'hormonal-health', label: t('category_hormonal_health') }
   ];
 
-  const fetchPosts = React.useCallback(async () => {
-    setLoading(true);
-    try {
-      const postsRef = collection(db, 'posts');
-      const q = query(postsRef, orderBy('created_at', 'desc'));
-      const snapshot = await getDocs(q);
-      const fetchedPosts = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Post[];
-
-      setPosts(fetchedPosts);
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-      toast({
-        title: 'Error fetching posts',
-        description: 'Could not load articles from the database.',
-        variant: 'destructive',
-      });
-      setPosts([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [toast]);
-
   useEffect(() => {
-    fetchPosts();
-  }, [fetchPosts]);
+    setLoading(true);
+    
+    const postsRef = collection(db, 'posts');
+    const q = query(postsRef, orderBy('created_at', 'desc'));
+    
+    const unsubscribe = onSnapshot(q, 
+      (snapshot) => {
+        const fetchedPosts = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Post[];
+        setPosts(fetchedPosts);
+        setLoading(false);
+      },
+      (error) => {
+        console.error('Error fetching posts:', error);
+        toast({
+          title: 'Error fetching posts',
+          description: 'Could not load articles from the database.',
+          variant: 'destructive',
+        });
+        setPosts([]);
+        setLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [toast]);
 
   const filteredPosts = selectedCategory === 'all' 
     ? posts 

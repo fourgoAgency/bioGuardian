@@ -4,7 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Calendar, User, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import Image from 'next/image';
 
@@ -29,48 +29,52 @@ const BlogPost = () => {
 
  
 useEffect(() => {
-  const fetchPost = async () => {
-    if (!slug) return;
-    setLoading(true);
-    try {
-      const q = query(
-        collection(db, 'posts'),
-        where('slug', '==', slug)
-      );
-      const querySnapshot = await getDocs(q);
-      const dataArray: Post[] = [];
-      querySnapshot.forEach((doc) => {
-        const data = doc.data() as Post;
-        dataArray.push({
-          id: doc.id,
-          title: data.title ?? '',
-          content: data.content ?? '',
-          excerpt: data.excerpt ?? null,
-          created_at: data.created_at ?? '',
-          slug: data.slug ?? '',
-          category: data.category ?? null,
-          image_url: data.image_url ?? null,
-          author: data.author ?? null,
-        });
+  if (!slug) return;
+  setLoading(true);
+  
+  const q = query(
+    collection(db, 'posts'),
+    where('slug', '==', slug)
+  );
+  
+  const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    const dataArray: Post[] = [];
+    querySnapshot.forEach((doc) => {
+      const data = doc.data() as Post;
+      dataArray.push({
+        id: doc.id,
+        title: data.title ?? '',
+        content: data.content ?? '',
+        excerpt: data.excerpt ?? null,
+        created_at: data.created_at ?? '',
+        slug: data.slug ?? '',
+        category: data.category ?? null,
+        image_url: data.image_url ?? null,
+        author: data.author ?? null,
       });
-      const data = dataArray[0] || null;
-      if (!data) {
-        throw new Error('Post not found');
-      }
-      setPost(data);
-    } catch (error) {
-      console.error('Error fetching post:', error);
+    });
+    
+    const data = dataArray[0] || null;
+    if (!data) {
       toast({
         title: 'Error fetching article',
         description: 'The requested article could not be loaded.',
         variant: 'destructive',
       });
-    } finally {
-      setLoading(false);
     }
-  };
+    setPost(data);
+    setLoading(false);
+  }, (error) => {
+    console.error('Error fetching post:', error);
+    toast({
+      title: 'Error fetching article',
+      description: 'The requested article could not be loaded.',
+      variant: 'destructive',
+    });
+    setLoading(false);
+  });
 
-  fetchPost();
+  return () => unsubscribe();
 }, [slug, toast]);
 
 
@@ -96,34 +100,48 @@ const formatDate = (dateValue: string | Date | Timestamp | null | undefined) => 
 
 
   const formatContent = (content: string) => {
-    return content.split('\n').map((paragraph, index) => {
-      if (paragraph.startsWith('## ')) {
-        return (
-          <h2 key={index} className="text-2xl font-bold text-gray-800 mt-8 mb-4">
-            {paragraph.replace('## ', '')}
-          </h2>
-        );
-      } else if (paragraph.startsWith('### ')) {
-        return (
-          <h3 key={index} className="text-xl font-semibold text-gray-800 mt-6 mb-3">
-            {paragraph.replace('### ', '')}
-          </h3>
-        );
-      } else if (paragraph.startsWith('- ')) {
-        return (
-          <li key={index} className="text-gray-700 leading-relaxed ml-4">
-            {paragraph.replace('- ', '')}
-          </li>
-        );
-      } else if (paragraph.trim()) {
-        return (
-          <p key={index} className="text-gray-700 leading-relaxed mb-4">
-            {paragraph}
-          </p>
-        );
-      }
-      return null;
-    });
+    // Check if content contains HTML tags
+    const containsHTML = /<[^>]*>/g.test(content);
+    
+    if (containsHTML) {
+      // Render HTML content directly
+      return (
+        <div 
+          className="prose prose-lg max-w-none"
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
+      );
+    } else {
+      // Fallback to plain text formatting for backward compatibility
+      return content.split('\n').map((paragraph, index) => {
+        if (paragraph.startsWith('## ')) {
+          return (
+            <h2 key={index} className="text-2xl font-bold text-gray-800 mt-8 mb-4">
+              {paragraph.replace('## ', '')}
+            </h2>
+          );
+        } else if (paragraph.startsWith('### ')) {
+          return (
+            <h3 key={index} className="text-xl font-semibold text-gray-800 mt-6 mb-3">
+              {paragraph.replace('### ', '')}
+            </h3>
+          );
+        } else if (paragraph.startsWith('- ')) {
+          return (
+            <li key={index} className="text-gray-700 leading-relaxed ml-4">
+              {paragraph.replace('- ', '')}
+            </li>
+          );
+        } else if (paragraph.trim()) {
+          return (
+            <p key={index} className="text-gray-700 leading-relaxed mb-4">
+              {paragraph}
+            </p>
+          );
+        }
+        return null;
+      });
+    }
   };
 
   if (loading) {
@@ -209,9 +227,7 @@ const formatDate = (dateValue: string | Date | Timestamp | null | undefined) => 
 
           {/* Article Content */}
           <div className="bg-white/60 backdrop-blur-sm rounded-3xl border border-white/20 p-8 md:p-12">
-            <div className="prose prose-lg max-w-none">
-              {formatContent(post.content)}
-            </div>
+            {formatContent(post.content)}
           </div>
 
           {/* Navigation */}

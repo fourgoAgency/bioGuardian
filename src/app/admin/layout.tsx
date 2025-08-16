@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Sidebar from "@/components/admin/Sidebar";
 import { Menu } from "lucide-react";
 
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false); // Start closed on mobile
 
