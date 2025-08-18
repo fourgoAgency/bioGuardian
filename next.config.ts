@@ -18,6 +18,8 @@ const nextConfig: NextConfig = {
       }
     ],
   },
+  plugins: [
+    require('tailwindcss-animate')]
 };
 
 export default nextConfig;
