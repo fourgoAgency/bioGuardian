@@ -17,9 +17,7 @@ const nextConfig: NextConfig = {
         pathname: '/v0/b/**',
       }
     ],
-  },
-  plugins: [
-    require('tailwindcss-animate')]
+  }
 };
 
 export default nextConfig;
