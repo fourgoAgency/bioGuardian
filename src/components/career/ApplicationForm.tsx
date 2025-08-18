@@ -10,6 +10,7 @@ interface JobListing {
   description: string;
   requirements: string[];
   responsibilities: string[];
+  whatWeOffer?: string[];
 }
 
 export interface ApplicationData {
@@ -47,13 +48,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
         <Send className="w-8 h-8 text-blue-600" />
         <h2 className="text-2xl font-bold">Apply Now</h2>
       </div>
-      
-      {showApplicationForm && (
-        <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-2xl">
-          <p className="text-blue-800 font-medium">Applying for: {applicationData.position}</p>
-        </div>
-      )}
-      
+
       <form onSubmit={onSubmit} className="space-y-6">
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -70,7 +65,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
             placeholder="Enter your full name"
           />
         </div>
-        
+
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
             Email Address *
@@ -86,7 +81,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
             placeholder="Enter your email"
           />
         </div>
-        
+
         <div>
           <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
             Phone Number *
@@ -102,7 +97,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
             placeholder="Enter your phone number"
           />
         </div>
-        
+
         <div>
           <label htmlFor="position" className="block text-sm font-medium text-gray-700 mb-2">
             Position Applied For *
@@ -120,8 +115,10 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
               <option key={index} value={job.title}>{job.title}</option>
             ))}
           </select>
+
+
         </div>
-        
+
         <div>
           <label htmlFor="experience" className="block text-sm font-medium text-gray-700 mb-2">
             Years of Experience *
@@ -141,7 +138,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
             <option value="5+">5+ years</option>
           </select>
         </div>
-        
+
         <div>
           <label htmlFor="education" className="block text-sm font-medium text-gray-700 mb-2">
             Education *
@@ -177,7 +174,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
           />
           <p className="mt-1 text-xs text-gray-500">PDF, DOC, DOCX, JPG, or PNG file. Max 5MB.</p>
         </div>
-        
+
         <div>
           <label htmlFor="coverLetter" className="block text-sm font-medium text-gray-700 mb-2">
             Cover Letter *
@@ -193,7 +190,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
             placeholder="Tell us why you're interested in this position..."
           ></textarea>
         </div>
-        
+
         <button
           type="submit"
           disabled={isSubmitting}

@@ -15,6 +15,7 @@ interface JobListing {
   description?: string;
   requirements?: string[];
   responsibilities?: string[];
+  whatWeOffer?: string[];
   created_at?: Timestamp | undefined;
 }
 
@@ -67,6 +68,31 @@ const JobCard: React.FC<JobCardProps> = ({ job, onReadClick }) => {
                   {t}
                 </span>
               ))}
+            </div>
+          )}
+
+          {Array.isArray(job.whatWeOffer) && job.whatWeOffer.length > 0 && (
+            <div className="mt-3">
+              <h4 className="text-sm font-semibold mb-2 text-blue-700">What We Offer:</h4>
+              <div className="flex flex-wrap gap-2">
+                {job.whatWeOffer.slice(0, 3).map((offer, i) => (
+                  <span 
+                    key={i} 
+                    className={`text-xs px-2 py-1 rounded-full ${
+                      offer.toLowerCase().includes('firebase') 
+                        ? 'bg-orange-100 text-orange-800 border border-orange-200' 
+                        : 'bg-purple-100 text-purple-800'
+                    }`}
+                  >
+                    {offer}
+                  </span>
+                ))}
+                {job.whatWeOffer.length > 3 && (
+                  <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">
+                    +{job.whatWeOffer.length - 3} more
+                  </span>
+                )}
+              </div>
             </div>
           )}
 

@@ -15,6 +15,7 @@ export interface JobListing {
   description: string;
   requirements: string[];
   responsibilities: string[];
+  whatWeOffer?: string[];
   created_at?: Timestamp | string;
 }
 
@@ -84,6 +85,42 @@ export default function JobDetailDialog({ job, open, onClose, onApply }: JobDeta
                 <li key={idx}>{res}</li>
               ))}
             </ul>
+          </div>
+        )}
+
+        {/* What We Offer */}
+        {job.whatWeOffer && job.whatWeOffer?.length > 0 && (
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold text-blue-800">What We Offer</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
+              {job.whatWeOffer.map((offer, idx) => (
+                <div 
+                  key={idx} 
+                  className={`p-3 rounded-lg border ${
+                    offer.toLowerCase() 
+                      ? 'bg-blue-50 border-blue-200' 
+                      : 'bg-blue-50 border-blue-200'
+                  }`}
+                >
+                  <div className="flex items-start">
+                    <span className={`mr-2 mt-1 text-sm ${
+                      offer.toLowerCase()
+                        ? 'text-blue-600' 
+                        : 'text-blue-600'
+                    }`}>
+                      ✓
+                    </span>
+                    <span className={`text-sm ${
+                      offer.toLowerCase()
+                        ? 'text-blue-800 font-medium' 
+                        : 'text-gray-700'
+                    }`}>
+                      {offer}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
