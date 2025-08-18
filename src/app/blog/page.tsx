@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { collection,  onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import UpdatePcosImage from '@/components/UpdatePcosImage';
 import BlogHero from '@/components/blog/BlogHero';
@@ -13,7 +13,8 @@ interface Post {
   id: string;
   title: string;
   content: string;
-  created_at: string;
+  created_at: any;  // Firestore Timestamp
+  updated_at?: any; // Firestore Timestamp
   excerpt: string;
   slug: string;
   category: string;
@@ -28,17 +29,18 @@ const Blog = () => {
 
   useEffect(() => {
     const q = collection(db, 'posts');
-    
-    const unsubscribe = onSnapshot(q, 
+
+    const unsubscribe = onSnapshot(
+      q,
       (snapshot) => {
-        const fetchedPosts = snapshot.docs.map(doc => {
+        const fetchedPosts = snapshot.docs.map((doc) => {
           const data = doc.data();
           return {
             id: doc.id,
             title: data.title ?? '',
             content: data.content ?? '',
-            created_at: data.created_at ?? '',
-            updated_at: data.updated_at ?? data.created_at ?? '',
+            created_at: data.created_at ?? null,
+            updated_at: data.updated_at ?? null,
             excerpt: data.excerpt ?? '',
             slug: data.slug ?? '',
             category: data.category ?? '',
@@ -46,14 +48,20 @@ const Blog = () => {
             author: data.author ?? '',
           };
         });
-        
-        // Sort posts: prioritize updated_at if it exists, otherwise use created_at
+
+        // Sort by latest of created_at OR updated_at
         const sortedPosts = fetchedPosts.sort((a, b) => {
-          const dateA = a.updated_at ? new Date(a.updated_at) : new Date(a.created_at);
-          const dateB = b.updated_at ? new Date(b.updated_at) : new Date(b.created_at);
-          return dateB.getTime() - dateA.getTime();
+          const dateA = Math.max(
+            a.created_at?.toDate().getTime() ?? 0,
+            a.updated_at?.toDate().getTime() ?? 0
+          );
+          const dateB = Math.max(
+            b.created_at?.toDate().getTime() ?? 0,
+            b.updated_at?.toDate().getTime() ?? 0
+          );
+          return dateB - dateA;
         });
-        
+
         setPosts(sortedPosts);
         setLoading(false);
       },
@@ -68,28 +76,16 @@ const Blog = () => {
   }, []);
 
   if (loading) {
-    return (
-      <>
-
-        <BlogLoading />
-
-      </>
-    );
+    return <BlogLoading />;
   }
 
   if (error) {
-    return (
-      <>
-        <BlogError />
-
-      </>
-    );
+    return <BlogError />;
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
       <UpdatePcosImage />
-
       <div className="pt-20">
         <div className="max-w-7xl mx-auto px-4 py-12">
           <BlogHero />

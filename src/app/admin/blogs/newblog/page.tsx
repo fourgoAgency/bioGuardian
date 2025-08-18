@@ -12,7 +12,41 @@ import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
-import QuillEditor from 'react-quill-new';
+import Quill from 'quill';
+import 'react-quill-new/dist/quill.snow.css';
+import dynamic from 'next/dynamic';
+
+// ✅ Define proper type for Quill formats
+interface QuillFormat {
+  whitelist: string[];
+}
+
+// ✅ Fonts
+const Font = Quill.import("formats/font") as QuillFormat;
+Font.whitelist = [
+  "arial",
+  "times-new-roman",
+  "courier-new",
+  "georgia",
+  "poppins",
+  "roboto",
+  "montserrat",
+  "verdana",
+  "tahoma",
+  "serif",
+  "sans-serif",
+  "monospace",
+];
+Quill.register("formats/font", Font);
+
+
+// ✅ Font Sizes
+const Size = Quill.import("formats/size") as QuillFormat;
+Size.whitelist = ["small", "normal", "large", "huge"];
+Quill.register("formats/size", Size);
+
+const QuillEditor = dynamic(() => import("react-quill-new"), { ssr: false });
+
 
 export default function AddBlogPage() {
   const [title, setTitle] = useState('');
@@ -27,6 +61,8 @@ export default function AddBlogPage() {
 
   const quillModules = {
     toolbar: [
+      [{ 'font': Font.whitelist }],
+      [{ 'size': Size.whitelist }],
       [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
       ['bold', 'italic', 'underline', 'strike'],
       [{ 'color': [] }, { 'background': [] }],
@@ -45,7 +81,7 @@ export default function AddBlogPage() {
     'bold', 'italic', 'underline', 'strike',
     'color', 'background',
     'script',
-    'list', 'bullet',
+    'list', 
     'indent',
     'direction',
     'align',
@@ -123,21 +159,124 @@ export default function AddBlogPage() {
             theme='snow'
             value={content}
             placeholder="Write your blog content here..."
-            className="w-full h-64"
+            className="w-full border border-gray-300 rounded-lg"
             modules={quillModules}
             formats={quillFormats}
             onChange={setContent}
             />
-            <Textarea
-              id="content"
-              placeholder="Write your blog content here..."
-              rows={10}
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              disabled={loading}
-              required
-            />
-            </div>
+            <style jsx global>{`
+              .ql-editor {
+                min-height: 300px;
+                font-size: 16px;
+                line-height: 1.6;
+              }
+              .ql-container {
+                font-size: 16px;
+              }
+              /* Quill font labels */
+              .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="arial"]::before,
+              .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="arial"]::before {
+                content: "Arial";
+                font-family: Arial, sans-serif;
+              }
+
+              .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="times-new-roman"]::before,
+              .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="times-new-roman"]::before {
+                content: "Times New Roman";
+                font-family: "Times New Roman", serif;
+              }
+
+              .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="courier-new"]::before,
+              .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="courier-new"]::before {
+                content: "Courier New";
+                font-family: "Courier New", monospace;
+              }
+
+              .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="georgia"]::before,
+              .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="georgia"]::before {
+                content: "Georgia";
+                font-family: Georgia, serif;
+              }
+
+              .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="poppins"]::before,
+              .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="poppins"]::before {
+                content: "Poppins";
+                font-family: var(--font-poppins), sans-serif;
+              }
+
+              .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="roboto"]::before,
+              .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="roboto"]::before {
+                content: "Roboto";
+                font-family: var(--font-roboto), sans-serif;
+              }
+
+              .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="montserrat"]::before,
+              .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="montserrat"]::before {
+                content: "Montserrat";
+                font-family: var(--font-montserrat), sans-serif;
+              }
+
+              .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="verdana"]::before,
+              .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="verdana"]::before {
+                content: "Verdana";
+                font-family: Verdana, sans-serif;
+              }
+
+              .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="tahoma"]::before,
+              .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="tahoma"]::before {
+                content: "Tahoma";
+                font-family: Tahoma, sans-serif;
+              }
+
+              /* Ensure fonts are applied to editor content */
+              .ql-editor.ql-font-arial {
+                font-family: Arial, sans-serif;
+              }
+
+              .ql-editor.ql-font-times-new-roman {
+                font-family: "Times New Roman", serif;
+              }
+
+              .ql-editor.ql-font-courier-new {
+                font-family: "Courier New", monospace;
+              }
+
+              .ql-editor.ql-font-georgia {
+                font-family: Georgia, serif;
+              }
+
+              .ql-editor.ql-font-poppins {
+                font-family: var(--font-poppins), sans-serif;
+              }
+
+              .ql-editor.ql-font-roboto {
+                font-family: var(--font-roboto), sans-serif;
+              }
+
+              .ql-editor.ql-font-montserrat {
+                font-family: var(--font-montserrat), sans-serif;
+              }
+
+              .ql-editor.ql-font-verdana {
+                font-family: Verdana, sans-serif;
+              }
+
+              .ql-editor.ql-font-tahoma {
+                font-family: Tahoma, sans-serif;
+              }
+
+              .ql-editor.ql-font-serif {
+                font-family: serif;
+              }
+
+              .ql-editor.ql-font-sans-serif {
+                font-family: sans-serif;
+              }
+
+              .ql-editor.ql-font-monospace {
+                font-family: monospace;
+              }
+            `}</style>
         </div>
 
         {/* Categorization & Media */}
@@ -209,6 +348,7 @@ export default function AddBlogPage() {
                 required
               />
             </div>
+          </div>
           </div>
         </div>
 

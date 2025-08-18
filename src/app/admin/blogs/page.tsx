@@ -17,7 +17,8 @@ interface BlogPost {
   context: string;
   slug: string;
   image_url: string;
-  created_at: string;
+  created_at: Date | null;
+  updated_at?: Date | null;
   excerpt: string;
 }
 
@@ -32,18 +33,27 @@ const BlogsPage = () => {
     const fetchBlogs = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, 'posts'));
-        const data: BlogPost[] = querySnapshot.docs.map((doc) => {
-          const blog = doc.data();
+        let data: BlogPost[] = querySnapshot.docs.map((docSnap) => {
+          const blog = docSnap.data();
           return {
-            id: doc.id,
-            title: blog.title,
-            context: blog.context,
-            slug: blog.slug,
-            image_url: blog.image_url,
-            created_at: blog.created_at?.toDate().toISOString().split('T')[0] || '',
-            excerpt: blog.excerpt,
+            id: docSnap.id,
+            title: blog.title || '',
+            context: blog.context || '',
+            slug: blog.slug || '',
+            image_url: blog.image_url || '',
+            created_at: blog.created_at ? blog.created_at.toDate() : null,
+            updated_at: blog.updated_at ? blog.updated_at.toDate() : null,
+            excerpt: blog.excerpt || '',
           };
         });
+
+        // ✅ Sort by updated_at (desc), then fallback to created_at (desc)
+        data = data.sort((a, b) => {
+          const aTime = a.updated_at?.getTime() || a.created_at?.getTime() || 0;
+          const bTime = b.updated_at?.getTime() || b.created_at?.getTime() || 0;
+          return bTime - aTime; // newest first
+        });
+
         setBlogs(data);
       } catch (error) {
         console.error('Error fetching blogs:', error);
@@ -127,7 +137,13 @@ const BlogsPage = () => {
                 {/* Title and Meta */}
                 <h2 className="font-semibold text-lg leading-tight">{blog.title}</h2>
                 <p className="text-sm text-muted-foreground line-clamp-2">{blog.excerpt}</p>
-                <p className="text-xs text-gray-500">Created on {blog.created_at}</p>
+                <p className="text-xs text-gray-500">
+                  {blog.updated_at
+                    ? `Updated on ${blog.updated_at.toLocaleDateString()}`
+                    : blog.created_at
+                    ? `Created on ${blog.created_at.toLocaleDateString()}`
+                    : 'No date'}
+                </p>
 
                 {/* Actions */}
                 <div className="mt-4 flex flex-col sm:flex-row gap-2">
@@ -142,7 +158,7 @@ const BlogsPage = () => {
                   <Button
                     size="sm"
                     variant="destructive"
-                    className='w-full'
+                    className="w-full"
                     disabled={deletingId === blog.id}
                     onClick={() => handleDelete(blog.id)}
                   >

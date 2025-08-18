@@ -1,24 +1,24 @@
 import { Product } from '@/components/products/ProductCard';
-import Agnus1 from '@/../public/Agnus High Res-01.png';
-import Agnus2 from '@/../public/Agnus High Res-02.png';
-import Agnus3 from '@/../public/Agnus High Res-03.png';
-import Agnus4 from '@/../public/Agnus High Res-04.png';
-import Agnus5 from '@/../public/Agnus High Res-05.png';
-import Sliczole1 from '@/../public/Sliczole-1.png';
-import Sliczole2 from '@/../public/Sliczole-2.png';
-import Sliczole3 from '@/../public/Sliczole-3.png';
-import Sliczole4 from '@/../public/Sliczole-4.png';
-import Sliczole5 from '@/../public/Sliczole-5.png';
-import Sliczole6 from '@/../public/Sliczole-6.png';
-import insotek1 from '@/../public/insotek-1.png';
-import insotek2 from '@/../public/insotek-2.png';
-import insotek3 from '@/../public/insotek-3.png';
-import insotek4 from '@/../public/insotek-4.png';
-import insotek5 from '@/../public/insotek-5.png';
-import insotek6 from '@/../public/insotek-6.png';
-import funzil1 from '@/../public/funzil-02.png';
-import funzil2 from '@/../public/funzil-03.png';
-import funzil3 from '@/../public/funzil-04.png';
+import Agnus1 from '@/assets/Agnus High Res-01.png';
+import Agnus2 from '@/assets/Agnus High Res-02.png';
+import Agnus3 from '@/assets/Agnus High Res-03.png';
+import Agnus4 from '@/assets/Agnus High Res-04.png';
+import Agnus5 from '@/assets/Agnus High Res-05.png';
+import Sliczole1 from '@/assets/Sliczole-1.png';
+import Sliczole2 from '@/assets/Sliczole-2.png';
+import Sliczole3 from '@/assets/Sliczole-3.png';
+import Sliczole4 from '@/assets/Sliczole-4.png';
+import Sliczole5 from '@/assets/Sliczole-5.png';
+import Sliczole6 from '@/assets/Sliczole-6.png';
+import insotek1 from '@/assets/insotek-1.png';
+import insotek2 from '@/assets/insotek-2.png';
+import insotek3 from '@/assets/insotek-3.png';
+import insotek4 from '@/assets/insotek-4.png';
+import insotek5 from '@/assets/insotek-5.png';
+import insotek6 from '@/assets/insotek-6.png';
+import funzil1 from '@/assets/funzil-02.png';
+import funzil2 from '@/assets/funzil-03.png';
+import funzil3 from '@/assets/funzil-04.png';
 
 
 export const products: Product[] = [
