@@ -19,7 +19,7 @@ const COLLECTIONS_TO_FETCH = [
   "newsletter_subscriptions",
 ];
 
-// You can change mapping for better status UI
+// You can change mapping for better status UIa
 const collectionStatusMap: Record<string, string> = {
   orders: "Completed",
   posts: "New",
