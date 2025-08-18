@@ -22,6 +22,7 @@ export interface JobListing {
   requirements?: string[];
   responsibilities?: string[];
   experience?: string;
+  whatWeOffer?: string[];
 }
 
 async function fetchJobsFromFirebase(): Promise<JobListing[]> {
@@ -54,7 +55,9 @@ async function fetchJobsFromFirebase(): Promise<JobListing[]> {
         description: data.description || '',
         requirements: Array.isArray(data.requirements) ? data.requirements : [],
         responsibilities: Array.isArray(data.responsibilities) ? data.responsibilities : [],
-      };
+        experience: data.experience || '',
+        whatWeOffer: Array.isArray(data.whatWeOffer) ? data.whatWeOffer : [],
+      } as JobListing;
     });
   } catch (err) {
     console.error('Error fetching jobs:', err);
@@ -202,6 +205,16 @@ const JobListingPage: React.FC = () => {
                         <span key={t} className="text-xs bg-green-100 px-2 py-1 rounded-full">{t}</span>
                       ))}
                     </div>
+                  )}
+                  {job.whatWeOffer && job.whatWeOffer.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                        {job.whatWeOffer.map((offer, idx) => (
+                          <span key={idx} className="text-xs bg-gray-100 px-2 py-1 rounded-full">{offer}</span>
+                        ))}
+                    </div>
+                  )}
+                  {job.experience && (
+                    <div className="mt-2 text-sm text-gray-600">Experience: {job.experience}</div>
                   )}
                   <div className="mt-4 flex justify-between items-center">
                     <div className="text-xs text-muted-foreground">

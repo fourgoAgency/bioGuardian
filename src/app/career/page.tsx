@@ -59,7 +59,8 @@ const CareerPage: React.FC = () => {
             data.experience &&
             data.description &&
             Array.isArray(data.requirements) &&
-            Array.isArray(data.responsibilities)
+            Array.isArray(data.responsibilities) ||
+            Array.isArray(data.whatWeOffer)
           ) {
             jobsData.push({ id: doc.id, ...data } as JobListing);
           }
@@ -156,20 +157,15 @@ const CareerPage: React.FC = () => {
 
 
         {showApplicationForm && (
-          <section className="max-w-3xl mx-auto">
-            <h2 className="text-2xl font-semibold mb-4 text-center">Apply Now</h2>
-
             <ApplicationForm
               applicationData={applicationData}
               onInputChange={handleInputChange}
               onSubmit={handleSubmit}
               isSubmitting={isSubmitting}
-              showApplicationForm={!!applicationData.position}
+              showApplicationForm={!applicationData.position}
               jobListings={jobListings}
               onFileChange={handleFileChange}
             />
-
-          </section>
         )}
       </main>
     </div>
