@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import Whatsapp_image from '@/../public/Whatsapp.png'
+import Whatsapp_image from '@/assets/Whatsapp.png'
 
 interface WhatsappProps {
   whatsappLink?: string;

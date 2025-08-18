@@ -43,8 +43,6 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
   onFileChange,
 }) => {
   return (
-    <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity ${showApplicationForm ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => showApplicationForm = false}></div>
     <div id="application-form" className="bg-white/60 backdrop-blur-sm rounded-3xl border border-white/20 p-8">
       <div className="flex items-center space-x-3 mb-6">
         <Send className="w-8 h-8 text-blue-600" />
@@ -214,9 +212,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({
           )}
         </button>
       </form>
-    </div>
-    </div>
-    
+    </div>    
   );
 };
 
