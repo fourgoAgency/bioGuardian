@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { collection,  onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import UpdatePcosImage from '@/components/UpdatePcosImage';
 import BlogHero from '@/components/blog/BlogHero';

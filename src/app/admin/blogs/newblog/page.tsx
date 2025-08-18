@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
-
+import QuillEditor from 'react-quill-new';
 
 export default function AddBlogPage() {
   const [title, setTitle] = useState('');
@@ -119,6 +119,15 @@ export default function AddBlogPage() {
 
           <div className="space-y-2">
             <Label htmlFor="content">Blog Content</Label>
+            <QuillEditor
+            theme='snow'
+            value={content}
+            placeholder="Write your blog content here..."
+            className="w-full h-64"
+            modules={quillModules}
+            formats={quillFormats}
+            onChange={setContent}
+            />
             <Textarea
               id="content"
               placeholder="Write your blog content here..."
