@@ -99,50 +99,54 @@ const formatDate = (dateValue: string | Date | Timestamp | null | undefined) => 
 };
 
 
-  const formatContent = (content: string) => {
-    // Check if content contains HTML tags
-    const containsHTML = /<[^>]*>/g.test(content);
-    
-    if (containsHTML) {
-      // Render HTML content directly
-      return (
-        <div 
-          className="prose prose-lg max-w-none"
-          dangerouslySetInnerHTML={{ __html: content }}
-        />
-      );
-    } else {
-      // Fallback to plain text formatting for backward compatibility
-      return content.split('\n').map((paragraph, index) => {
-        if (paragraph.startsWith('## ')) {
-          return (
-            <h2 key={index} className="text-2xl font-bold text-gray-800 mt-8 mb-4">
-              {paragraph.replace('## ', '')}
-            </h2>
-          );
-        } else if (paragraph.startsWith('### ')) {
-          return (
-            <h3 key={index} className="text-xl font-semibold text-gray-800 mt-6 mb-3">
-              {paragraph.replace('### ', '')}
-            </h3>
-          );
-        } else if (paragraph.startsWith('- ')) {
-          return (
-            <li key={index} className="text-gray-700 leading-relaxed ml-4">
-              {paragraph.replace('- ', '')}
-            </li>
-          );
-        } else if (paragraph.trim()) {
-          return (
-            <p key={index} className="text-gray-700 leading-relaxed mb-4">
-              {paragraph}
-            </p>
-          );
-        }
-        return null;
-      });
-    }
-  };
+const formatContent = (content: string) => {
+  // Clean up Quill-specific attributes that might cause issues
+  const cleanContent = content
+    .replace(/<span class="ql-ui"[^>]*><\/span>/g, '') // remove empty ql-ui spans
+    .replace(/contenteditable="false"/g, ''); // remove editor-only attrs
+
+  // Check if content contains HTML tags
+  const containsHTML = /<[^>]*>/g.test(cleanContent);
+
+  if (containsHTML) {
+    return (
+      <div
+        className="quill-content prose prose-lg max-w-none"
+        dangerouslySetInnerHTML={{ __html: cleanContent }}
+      />
+    );
+  } else {
+    return cleanContent.split('\n').map((paragraph, index) => {
+      if (paragraph.startsWith('## ')) {
+        return (
+          <h2 key={index} className="text-2xl font-bold text-gray-800 mt-8 mb-4">
+            {paragraph.replace('## ', '')}
+          </h2>
+        );
+      } else if (paragraph.startsWith('### ')) {
+        return (
+          <h3 key={index} className="text-xl font-semibold text-gray-800 mt-6 mb-3">
+            {paragraph.replace('### ', '')}
+          </h3>
+        );
+      } else if (paragraph.startsWith('- ')) {
+        return (
+          <li key={index} className="text-gray-700 leading-relaxed ml-4">
+            {paragraph.replace('- ', '')}
+          </li>
+        );
+      } else if (paragraph.trim()) {
+        return (
+          <div key={index} className="text-gray-700 leading-relaxed mb-4">
+            {paragraph}
+          </div>
+        );
+      }
+      return null;
+    });
+  }
+};
+
 
   if (loading) {
     return (
