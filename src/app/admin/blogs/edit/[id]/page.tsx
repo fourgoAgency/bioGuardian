@@ -166,7 +166,7 @@ export default function EditBlogPage() {
             />
           </div>
 
-          <div className="space-y-5">
+          <div className="space-y-2 mb-4">
             <Label htmlFor="content">Blog Content</Label>
             <div className="border rounded-md">
               <QuillEditor
@@ -384,3 +384,4 @@ export default function EditBlogPage() {
 }
 
 // end of file
+
