@@ -50,52 +50,6 @@ const JobCard: React.FC<JobCardProps> = ({ job, onReadClick }) => {
           {job.description && (
             <p className="mt-2 text-sm line-clamp-3">{job.description}</p>
           )}
-
-          {Array.isArray(job.requirements) && job.requirements.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-2">
-              {job.requirements.map((t, i) => (
-                <span key={i} className="text-xs bg-blue-100 px-2 py-1 rounded-full">
-                  {t}
-                </span>
-              ))}
-            </div>
-          )}
-
-          {Array.isArray(job.responsibilities) && job.responsibilities.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-2">
-              {job.responsibilities.map((t, i) => (
-                <span key={i} className="text-xs bg-green-100 px-2 py-1 rounded-full">
-                  {t}
-                </span>
-              ))}
-            </div>
-          )}
-
-          {Array.isArray(job.whatWeOffer) && job.whatWeOffer.length > 0 && (
-            <div className="mt-3">
-              <h4 className="text-sm font-semibold mb-2 text-blue-700">What We Offer:</h4>
-              <div className="flex flex-wrap gap-2">
-                {job.whatWeOffer.slice(0, 3).map((offer, i) => (
-                  <span 
-                    key={i} 
-                    className={`text-xs px-2 py-1 rounded-full ${
-                      offer.toLowerCase().includes('firebase') 
-                        ? 'bg-orange-100 text-orange-800 border border-orange-200' 
-                        : 'bg-purple-100 text-purple-800'
-                    }`}
-                  >
-                    {offer}
-                  </span>
-                ))}
-                {job.whatWeOffer.length > 3 && (
-                  <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">
-                    +{job.whatWeOffer.length - 3} more
-                  </span>
-                )}
-              </div>
-            </div>
-          )}
-
           <div className="mt-4 flex justify-between items-center">
             <div className="text-xs text-muted-foreground">
               {job.created_at ? `Posted ${formatRelativeDate(job.created_at)}` : ""}
