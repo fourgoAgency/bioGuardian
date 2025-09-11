@@ -61,10 +61,26 @@ const ContactSection = () => {
                 <Mail className="w-6 h-6 text-green-600" />
               </div>
               <div>
-                <Link href='https://mail.google.com/mail/?view=cm&fs=1&to=info@bioguardian.ne'>
-                <h3 className="text-lg font-semibold text-gray-800">{t('email')}</h3>
-                <p className="text-gray-600">info@bioguardian.net</p>
-                </Link>
+                {/* Mobile: mailto */}
+<Link
+  href="mailto:info@bioguardian.net"
+  className="block md:hidden"
+>
+  <h3 className="text-lg font-semibold text-gray-800">{t('email')}</h3>
+  <p className="text-gray-600">info@bioguardian.net</p>
+</Link>
+
+{/* Desktop: Gmail compose */}
+<Link
+  href="https://mail.google.com/mail/?view=cm&fs=1&to=info@bioguardian.net"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="hidden md:block"
+>
+  <h3 className="text-lg font-semibold text-gray-800">{t('email')}</h3>
+  <p className="text-gray-600">info@bioguardian.net</p>
+</Link>
+
               </div>
             </div>
           </div>
