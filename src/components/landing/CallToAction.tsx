@@ -43,15 +43,26 @@ const CallToAction = () => {
                                     <Phone className="w-4 h-4" />
                                     <span>+92 334 0063616</span>
                                 </a>
-                                <a
-                                    href="https://mail.google.com/mail/?view=cm&fs=1&to=info@bioguardian.net"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-2 hover:text-sky-600 transition-colors cursor-pointer"
-                                >
-                                    <Mail className="w-4 h-4" />
-                                    <span>info@bioguardian.net</span>
-                                </a>
+{/* Mobile: mailto */}
+<a
+  href="mailto:info@bioguardian.net"
+  className="flex items-center gap-2 hover:text-sky-600 transition-colors cursor-pointer md:hidden"
+>
+  <Mail className="w-4 h-4" />
+  <span>info@bioguardian.net</span>
+</a>
+
+{/* Desktop: Gmail link */}
+<a
+  href="https://mail.google.com/mail/?view=cm&fs=1&to=info@bioguardian.net"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="hidden md:flex items-center gap-2 hover:text-sky-600 transition-colors cursor-pointer"
+>
+  <Mail className="w-4 h-4" />
+  <span>info@bioguardian.net</span>
+</a>
+
 
                             </div>
                         </div>
