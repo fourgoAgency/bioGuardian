@@ -132,7 +132,11 @@ const Footer = () => {
 
         <div className="border-t border-gray-700 mt-12 pt-8 flex flex-col sm:flex-row-reverse justify-between items-center text-sm text-gray-400">
           <div className="flex items-center space-x-6 mt-4 sm:mt-0">
-            <a href="mailto:info@bioguardian.net" className="flex items-center space-x-2">
+            <a href="mailto:info@bioguardian.net" className="md:hidden flex items-center space-x-2">
+              <Mail size={14} />
+              <span>info@bioguardian.net</span>
+            </a>
+            <a href="mailto:info@bioguardian.net" className="sm:hidden flex items-center space-x-2">
               <Mail size={14} />
               <span>info@bioguardian.net</span>
             </a>
