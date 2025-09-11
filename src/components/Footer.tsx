@@ -132,14 +132,18 @@ const Footer = () => {
 
         <div className="border-t border-gray-700 mt-12 pt-8 flex flex-col sm:flex-row-reverse justify-between items-center text-sm text-gray-400">
           <div className="flex items-center space-x-6 mt-4 sm:mt-0">
-            <a href="mailto:info@bioguardian.net" className="md:hidden flex items-center space-x-2">
-              <Mail size={14} />
-              <span>info@bioguardian.net</span>
-            </a>
-            <a href="mailto:info@bioguardian.net" className="sm:hidden flex items-center space-x-2">
-              <Mail size={14} />
-              <span>info@bioguardian.net</span>
-            </a>
+            {/* Mobile only */}
+<a href="mailto:info@bioguardian.net" className="flex items-center space-x-2 md:hidden">
+  <Mail size={14} />
+  <span>info@bioguardian.net</span>
+</a>
+
+{/* Desktop only */}
+<a href="https://mail.google.com/mail/?view=cm&fs=1&to=info@bioguardian.net" className="hidden md:flex items-center space-x-2">
+  <Mail size={16} />
+  <span>info@bioguardian.net</span>
+</a>
+
             <div className="flex items-center space-x-2">
               <Map size={14} />
               <span>Karachi, Pakistan</span>
