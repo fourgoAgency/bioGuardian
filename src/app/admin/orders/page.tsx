@@ -50,8 +50,10 @@ export default function OrdersPage() {
         fetchedOrders.filter((o) => o.status?.toLowerCase() === "pending").length
       );
 
-      // Calculate total revenue
+      // ✅ Calculate total revenue (exclude cancelled)
       const totalRevenue = fetchedOrders.reduce((acc, order) => {
+        if (order.status?.toLowerCase() === "cancelled") return acc;
+
         const orderItems = order.items || [];
         const orderTotal = orderItems.reduce(
           (sum: number, item: OrderItem) =>
@@ -67,31 +69,30 @@ export default function OrdersPage() {
     return () => unsubscribe();
   }, []);
 
-  // Filtered orders
+  // ✅ Filtered orders (Cancelled bhi dikhne chahiye)
   const filteredOrders = orders.filter((order) => {
-    // ✅ Convert Firestore Timestamp or Date to JS Date
+    // Convert Firestore Timestamp or Date to JS Date
     let orderDate: Date | null = null;
     if (order.created_at instanceof Date) {
       orderDate = order.created_at;
     } else if (order.created_at && "seconds" in order.created_at) {
       orderDate = new Date(order.created_at.seconds * 1000);
     }
-
     if (!orderDate) return false;
 
-    // ✅ Search filter
+    // Search filter
     const matchesSearch =
       order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (order.customer_name || "")
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
 
-    // ✅ Status filter
+    // Status filter
     const matchesStatus =
       statusFilter === "all" ||
       order.status?.toLowerCase() === statusFilter.toLowerCase();
 
-    // ✅ Date range filter
+    // Date range filter
     const matchesDateRange = (() => {
       if (startDate) {
         const start = new Date(startDate);
@@ -109,8 +110,10 @@ export default function OrdersPage() {
     return matchesSearch && matchesStatus && matchesDateRange;
   });
 
-  // Calculate filtered revenue
+  // ✅ Filtered revenue (cancelled exclude)
   const filteredRevenue = filteredOrders.reduce((acc, order) => {
+    if (order.status?.toLowerCase() === "cancelled") return acc;
+
     const orderItems = order.items || [];
     const orderTotal = orderItems.reduce(
       (sum, item) =>
@@ -146,20 +149,22 @@ export default function OrdersPage() {
         />
         <OverviewCard
           title="Total Revenue"
-          value={`PKR ${(startDate || endDate ? filteredRevenue : totalRevenue).toLocaleString()
-            }`}
+          value={`PKR ${(
+            startDate || endDate || statusFilter !== "all"
+              ? filteredRevenue
+              : totalRevenue
+          ).toLocaleString()}`}
           timeframe={
             startDate && endDate
               ? `${startDate} → ${endDate}`
               : startDate
-                ? `From ${startDate}`
-                : endDate
-                  ? `Until ${endDate}`
-                  : "All time"
+              ? `From ${startDate}`
+              : endDate
+              ? `Until ${endDate}`
+              : "All time"
           }
           Icon={DollarSign}
         />
-
       </div>
 
       {/* Filters */}
