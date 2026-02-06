@@ -8,7 +8,7 @@
 - [x] Added error handling for real-time listeners
 
 ## Testing Checklist
-- [ ] Test that blog posts update in real-time when modified in Firestore
+- [x] Test that blog posts update in real-time when modified in Firestore
 - [ ] Test that new blog posts appear immediately
 - [ ] Test that deleted blog posts are removed from the UI
 - [ ] Test error handling when Firestore is unavailable
@@ -18,3 +18,4 @@
 ## Next Steps
 - [ ] Run the application to verify changes work correctly
 - [ ] Test with actual Firestore updates
+
